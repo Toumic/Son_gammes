@@ -6,23 +6,33 @@ Cette gamme est en Do et elle retrace les gammes fondamentales.
 L'architecture de cet assemblage ressemble à cette image (images/ClassBooLsIII.png)."""
 # https://cabviva.com/musicmp3/gamcop!s.mp3
 
-# import gammes_audio as gamma
-# import binomes_audio as biner
-
 from tkinter import *
 from tkinter.constants import *
+from tkinter.font import *
 from PIL import ImageTk, Image
+import gammes_audio as gamma
+import binomes_audio as biner
 
 "# Initialisation du visuel, sous forme d'un tableur."
 root = Tk()
 root.title("Base illusion")
-root.geometry("1800x1000+30+10")
-table_x = Canvas(root, width=72, height=30, bg="white")  # Coin (haut, gauche) pour l'image favicon.
+root.geometry("1824x1000+30+10")
+table_x = Canvas(root, width=60, height=30)  # Coin (haut, gauche) pour l'image favicon.
 table_x.grid(row=1, column=1)
-table_b = Canvas(root, width=72, height=884, bg="white")  # Colonne dédiée aux boutons binaires. (Verticale)
+table_b = Canvas(root, width=60, height=884, bg="white")  # Colonne dédiée aux boutons binaires. (Verticale)
 table_b.grid(row=2, column=1)
+frame_b = Frame(table_b)
+frame_b.grid()
+table_y = Canvas(root, width=84, height=30, bg="thistle")  # Coin (haut, droite).
+table_y.grid(row=1, column=3)
+table_o = Canvas(root, width=84, height=884, bg="thistle")  # Colonne dédiée aux binaires ordonnés. (Verticale)
+table_o.grid(row=2, column=3)
+table_z = Canvas(root, width=84, height=60, bg="thistle")  # Coin (bas, droite).
+table_z.grid(row=3, column=3)
 table_g = Canvas(root, width=1656, height=30, bg="seashell")  # Colonne dédiée aux boutons gammes. (Horizontale)
 table_g.grid(row=1, column=2)
+frame_g = Frame(table_g)
+frame_g.grid()
 tableau = Canvas(root, width=1656, height=884, bg="ivory")  # Affichage des gammes (noms, binaires) liées.
 tableau.grid(row=2, column=2)
 tableau.config(borderwidth=3, relief=RAISED)
@@ -92,6 +102,8 @@ gam_physic = {
 }
 gam_maj = '102034050607'
 dic_codage = {}  # Dictionnaire des gammes et de leurs modes.
+dic_binary = {}  # Dictionnaire, clé = binaire, valeur = zob (['o45x', 1], '1000001'), (1, 2, '1000001')...
+dic_indice = {}  # Dictionnaire, clé = Nom de la gamme, valeur = Numéro de la gamme.
 pre_codage = open('globdicTcoup.txt', 'r')
 mod, cod1 = '', 1
 
@@ -112,11 +124,19 @@ for pre_cod in pre_codage:
                         mod += '1'
                     else:
                         mod += '0'
+            # C'est une section des premiers degrés, des noms gammes et des numéros des gammes.
             if cod2 == 1:
                 zob = gam_classic[mod_cod], mod
+                dic_indice[gam_classic[mod_cod][0]] = []  # Dictionnaire, clé = Nom_gamme, valeur = Rang_gamme.
+                dic_indice[gam_classic[mod_cod][0]].append(cod1)
+                # print("     gam_classic[mod_cod]", gam_classic[mod_cod])
             else:
                 zob = cod1, cod2, mod
             dic_codage[cod1, pre_cod[:12]].append(zob)
+            # print("dic_codage[cod1, pre_cod[:12]]", dic_codage[cod1, pre_cod[:12]])
+            dic_binary[zob[-1]] = []  # 'dic_mode01' = Clé Binaire, = Rang numérique.
+            dic_binary[zob[-1]].append(zob)
+            # print("zob", zob[-1])
             # print("dic_codage :", dic_codage[cod1, pre_cod[:12]])
             mod = ''
             "# Renversements diatoniques."
@@ -135,12 +155,58 @@ for pre_cod in pre_codage:
             if mod_cod == pre_cod[:12]:
                 break
         cod1 += 1
+# ("dic_codage", dic_codage)
 pre_codage.close()
 
 colonne_bin = []  # Première colonne contenant les modes binaires uniques. L'index de l'élément = La ligne.
 colonne_gam = {}  # Colonnes contenant les gammes de 1 à 66. Première ligne = Noms.
 colonne_lis = {}  # Le dictionnaire clé=N°gamme, valeur=Ensemble degrés à même niveau.
 gammes_bin = {}  # Dictionnaire des gammes aux modes binaires existants.
+images_liste = ["images/BoutonTriInt.png", "images/BoutonTriBin.png", "images/BoutonTriHex.png",
+                "images/BoutonTriOct.png"]
+images_copie = images_liste.copy()
+
+
+def clic_image(event):
+    """Cette fonction convertit les modes binaires.
+        En changeant le type, on change aussi son ordre croissant.
+        'dic_indice' ; un dictionnaire = Les clés sont les noms et les valeurs sont les numéros des gammes.
+        Il faut modifier le dictionnaire original, afin d'établir une nouvelle correspondance."""
+    liste_iso = list(set(list(dic_binary.keys())))
+    # print("dic_indice", "dic_indice", "dic_binary", "dic_binary", "\n liste_iso", liste_iso, len(liste_iso))
+    x, y = event.x, event.y
+    item_id = table_o.find_closest(x, y)[0]  # Récupère l'ID de l'objet le plus proche
+    if item_id == 1:  # Conversion des modes binaires en nombres entiers.
+        liste_int = [int(x) for x in liste_iso]
+        liste_int.sort()
+        print("Type de nombre entier", liste_int)
+    elif item_id == 2:  # Conversion des modes binaires en nombres entiers.
+        liste_bin = [bin(x) for x in liste_iso]
+        liste_bin.sort()
+        print("Type de nombre binaire", liste_bin)
+    elif item_id == 3:  # Conversion des modes binaires en nombres hexadécimaux.
+        liste_hex = [hex(int(x)) for x in liste_iso]
+        liste_hex.sort()
+        print("Type de nombre hexadécimal", liste_hex)
+    else:  # Conversion des modes binaires en nombres octaux.
+        liste_oct = [oct(int(x)) for x in liste_iso]
+        liste_oct.sort()
+        print("Type de nombre octal", liste_oct)
+    print("\n item_id", item_id, images_copie[item_id - 1], "x/y", x, y)
+
+
+# _________________________________________________________________________________________
+"# Placer les boutons-images sur le volet de droite 'table_o'"
+# table_o = Canvas(root, width=84, height=884, bg="thistle"), (row=2, column=3)
+esp, deb = 60, 48
+image_id = ["", "", ""]
+'# images_liste = ["images/BoutonTriBin.png", "images/BoutonTriHex.png", "images/BoutonTriOct.png"]'
+for il, image in enumerate(images_liste):
+    images_liste[il] = Image.open(image)
+    images_liste[il] = ImageTk.PhotoImage(images_liste[il])
+    image_id = table_o.create_image(deb, esp, image=images_liste[il])
+    table_o.tag_bind(image_id, "<Button-1>", clic_image)
+    esp += 100
 
 
 def gammes_arp():
@@ -253,12 +319,26 @@ def gammes_arp():
 
 
 gammes_arp()
+
+
+def bouton_bin(bb):
+    """Pratiquer les redirections des boutons d'en-tête[noms des gammes] et latéral gauche[binaires].
+        Cette fonction est située après avoir initialisé les dictionnaires nécessaires."""
+    if len(bb) < 7:
+        a = "# Jonction module gammes_audio"
+    else:
+        a = "# Jonction module binomes_audio"
+    print("Bb", bb, len(bb), "\t A", a)
+
+
 # _________________________________________________________________________________________
 "# Mise en forme des tables dans la grille"
+font_coins = "Courrier 18 bold"
 # table_x = Canvas(root, width=72, height=30, bg="white"), (row=1, column=1)
 "72/2=36/2=18, 30/2=15, 54=18+36"
 tx1, tx2 = (18, 2), (54, 30)
 table_x.create_oval(tx1, tx2, fill="gold", width=0)  # Table du favicon.
+table_x.create_text(36, 15, fill="white", text="X", font=font_coins)  # Table du favicon. Lettre X.
 image_pil = Image.open("favicon_16.png")
 image_tk = ImageTk.PhotoImage(image_pil)
 # Image = 16×16. Table_x = 72×30. Emplacement = 54×5
@@ -266,16 +346,20 @@ table_x.create_image(12, 16, image=image_tk)  # Table du favicon.
 # table_g = Canvas(root, width=1656, height=30, bg="seashell"), (row=1, column=2)
 tx1, tx2 = (2, 2), (1656, 30)
 table_g.create_oval(tx1, tx2, fill="blanchedalmond", width=0)  # Colonne dédiée aux boutons gammes.
+# table_y = Canvas(root, width=84, height=30, bg="thistle"), (row=1, column=3)
+table_y.create_text(44, 16, fill="white", text="Y", font=font_coins)  # Table décorative. Lettre Y.
+# table_z = Canvas(root, width=84, height=60, bg="thistle"), (row=3, column=3)
+table_z.create_text(44, 31, fill="white", text="Z", font=font_coins)  # Table décorative. Lettre Y.
 # _________________________________________________________________________________________
 "# Analyse des modes binaires et des gammes."
 coq0, coq1 = 0, 0
 deb_col0, deb_lin0 = deb_col + 6, deb_lin + 26
-# Visionner les modes binaires.
-for colon_lin in colonne_bin:
+# Visionner les modes binaires par l'écriture.
+for colin in colonne_bin:
     tableau.create_text(deb_col0, deb_lin0, text=colonne_bin[coq1], font=police1)
     coq1 += 1
     deb_lin0 += lin
-    # print("colon_lin", colon_lin)
+    # print("colon_lin", colon_lin, " = colonne_bin[coq1]", colonne_bin[coq1])
 # _________________________________________________________________________________________
 "# Repérer les gammes ayant deux ensembles de degrés séparés."
 multi, sage, passe = {}, 0, ''
@@ -293,9 +377,21 @@ for k_sage in multi.keys():
     if len(multi[k_sage]) < 2:
         multi[k_sage] = {}
 # _________________________________________________________________________________________
+"# Mise en place des boutons binaires sur le panneau gauche."
+coq0, tab_bin = 0, colonne_bin.copy()
+poli0, poli1 = Font(size=5, weight="bold"), Font(size=7, weight="bold")
+for colin in range(len(tab_bin)):
+    if tab_bin[colin]:
+        nom0 = tab_bin[colin]
+        tab_bin[colin] = Button(frame_b, font=poli0, text=nom0,
+                                command=lambda bab=tab_bin[colin]: bouton_bin(bab))
+        tab_bin[colin].grid(pady=1)
+        coq0 += 1
+# _________________________________________________________________________________________
 "# Écriture des noms et les degrés des soixante-six gammes."
 #  gammes_bin = Les gammes aux modes binaires existants.
-color1 = "black"
+coq2 = 1
+color1, color2 = "black", "lavender"
 mul_bin = False  # Si la gamme en cours a plusieurs ensembles de degrés.
 col0, lin0 = deb_col + 24, deb_lin + 26
 recaler = True
@@ -306,10 +402,12 @@ for k_col, v_lin in colonne_gam.items():
         if k_col[1] == 0:
             if val in gammes_bin.keys():
                 color1 = "red"
+                color2 = "pink"
             else:
                 color1 = "black"
+                color2 = "lavender"
         lin1 = (k_col[1] * lin) + lin0
-        # print("___   col1", col1, "lin1", lin1)
+        # print("___   col1", col1, "lin1", lin1, "v_lin", v_lin)
         # print("*** k_col", k_col[1], "val", type(val), len(val), val)
         if len(val) > 1:  # Le dictionnaire 'multi' informe sur les multilistes.
             if val in multi.keys() and multi[val]:
@@ -317,17 +415,23 @@ for k_col, v_lin in colonne_gam.items():
             else:
                 mul_bin = False
         if len(v_lin) == 1:  # Écriture des noms en quinconce pour une meilleure lisibilité.
+            coq2 += 1
             if k_col[1] == 0:
                 if recaler:
                     sig = -12
+                    row0 = 1
                     recaler = False
                 else:
+                    row0 = 2
                     recaler = True
+                gam_bouton = Button(frame_g, font=poli1, text=str(val), bg=color2,
+                                    command=lambda bag=str(val): bouton_bin(bag))
+                gam_bouton.grid(row=row0, column=coq2)
             if v_lin[0] == '1':
-                col3, lin3 = (col1-6, lin1-6), (col1+6, lin1+6)
+                col3, lin3 = (col1 - 6, lin1 - 6), (col1 + 6, lin1 + 6)
                 tableau.create_rectangle(col3, lin3, fill="gold", width=0)
             tableau.create_text(col1, lin1 + sig, text=str(val), font=police2, fill=color1)
-        else:
+        else:  # 'len(v_lin)'. Quand, plusieurs degrés correspondent à un même emplacement.
             ce = len(v_lin)
             col2, lin2 = (col1 - ce, lin1 - ce), (col1 + ce, lin1 + ce)
             if mul_bin:
@@ -338,7 +442,7 @@ for k_col, v_lin in colonne_gam.items():
                     if ici == '1':
                         col3, lin3 = (col1 - 12, lin1 - 6), (col1, lin1 + 6)
                         tableau.create_rectangle(col3, lin3, fill="gold", width=0)
-                    tableau.create_text(col1+cran, lin1, text=ici, font=police2, fill="maroon")
+                    tableau.create_text(col1 + cran, lin1, text=ici, font=police2, fill="maroon")
                     cran += 12
                     # print("Ici", ici, "col2, lin2", col2, lin2, val, "v_lin", v_lin, colonne_gam[k_col[0], 0][0])
             else:
@@ -352,11 +456,9 @@ for k_col, v_lin in colonne_gam.items():
     # print(" FOR colonne_gam   cadrer", cadrer)
     # break
 
-# gamma.audio_gam(colonne_gam)
-# biner.audio_bin(colonne_bin)
+gamma.audio_gam(colonne_gam)
+biner.audio_bin(colonne_bin)
 
 print("\n LONGUEURS : \n _ colonne_bin", len(colonne_bin), "\n _ colonne_gam", len(colonne_gam.keys()), "\n", col, lin)
 
 root.mainloop()
-'''if __name__ == '__main__':
-    gammes_arp()'''
