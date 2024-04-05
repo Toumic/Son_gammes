@@ -162,8 +162,7 @@ colonne_bin = []  # Première colonne contenant les modes binaires uniques. L'in
 colonne_gam = {}  # Colonnes contenant les gammes de 1 à 66. Première ligne = Noms.
 colonne_lis = {}  # Le dictionnaire clé=N°gamme, valeur=Ensemble degrés à même niveau.
 gammes_bin = {}  # Dictionnaire des gammes aux modes binaires existants.
-images_liste = ["images/BoutonTriInt.png", "images/BoutonTriBin.png", "images/BoutonTriHex.png",
-                "images/BoutonTriOct.png"]
+images_liste = ["BoutonTriInt.png", "BoutonTriBin.png", "BoutonTriHex.png", "BoutonTriOct.png"]
 images_copie = images_liste.copy()
 
 
@@ -176,22 +175,22 @@ def clic_image(event):
     # print("dic_indice", "dic_indice", "dic_binary", "dic_binary", "\n liste_iso", liste_iso, len(liste_iso))
     x, y = event.x, event.y
     item_id = table_o.find_closest(x, y)[0]  # Récupère l'ID de l'objet le plus proche
-    if item_id == 1:  # Conversion des modes binaires en nombres entiers.
+    if item_id == 1:  # Conversion des modes originaux en nombres entiers.
         liste_int = [int(x) for x in liste_iso]
         liste_int.sort()
-        print("Type de nombre entier", liste_int)
-    elif item_id == 2:  # Conversion des modes binaires en nombres entiers.
-        liste_bin = [bin(x) for x in liste_iso]
+        print("Type de nombre entier", liste_int, len(liste_int))
+    elif item_id == 2:  # Conversion des modes originaux en nombres binaires.
+        liste_bin = [bin(int(x)) for x in liste_iso]
         liste_bin.sort()
-        print("Type de nombre binaire", liste_bin)
-    elif item_id == 3:  # Conversion des modes binaires en nombres hexadécimaux.
+        print("Type de nombre binaire", liste_bin, len(liste_bin))
+    elif item_id == 3:  # Conversion des modes originaux en nombres hexadécimaux.
         liste_hex = [hex(int(x)) for x in liste_iso]
         liste_hex.sort()
-        print("Type de nombre hexadécimal", liste_hex)
-    else:  # Conversion des modes binaires en nombres octaux.
+        print("Type de nombre hexadécimal", liste_hex, len(liste_hex))
+    else:  # Conversion des modes originaux en nombres octaux.
         liste_oct = [oct(int(x)) for x in liste_iso]
         liste_oct.sort()
-        print("Type de nombre octal", liste_oct)
+        print("Type de nombre octal", liste_oct, len(liste_oct))
     print("\n item_id", item_id, images_copie[item_id - 1], "x/y", x, y)
 
 
@@ -200,7 +199,7 @@ def clic_image(event):
 # table_o = Canvas(root, width=84, height=884, bg="thistle"), (row=2, column=3)
 esp, deb = 60, 48
 image_id = ["", "", ""]
-'# images_liste = ["images/BoutonTriBin.png", "images/BoutonTriHex.png", "images/BoutonTriOct.png"]'
+'# images_liste = ["BoutonTriInt.png", "BoutonTriBin.png", "BoutonTriHex.png", "BoutonTriOct.png"]'
 for il, image in enumerate(images_liste):
     images_liste[il] = Image.open(image)
     images_liste[il] = ImageTk.PhotoImage(images_liste[il])
