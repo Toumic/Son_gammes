@@ -6,6 +6,8 @@ Cette gamme est en Do et elle retrace les gammes fondamentales.
 L'architecture de cet assemblage ressemble à cette image (images/ClassBooLsIII.png)."""
 # https://cabviva.com/musicmp3/gamcop!s.mp3
 
+import inspect
+from typing import Callable
 from tkinter import *
 from tkinter.constants import *
 from tkinter.font import *
@@ -13,6 +15,10 @@ from PIL import ImageTk, Image
 # Les modules personnels.
 import gammes_audio as gamma  # Faire sonner les gammes.
 import binomes_audio as biner  # Faire sonner les gammes.
+
+# lineno() Pour consulter le programme grâce au suivi des print's
+lineno: Callable[[], int] = lambda: inspect.currentframe().f_back.f_lineno
+
 
 gam_classic = {
     "102034050607": ["0", 336], "120034050607": ["-2", 210], "100234050607": ["+2", 392],
@@ -125,27 +131,31 @@ pre_codage.close()
 def bouton_bin(bb):
     """Pratiquer les redirections des boutons d'en-tête[noms des gammes] et latéral gauche[binaires].
         Cette fonction est située après avoir initialisé les dictionnaires nécessaires."""
-    print("**   Fonction bouton_bin bb ", bb)
+    print(lineno(), "**   Fonction bouton_bin bb ", bb)
     if len(bb) < 7:
         a = "# Jonction module gammes_audio"
     else:
         a = "# Jonction module binomes_audio"
-    print("Bb", bb, len(bb), "\t A", a)
+    print(lineno(), "Bb", bb, len(bb), "\t A", a)
 
 
 class Relance(Tk):
     """Permet de relancer l'affichage avec une nouvelle orientation"""
 
-    def __init__(self, di_code=None):
+    def __init__(self, di_code=None, di_bine=None, di_indi=None):
         """ Initialisation du visuel, sous forme d'un tableur."""
         Tk.__init__(self)
         self.title("Base illusion")
         self.geometry("1824x1000+30+10")
+        image_pil = Image.open("favicon_16.png")
+        image_tk = ImageTk.PhotoImage(image_pil)
+        # Image = 16×16. Table_x = 72×30. Emplacement = 54×5
+        self.iconphoto(True, image_tk)
         #
         self.dic_codage = di_code  # Dictionnaire des gammes et de leurs modes.
         self.codage_cop = {}  # Dictionnaire qui copie (des gammes et de leurs modes).
-        self.dic_binary = dic_binary.copy()  # Clé = binaire, valeur = zob (['o45x', 1], '1000001'), (1, 2, '1000001')
-        self.dic_indice = dic_indice.copy()  # Dictionnaire, clé = Nom de la gamme, valeur = Numéro de la gamme.
+        self.dic_binary = di_bine  # Clé = binaire, valeur = zob (['o45x', 1], '1000001'), (1, 2, '1000001')
+        self.dic_indice = di_indi  # Dictionnaire, clé = Nom de la gamme, valeur = Numéro de la gamme.
         self.font_coins = "Courrier 18 bold"
         self.table_x = Canvas(self, width=60, height=30)  # Coin (haut, gauche) pour l'image favicon.
         self.table_x.grid(row=1, column=1)
@@ -163,16 +173,13 @@ class Relance(Tk):
         self.table_g.grid(row=1, column=2)
         self.frame_g = Frame(self.table_g)
         self.frame_g.grid()
+
         "# Mise en forme des tables dans la grille"
         # table_x = Canvas(root, width=72, height=30, bg="white"), (row=1, column=1)
         "72/2=36/2=18, 30/2=15, 54=18+36"
         tx1, tx2 = (18, 2), (54, 30)
-        self.table_x.create_oval(tx1, tx2, fill="gold", width=0)  # Table du favicon.
-        self.table_x.create_text(36, 15, fill="white", text="X", font=self.font_coins)  # Table du favicon. Lettre X.
-        image_pil = Image.open("favicon_16.png")
-        image_tk = ImageTk.PhotoImage(image_pil)
-        # Image = 16×16. Table_x = 72×30. Emplacement = 54×5
-        self.table_x.create_image(12, 16, image=image_tk)  # Table du favicon.
+        self.table_x.create_oval(tx1, tx2, fill="gold", width=0)  # Table décorative.
+        self.table_x.create_text(36, 15, fill="white", text="X", font=self.font_coins)  # Table décorative. Lettre X.
         # table_g = Canvas(root, width=1656, height=30, bg="seashell"), (row=1, column=2)
         tx1, tx2 = (2, 2), (1656, 30)
         self.table_g.create_oval(tx1, tx2, fill="blanchedalmond", width=0)  # Colonne dédiée aux boutons gammes.
@@ -183,6 +190,8 @@ class Relance(Tk):
         self.tableau = Canvas(self, width=1656, height=884, bg="ivory")  # Affichage des (noms, binaires) liées.
         self.tableau.grid(row=2, column=2)
         self.tableau.config(borderwidth=3, relief=RAISED)
+
+        "# Initialisation métrique de l'affichage."
         self.police1, self.police2 = "Courier 8 bold", "Courrier 10"
         '''Pour une colonne binaire de soixante-six éléments, un intervalle de treize = Hauteur (67*13 = 871).
         Ayant un nombre de colonnes égal aux gammes (66), plus une pour les binaires = Longueur (67*24 = 1608).'''
@@ -190,6 +199,7 @@ class Relance(Tk):
         self.deb_col, self.deb_lin = (long1 - long2) // 2, (haut1 - haut2) // 2
         self.col, self.lin = 24, 13  # Espace entre les colonnes_26 et espace entre les lignes_13.
         self.tot_col, self.tot_lin = 67 * 24, 67 * 13
+
         "# Tracer le quadrillage principal."
         self.fin_col, self.fin_lin = self.deb_col + self.tot_col, self.deb_lin + self.tot_lin
         self.deb_col0, self.deb_lin0 = self.deb_col, self.deb_lin
@@ -199,18 +209,17 @@ class Relance(Tk):
         self.gammes_bin = {}  # Dictionnaire des gammes aux modes binaires existants.
         self.images_liste = ["BoutonTriIso.png", "BoutonTriInt.png", "BoutonTriBin.png", "BoutonTriHex.png",
                              "BoutonTriOct.png"]
+
+        "# Exécution de la fonction qui sert à alimenter les boutons horizontaux et verticaux."
+        self.gammes_arp()
+
         self.gammes_copie, self.gammes_mode = [], True
         # Clé = iso, valeur = (iso, int, bin, hex, oct)
         self.dic_iso, self.dic_int, self.dic_bin, self.dic_hex, self.dic_oct = {}, {}, {}, {}, {}
-        self.mod_type = None
+        self.mod_type = []
         self.dic_trans = {}
-        "# Repérer les gammes ayant deux ensembles de degrés séparés."
         self.table_bin = self.colonne_bin.copy()
-        "# Écriture des noms et les degrés des soixante-six gammes."
-        # _________________________________________________________________________________________
-        "# Placer les boutons-images sur le volet de droite 'table_o'"
-        #
-        print("\n Long \ncolonne_bin", len(self.colonne_bin), "\ncolonne_gam", len(self.colonne_gam.keys()))
+        # print(lineno(), "Long colonne_bin", len(self.colonne_bin), "Long colonne_gam", len(self.colonne_gam.keys()))
 
         """Tracer les éléments du Canvas."""
         "# Tracer le quadrillage principal en bleu clair."
@@ -228,7 +237,7 @@ class Relance(Tk):
         for colin in range(len(self.colonne_bin)):
             self.tableau.create_text(deb_col1, deb_lin1, text=self.colonne_bin[colin], font=self.police1)
             deb_lin1 += self.lin
-            # print(" colonne_bin[coq1]", colonne_bin[colin], "coq1", colin)
+            # print(lineno(), " colonne_bin[colin]", self.colonne_bin[colin], "colin", colin)
 
         "# Mise en place des boutons binaires sur le panneau gauche."
         coq0 = 0
@@ -338,18 +347,18 @@ class Relance(Tk):
             image_id = self.table_o.create_image(deb, esp, image=self.images_liste[elle])
             self.table_o.tag_bind(image_id, "<Button-1>", self.clic_image)
             esp += 100
-        print("498 dic_trans", self.dic_trans)
+        print(lineno(), "dic_trans", self.dic_trans)
         # 498 retour 2130757091968clic_image
-        print("dic_codage", self.dic_codage.keys())
+        # print(lineno(), "dic_codage", list(self.dic_codage.keys())[0], "\n colonne_bin", colonne_bin)
 
     def gammes_arp(self):
         """Cette fonction est destinée à trier les modèles binaires, en commençant par la gamme naturelle.
         Concerne l'initialisation des tables par la gamme naturelle exprimée en modulations (binaires et degrés)."""
-        print("**   Fonction gammes_arp ", "gammes_mode", self.gammes_mode)
-        if self.gammes_mode:
-            gammes_col = list(self.dic_codage.values())  # "dic_codage" = Les gammes issues de 'globdicTcoup.txt'
-        else:
-            gammes_col = []
+        print(lineno(), "**   Fonction gammes_arp ", "gammes_mode", "self.gammes_mode")
+        # if self.gammes_mode:
+        gammes_col = list(self.dic_codage.values())  # "dic_codage" = Les gammes issues de 'globdicTcoup.txt'
+        # else:
+        # gammes_col = []
         "# À chaque ligne, correspond un mode binaire. La ligne zéro, c'est pour les noms des gammes."
         # La ligne peut être donnée par l'index de l'élément de la liste des modes binaires présents.
         colon = 1  # À chaque colonne, correspond une gamme répertoriée. Une gamme a autant de modes que de lignes.
@@ -465,7 +474,7 @@ class Relance(Tk):
         # print("dic_indice", "dic_indice", "dic_binary", "dic_binary", "\n liste_iso", liste_iso, len(liste_iso))
         x, y = event.x, event.y
         item_id = self.table_o.find_closest(x, y)[0]  # Récupère l'ID de l'objet le plus proche
-        # print(" item_id", item_id, "x/y", x, y)
+        print(lineno(), " item_id", item_id, "x/y", x, y)
         if item_id == 1:  # Conversion des modes originaux en nombres entiers.
             liste_iso = [int(x) for x in liste_iso0]
             for ind in range(len(liste_iso)):
@@ -502,9 +511,8 @@ class Relance(Tk):
             self.dic_trans = self.dic_oct.copy()
         self.mod_type.append(item_id)
         self.mod_type.append(self.dic_trans)
-        print("224 gammes_mode", self.gammes_mode, "dic_trans", self.dic_trans)
-
-    # gammes_arp()
+        print(lineno(), " item_id", item_id)
+        print(lineno(), " gammes_mode", self.gammes_mode, "dic_trans", self.dic_trans)
 
     # , "gammes_copie" : Remplace : "g mmes_col" par une autre demande utilisateur.
     # , "gammes_mode" : Informe pour le remplacement de "gammes_copie".
@@ -519,4 +527,5 @@ class Relance(Tk):
     biner.audio_bin("colonne_bin")
 
 
-Relance(dic_codage).mainloop()
+print(lineno(), "colonne_bin", "colonne_bin")
+Relance(dic_codage, dic_binary, dic_indice).mainloop()
