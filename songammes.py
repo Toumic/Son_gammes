@@ -205,6 +205,7 @@ class Relance(Tk):
         Tk.__init__(self)
         self.title("Base illusion")
         self.geometry("1824x1000+30+10")
+        self.protocol("WM_DELETE_WINDOW", self.quitter())
         "# Assemblage, clé = binaire, valeur = dic_codage.keys() à même binaire."
         self.dic_force = di_fort  # Dictionnaire clé=Binaire valeur=Clé_dic_codage original
         self.dic_codage = di_code  # Dictionnaire des gammes et de leurs modes.
@@ -400,6 +401,11 @@ class Relance(Tk):
             self.table_o.tag_bind(image_id, "<Button-1>", self.clic_image)
             esp += 100
 
+    @staticmethod
+    def quitter():
+        """Pour effectuer une transition en fenêtrage"""
+        print("\t", lineno(), "**   Fonction quitter")
+
     def gammes_arp(self):
         """Cette fonction est destinée à trier les modèles binaires, en commençant par la gamme naturelle.
         Concerne l'initialisation des tables par la gamme naturelle exprimée en modulations (binaires et degrés)."""
@@ -531,7 +537,11 @@ class Relance(Tk):
         avec la liste intégrale des modes binaires."""
         print("\t", lineno(), "**   Fonction gammes_log, self.dic_force", list(self.dic_force)[0])
         "# Définir les contenants par quantité des sept premiers binaires cumulatifs."
-        print(lineno(), "self.colonne_bin", self.colonne_bin, "\n", self.colonne_bin[:7])
+        gammes_loc = list(self.dic_codage.values())  # "dic_codage" = Les gammes issues de 'globdicTcoup.txt'
+        (lineno(), "gammes_loc[0]", gammes_loc[0], "\n self.dic_force", self.dic_force)
+        # 535 gammes_loc[0] [(['o45x', 1], '1000001'), (1, 2, '1000001'), (1, 3, '1000001'),
+        # self.dic_force {'1000001': [((1, '123400000567'), (['o45x', 1], '1000001')), (1, 2, '1000001'),
+        print(lineno(), "self.colonne_bin", self.colonne_bin[0], "", self.colonne_bin[:7])
 
     def clic_image(self, event):
         """Cette fonction convertit les modes binaires.
