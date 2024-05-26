@@ -261,7 +261,7 @@ class Relance(Tk):
         "# Tracer le quadrillage principal en bleu clair."
         self.fin_col, self.fin_lin = self.deb_col + self.tot_col, self.deb_lin + self.tot_lin
         self.deb_col0, self.deb_lin0 = self.deb_col, self.deb_lin
-        for i in range(67):
+        for i in range(68):
             self.tableau.create_line(self.deb_col, self.deb_lin0, self.fin_col, self.deb_lin0,
                                      fill="lightblue", dash=(1, 1))
             self.tableau.create_line(self.deb_col0, self.deb_lin, self.deb_col0, self.fin_lin,
@@ -269,6 +269,7 @@ class Relance(Tk):
             self.deb_col0 += self.col
             self.deb_lin0 += self.lin
 
+        print(lineno(), "di_colon", di_colon[:6])
         if di_colon == [""]:
             di_colon = []
         self.colonne_bin = di_colon  # Première colonne aux modes binaires uniques. L'index de l'élément = La ligne.
@@ -280,13 +281,13 @@ class Relance(Tk):
         "# Exécution de la fonction qui sert à alimenter les boutons horizontaux et verticaux."
         if len(di_colon) == 0:
             "# self.gammes_arp()  # Fonction découvertes binaires selon les gammes."
-            self.gammes_arp()  # Fonction découvertes binaires selon les gammes.
+            self.gammes_arp()  # Fonction découvertes des gammes binarisées.
             self.borne[1] = int([self.dic_codage[(44, '102034050607')][0][1]][0])
             ("self borne[1]", self.borne[1], type(self.borne[1]), "|", None, lineno())
             # self borne[1] 1111111 <class 'int'> | None 281.
         else:
             "# self.gammes_log()  # Fonction découvertes des gammes selon les binaires."
-            self.gammes_log()  # Fonction découvertes des gammes selon les binaires.
+            self.gammes_log()  # Fonction découvertes des gammes binarisées.
             self.borne[1] = di_colon[0]
             ("self borne[1]", self.borne[1], type(self.borne[1]), "|", di_colon[0], lineno())
             # self borne[1] 1000001 <class 'int'> | 1000001 287
@@ -297,12 +298,18 @@ class Relance(Tk):
         self.mod_type = []
         self.dic_trans = {}
         self.table_bin = self.colonne_bin.copy()
-        (lineno(), "colonne_bin", self.colonne_bin, "\n colonne_gam", self.colonne_gam)
+        (lineno(), "colonne_bin", self.colonne_bin, "\n colonne_gam", self.colonne_gam.keys())
         (lineno(), "Long colonne_bin", len(self.colonne_bin), "Long colonne_gam", len(self.colonne_gam.keys()))
 
         "# Visionner les modes binaires par l'écriture."
-        (lineno(), " colonne_bin", self.colonne_bin)
+        if self.colonne_bin.count("") == 0:
+            self.colonne_bin.insert(0, "")
+            self.colonne_bin.insert(0, "")
+        elif self.colonne_bin.count("") == 1:
+            self.colonne_bin.insert(0, "")
+        (lineno(), " colonne_bin", self.colonne_bin[:6])
         deb_col1, deb_lin1 = self.deb_col + 6, self.deb_lin + 26
+        (lineno(), "deb_col1, deb_lin1", deb_col1, deb_lin1)
         for colin in range(len(self.colonne_bin)):
             self.tableau.create_text(deb_col1, deb_lin1, text=self.colonne_bin[colin], font=self.police1)
             deb_lin1 += self.lin
@@ -339,6 +346,14 @@ class Relance(Tk):
 
         "# Écriture des noms et les degrés des soixante-six gammes."
         #  gammes_bin = Les gammes aux modes binaires existants.
+        (lineno(), "self.gammes_bin", self.gammes_bin, " ")
+        # 342 self.gammes_bin {'x26-': 'Ok', '*5': 'Ok', '-34': 'Ok', 'o63-': 'Ok', 'o34x': 'Ok', '-25o': 'Ok',
+        # '-45x': 'Ok', '-46o': 'Ok', '*6': 'Ok', 'o65-': 'Ok', '+34x': 'Ok', 'x36+': 'Ok', '^3': 'Ok', '^2': 'Ok',
+        # '+35x': 'Ok', '+23x': 'Ok', 'o35-': 'Ok', '+45x': 'Ok', 'x46+': 'Ok', '^4': 'Ok', 'o6': 'Ok', '+56': 'Ok',
+        # '-56': 'Ok', '-56+': 'Ok', '+25-': 'Ok', '-26+': 'Ok', '+26-': 'Ok', '+26': 'Ok', '+2': 'Ok', '-34x': 'Ok',
+        # '+34': 'Ok', 'x3': 'Ok', 'o5': 'Ok', '-35': 'Ok', '+6': 'Ok'}
+        (lineno(), "self.colonne_gam", self.colonne_gam, "")
+        print(lineno(),  " *********************************************** ")
         coq2 = 1
         color1, color2 = "black", "lavender"
         mul_bin = False  # Si la gamme en cours a plusieurs ensembles de degrés.
@@ -346,7 +361,7 @@ class Relance(Tk):
         recaler = True
         for k_col, v_lin in self.colonne_gam.items():
             col1, sig = (k_col[0] * self.col) + col0, 0
-            # print("colonne_gam", colonne_gam[k_col], "mul_bin", mul_bin)
+            (lineno(), "colonne_gam", self.colonne_gam[k_col], "mul_bin", mul_bin)
             for val in v_lin:
                 if k_col[1] == 0:
                     if val in self.gammes_bin.keys():
@@ -356,8 +371,8 @@ class Relance(Tk):
                         color1 = "black"
                         color2 = "lavender"
                 lin1 = (k_col[1] * self.lin) + lin0
-                # print("___   col1", col1, "lin1", lin1, "v_lin", v_lin)
-                # print("*** k_col", k_col[1], "val", type(val), len(val), val)
+                (lineno(), "___   col1", col1, "lin1", lin1, "v_lin", v_lin)
+                (lineno(), "*** k_col", k_col[1], "val", type(val), len(val), val)
                 if len(val) > 1:  # Le dictionnaire 'multi' informe sur les multilistes.
                     if val in multi.keys() and multi[val]:
                         mul_bin = True  # print("val", val, colonne_gam[k_col], "multi", multi[val])
@@ -380,6 +395,7 @@ class Relance(Tk):
                         col3, lin3 = (col1 - 6, lin1 - 6), (col1 + 6, lin1 + 6)
                         self.tableau.create_rectangle(col3, lin3, fill="gold", width=0)
                     self.tableau.create_text(col1, lin1 + sig, text=str(val), font=self.police2, fill=color1)
+                    (lineno(), "col1, lin1 + sig", col1, lin1 + sig)
                 else:  # 'len(v_lin)'. Quand, plusieurs degrés correspondent à un même emplacement.
                     ce = len(v_lin)
                     col2, lin2 = (col1 - ce, lin1 - ce), (col1 + ce, lin1 + ce)
@@ -393,6 +409,7 @@ class Relance(Tk):
                                 col3, lin3 = (col1 - 12, lin1 - 6), (col1, lin1 + 6)
                                 self.tableau.create_rectangle(col3, lin3, fill="gold", width=0)
                             self.tableau.create_text(col1 + cran, lin1, text=ici, font=self.police2, fill="maroon")
+                            (lineno(), "col1 + cran, lin1", col1 + cran, lin1)
                             cran += 12
                             # print("Ici", ici, "col2, lin2", col2, lin2, val, "v_lin", v_lin,
                             # colonne_gam[k_col[0], 0][0])
@@ -440,6 +457,7 @@ class Relance(Tk):
             self.destroy()
         elif tag == "clic_image":
             self.colonne_bin.clear()
+            self.colonne_gam.clear()
             self.destroy()
             (lineno(), "Quitter/elif/clic_image borne", self.borne[1], "\t tag", tag)
             # 436 Quitter/elif/clic_image borne 1111111 	 tag clic_image
@@ -452,6 +470,7 @@ class Relance(Tk):
         Concerne l'initialisation des tables par la gamme naturelle exprimée en modulations (binaires et degrés)."""
         ("\t", lineno(), "**   Fonction gammes_arp ", "gammes_mode", "self.gammes_mode")
         gammes_col = list(self.dic_codage.values())  # "dic_codage" = Les gammes issues de 'globdicTcoup.txt'
+        (lineno(), "gammes_col", len(gammes_col))
         "# À chaque ligne, correspond un mode binaire. La ligne zéro, c'est pour les noms des gammes."
         # La ligne peut être donnée par l'index de l'élément de la liste des modes binaires présents.
         colon = 1  # À chaque colonne, correspond une gamme répertoriée. Une gamme a autant de modes que de lignes.
@@ -459,6 +478,7 @@ class Relance(Tk):
         "# Initialisation de la colonne binaire par les modulations binaires de la gamme naturelle."
         for gc in gammes_col[43]:
             if len(gc) == 2:
+                self.colonne_bin.append("")
                 self.colonne_bin.append("")
                 self.colonne_bin.append(gc[-1])
                 ligne = self.colonne_bin.index(gc[-1])
@@ -557,7 +577,8 @@ class Relance(Tk):
                             # print("___ Not col_bin0 gc", gc, gc[-1])
                     if nbr_bin > 6:
                         self.gammes_bin[self.colonne_gam[colon, 0][0]] = 'Ok'
-                        # print("\t \t nbr_bin", nbr_bin, "colonne_gam[colon, 0]", colonne_gam[colon, 0][0])
+                        (lineno(), "\t\tnbr_bin", nbr_bin, "colonne_gam[colon, 0]", self.colonne_gam[colon, 0][0])
+                        (lineno(), "self.gammes_bin", self.gammes_bin[self.colonne_gam[colon, 0][0]], )
                     # print("Colon", colon, "Ligne", ligne, "gc", gc)
                     # print("Colon / Ligne", colon, ligne, "colonne_gam", colonne_gam[colon, ligne])
                 gammes_col.pop(n_gam)  # Effacement de la gamme traitée, afin de ne pas revenir dessus.
@@ -585,6 +606,7 @@ class Relance(Tk):
         ("\t", lineno(), "**   Fonction gammes_log, self.dic_force", list(self.dic_force)[0])
         "# Définir les contenants par quantité des sept premiers binaires cumulatifs."
         gammes_loc = list(self.dic_codage.values())  # "dic_codage" = Les gammes issues de 'globdicTcoup.txt'
+        (lineno(), "gammes_loc", len(gammes_loc))
         (lineno(), "gammes_loc[0]", gammes_loc[0], "\n force", self.dic_force, "\n Clés", self.dic_force.keys())
         # 541 gammes_loc[0] [(['o45x', 1], '1000001'), (1, 2, '1000001'), (1, 3, '1000001'),
         # force {'1000001': [((1, '123400000567'), (['o45x', 1], '1000001')), (1, 2, '1000001'),
@@ -620,7 +642,10 @@ class Relance(Tk):
             col_count = colonne_cop.count("")
             if col_count == 0:
                 colonne_cop.insert(0, "")
-            (lineno(), " § colonne_cop", colonne_cop, "long", len(colonne_cop), "col_count", col_count)
+                colonne_cop.insert(1, "")
+            if col_count == 1:
+                colonne_cop.insert(0, "")
+            (lineno(), " § colonne_cop", colonne_cop[:6], "long", len(colonne_cop), "col_count", col_count)
             # force_cop ['1000001', '1000000', '1000101', '1011000', '1011001', '1000111', '1111000']
             # colonne_cop ['1000001', '1000000', '1000101', '1011000', '1011001', '1000111', '1111000']
 
@@ -634,11 +659,11 @@ class Relance(Tk):
             (lineno(), " °°° Réajustement repos_num", repos_num, "Reste globe_num", globe_num)
 
             "# Tournée de tous les binaires de 'colonne_cop' en évolution. Et, rassembleur 'globe_num'"
-            for cop in colonne_cop[1:]:
+            for cop in colonne_cop[2:]:
                 liste_gam.clear()
                 force_gam[cop] = []  # Liste les gammes et contrôle quantitatif.
                 cop1 = cop
-                (lineno(), "colonne_cop", colonne_cop[1:], "cop", cop, type(cop))
+                (lineno(), "colonne_cop", colonne_cop[2:], "cop", cop, type(cop))
 
                 "# Lire le rassembleur 'self.dic_force[cop]', pour un mode binaire qui compte les 'globe_num'."
                 for fc in self.dic_force[str(cop)]:
@@ -694,7 +719,7 @@ class Relance(Tk):
                     ind_loc, halte0 = None, True
                     (lineno(), "gn", gn, "repos_num", repos_num)
                     "# Il peut y avoir quelques degrés avec un binaire, et le reste diatonique avec un autre binaire."
-                    for cc1 in colonne_cop[1:]:  # 'colonne_cop' = Les binaires ou clefs 'self.dic_force'.
+                    for cc1 in colonne_cop[2:]:  # 'colonne_cop' = Les binaires ou clefs 'self.dic_force'.
                         force_g1 = self.dic_force[str(cc1)]  # 'dic_force' = Total, 'force_gam' = Numéros.
                         gl_index, fg2 = -1, None
                         (lineno(), " ****** Tous les modes aux cc1", cc1, "\n♦ force_g1[:3]", force_g1)
@@ -765,8 +790,44 @@ class Relance(Tk):
             cc += 1  # Nombre d'accompagnements des binaires dans la liste (en cours). Utile boucle 'while'
 
         "# colonne_gam = Clé (colonne, ligne). Valeur (Position zéro = Nom-gamme. Autres = Degrés numériques (1234567)"
-        (lineno(), "self.colonne_gam", self.colonne_gam)
-        # 635 self.colonne_gam {}
+        "# Intégrer 'self.gammes_bin' et repérer les gammes aux mêmes binaires (colorations)."
+        # 342 self.gammes_bin {'x26-': 'Ok', '*5': 'Ok', '-34': 'Ok', 'o63-': 'Ok', 'o34x': 'Ok', '-25o': 'Ok'...
+        dic_keys, tab_lig, k_nbr = {}, [], 1
+        for g_key in self.colonne_gam.keys():
+            if g_key[0] == k_nbr:
+                tab_lig.append(g_key)
+                (lineno(), "tab_lig", tab_lig)
+            elif g_key[0] == k_nbr + 1:
+                dic_keys[k_nbr] = tab_lig.copy()
+                tab_lig.clear()
+                k_nbr += 1
+                tab_lig.append(g_key)
+                (lineno(), "g_key", g_key, "tab_lig", tab_lig, "\n dic_keys", dic_keys)
+        (lineno(), "dic_keys", dic_keys.keys())
+        (lineno(), "gammes_loc", len(gammes_loc), len(self.colonne_gam.keys()))
+
+        "# "
+        key_lig = []  # Enregistre les nouvelles lignes.
+        for c_col0 in range(0, 65):
+            c_col = c_col0 + 1
+            if c_col == 1:
+                for dk in dic_keys[c_col]:
+                    key_lig.append(dk[1])
+            else:
+                long_k, lo = len(dic_keys[c_col]), 0
+                for dk in dic_keys[c_col]:
+                    if dk[1] not in key_lig:  # Provient des nouvelles lignes.
+                        key_lig.append(dk[1])
+                        (lineno(), "If c_col", c_col, "long_k", long_k)
+                    else:  # dk[1] in key_lig
+                        lo += 1
+                        (lineno(), "    If/Else c_col", c_col, "\t lo", lo)
+                if long_k == lo:
+                    self.gammes_bin[self.colonne_gam[c_col, 0][0]] = "Ok"
+                (lineno(), "If c_col", c_col, "long_k", long_k, "\n dic_keys", dic_keys[c_col])
+            (lineno(), " **************************************************** ")
+        (lineno(), "key_lig", key_lig, "\n dic_keys", "dic_keys")
+        (lineno(), "self.gammes_bin", self.gammes_bin)
 
     def clic_image(self, event):
         """Cette fonction convertit les modes binaires.
