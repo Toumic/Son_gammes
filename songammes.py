@@ -149,12 +149,12 @@ for lk in liste_keys:
 def bouton_bin(bb):
     """Pratiquer les redirections des boutons d'en-tête[noms des gammes] et latéral gauche[binaires].
         Cette fonction est située après avoir initialisé les dictionnaires nécessaires."""
-    print(lineno(), "**   Fonction bouton_bin bb ", bb)
+    (lineno(), "**   Fonction bouton_bin bb ", bb)
     if len(bb) < 7:
         a = "# Jonction module gammes_audio"
     else:
         a = "# Jonction module binomes_audio"
-    print(lineno(), "Bb", bb, len(bb), "\t A", a)
+    (lineno(), "Bb", bb, len(bb), "\t A", a)
 
 
 def func_ima(ami):
@@ -269,7 +269,7 @@ class Relance(Tk):
             self.deb_col0 += self.col
             self.deb_lin0 += self.lin
 
-        print(lineno(), "di_colon", di_colon[:6])
+        (lineno(), "di_colon", di_colon[:6])
         if di_colon == [""]:
             di_colon = []
         self.colonne_bin = di_colon  # Première colonne aux modes binaires uniques. L'index de l'élément = La ligne.
@@ -353,7 +353,7 @@ class Relance(Tk):
         # '-56': 'Ok', '-56+': 'Ok', '+25-': 'Ok', '-26+': 'Ok', '+26-': 'Ok', '+26': 'Ok', '+2': 'Ok', '-34x': 'Ok',
         # '+34': 'Ok', 'x3': 'Ok', 'o5': 'Ok', '-35': 'Ok', '+6': 'Ok'}
         (lineno(), "self.colonne_gam", self.colonne_gam, "")
-        print(lineno(),  " *********************************************** ")
+        (lineno(),  " *********************************************** ")
         coq2 = 1
         color1, color2 = "black", "lavender"
         mul_bin = False  # Si la gamme en cours a plusieurs ensembles de degrés.
@@ -457,7 +457,6 @@ class Relance(Tk):
             self.destroy()
         elif tag == "clic_image":
             self.colonne_bin.clear()
-            self.colonne_gam.clear()
             self.destroy()
             (lineno(), "Quitter/elif/clic_image borne", self.borne[1], "\t tag", tag)
             # 436 Quitter/elif/clic_image borne 1111111 	 tag clic_image
@@ -634,7 +633,6 @@ class Relance(Tk):
         while cc <= len(force_cop):
             "# colonne_cop = Liste native des clés binaires utilisées."
             (lineno(), "_________________________________WHILE 1______ cc", cc)
-            cop1 = 0
             colonne_cop.clear()
             for cop_cc in force_cop[:cc]:
                 colonne_cop.append(str(cop_cc))
@@ -662,7 +660,6 @@ class Relance(Tk):
             for cop in colonne_cop[2:]:
                 liste_gam.clear()
                 force_gam[cop] = []  # Liste les gammes et contrôle quantitatif.
-                cop1 = cop
                 (lineno(), "colonne_cop", colonne_cop[2:], "cop", cop, type(cop))
 
                 "# Lire le rassembleur 'self.dic_force[cop]', pour un mode binaire qui compte les 'globe_num'."
@@ -707,7 +704,6 @@ class Relance(Tk):
             "# Donner les valeurs aux emplacements via 'colonne_gam'. Clé[colonne, ligne], valeur[Noms. Degré]."
             (lineno(), "globe_num", globe_num)
             val_vn1 = [(ky, vl) for ky, vl in globe_num.items() if vl > 6]
-            # if val_vn1:
             val_vn2.append(val_vn1)
             # Commencer à un (1) l'écriture en colonne des gammes.
             for gn, vn in globe_num.items():
@@ -777,38 +773,34 @@ class Relance(Tk):
                                 self.colonne_gam[colon, ligne] = []
                             self.colonne_gam[colon, ligne].append(str(deg_gl))
                             gl_count = 1
-                            (lineno(), "colonne_gam", self.colonne_gam)
+                            (lineno(), "colonne_gam", self.colonne_gam[colon, ligne])
                             (lineno(), "colon", colon, "ligne", ligne, "bin_gl", bin_gl, "vn_nbr",)
                             (lineno(), "colonne_cop[ligne]", colonne_cop[ligne])
                         colon += 1
 
                     (lineno(), "colonne_cop", colonne_cop)
                     (lineno(), "colonne_gam", self.colonne_gam, "\n colon", colon)
-                    (lineno(), "gn", gn, "vn", vn, "cop1", cop1, "colonne_gam", self.colonne_gam)
+                    (lineno(), "gn", gn, "vn", vn, "colonne_gam", self.colonne_gam)
                     (lineno(), "gammes_loc", "gammes_loc")
+            (lineno(), "colonne_gam", self.colonne_gam.keys())
 
             cc += 1  # Nombre d'accompagnements des binaires dans la liste (en cours). Utile boucle 'while'
 
         "# colonne_gam = Clé (colonne, ligne). Valeur (Position zéro = Nom-gamme. Autres = Degrés numériques (1234567)"
         "# Intégrer 'self.gammes_bin' et repérer les gammes aux mêmes binaires (colorations)."
         # 342 self.gammes_bin {'x26-': 'Ok', '*5': 'Ok', '-34': 'Ok', 'o63-': 'Ok', 'o34x': 'Ok', '-25o': 'Ok'...
-        dic_keys, tab_lig, k_nbr = {}, [], 1
+        "# Construction dictionnaire "
+        dic_keys = {}
         for g_key in self.colonne_gam.keys():
-            if g_key[0] == k_nbr:
-                tab_lig.append(g_key)
-                (lineno(), "tab_lig", tab_lig)
-            elif g_key[0] == k_nbr + 1:
-                dic_keys[k_nbr] = tab_lig.copy()
-                tab_lig.clear()
-                k_nbr += 1
-                tab_lig.append(g_key)
-                (lineno(), "g_key", g_key, "tab_lig", tab_lig, "\n dic_keys", dic_keys)
+            if g_key[1] == 0:
+                dic_keys[g_key[0]] = []
+            dic_keys[g_key[0]].append(g_key)
         (lineno(), "dic_keys", dic_keys.keys())
         (lineno(), "gammes_loc", len(gammes_loc), len(self.colonne_gam.keys()))
 
-        "# "
+        "# Reconnaissance des binaires anciens, pour une coloration des degrés."
         key_lig = []  # Enregistre les nouvelles lignes.
-        for c_col0 in range(0, 65):
+        for c_col0 in range(0, 66):
             c_col = c_col0 + 1
             if c_col == 1:
                 for dk in dic_keys[c_col]:
@@ -821,10 +813,10 @@ class Relance(Tk):
                         (lineno(), "If c_col", c_col, "long_k", long_k)
                     else:  # dk[1] in key_lig
                         lo += 1
-                        (lineno(), "    If/Else c_col", c_col, "\t lo", lo)
+                        # print(lineno(), "c_col", c_col, "lo", lo, "self.colonne_gam", self.colonne_gam[c_col, 0])
                 if long_k == lo:
                     self.gammes_bin[self.colonne_gam[c_col, 0][0]] = "Ok"
-                (lineno(), "If c_col", c_col, "long_k", long_k, "\n dic_keys", dic_keys[c_col])
+                (lineno(), "long_k", long_k, "\n dic_keys", dic_keys[c_col], dic_keys)
             (lineno(), " **************************************************** ")
         (lineno(), "key_lig", key_lig, "\n dic_keys", "dic_keys")
         (lineno(), "self.gammes_bin", self.gammes_bin)
