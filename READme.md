@@ -1,6 +1,6 @@
 # Commentaires généraux
-### Remarques importantes
-    Approfondir la compréhension des cumulations binaires des modes<br>
+#### Remarques importantes
+    Approfondir la compréhension des cumulations binaires des modes
     On ne peut choisir qu'une seule conversion sur quatre[int, bin, hex, oct].
 #### Remarques historiques
     L'application dans sa création a pris un tournant, du fait que composée de fonctions, elle a changé en classe.
@@ -15,11 +15,11 @@
     La liste selon 'self.colonne_bin.copy()'.
 ### Les boutons horizontaux
     Nous pouvons avoir des méthodes de lecture :
-    Tout comme les boutons verticaux, les boutons horizontaux peuvent se lire les gammes qui ont les mêmes propriétés.
+    Tout comme les boutons verticaux, les boutons horizontaux peuvent lire les gammes qui ont les mêmes propriétés.
     Ou bien, lire les gammes à partir de ce bouton jusqu'à la fin de la liste.
 ## Méthodes du traitement des modes binaires
 _Il existe une seule constance au démarrage, ce sont les modes naturels binaires._<br>
-_Les modes binaires sont issus du type classique des gammes primordiales, le type physique n'a pas encore été vu._<br>
+_Les modes binaires sont issus du type classique des gammes primordiales, le type physique n’a pas encore été vu._<br>
 _'songammes' : Construit les gammes et les binaires selon le type classique = Dictionnaire alimenté par le fichier_<br>
 _'globdicTcoup.txt' : Une création des 462 formules numériques, exemple = '102034050607'._<br>
 ### La méthode par défaut
@@ -27,7 +27,7 @@ _'globdicTcoup.txt' : Une création des 462 formules numériques, exemple = '102
     Ensuite, elle fait un sondage sur les formes binarisées restantes et à venir,
     pour définir quelle forme contient le plus de modes 'binaires' présents grâce aux modes déjà traités.
 * Tel qu'il a été écrit à son départ, le traitement est en mode 'append()'<br>
-C'est ainsi, que grâce aux gammes fondamentales, la colonne des binaires a été remplie.
+C’est ainsi, que grâce aux gammes fondamentales, la colonne des binaires a été remplie.
 #### La méthode des entiers (Nombres entiers)
     La liste originale des binaires a un ordre donné par **la méthode par défaut**.
     En transformant le tri en ordre croissant remplace la séquence originale.
