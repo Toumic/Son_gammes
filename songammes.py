@@ -18,6 +18,8 @@ import binomes_audio as biner  # Faire sonner les gammes.
 # lineno() Pour consulter le programme grâce au suivi des print’s
 lineno: Callable[[], int] = lambda: inspect.currentframe().f_back.f_lineno
 
+(lineno(), "Gammes", dir(gamma))
+
 gam_classic = {
     "102034050607": ["0", 336], "120034050607": ["-2", 210], "100234050607": ["+2", 392],
     "102304050607": ["-3", 301], "102034500607": ["-5", 341], "102034056007": ["-6", 330],
@@ -71,7 +73,8 @@ dic_codage = {}  # Dictionnaire des gammes et de leurs modes. PRÉALABLE
 dic_indice = {}  # Dictionnaire, clé = Nom de la gamme, valeur = Numéro de la gamme. PRÉALABLE
 dic_binary = {}  # Dictionnaire, clé = binaire, valeur = zob (['o45x', 1], '1000001'), (1, 2, '1000001'). PRÉALABLE
 dic_force = {}  # Dictionnaire, clé = binaire, valeur = dic_codage avec le même binaire. PRÉALABLE
-dic_colon = [""]  # Liste, clés = binaires liées aux choix de conversions.
+dic_colon = [""]  # Liste, clés binaires liées aux choix de conversions.
+code_ages = {}  # Dictionnaire, clé = Numéro, valeur = Modes diatoniques.
 
 pre_codage = open('globdicTcoup.txt', 'r')
 mod, cod1 = '', 1
@@ -81,7 +84,9 @@ for pre_cod in pre_codage:
     if pre_cod[:12] in gam_classic.keys():
         cod2 = 0
         dic_codage[cod1, mod_cod] = []
-        "# Binariser les modulations diatoniques."
+        code_ages[cod1] = [pre_cod[:12]]  # Enregistrer le mode tonique de chaque gamme.
+        (lineno(), "code_ages", code_ages[cod1], cod1)
+        # 86 code ages ['123400000567'] 1
         while cod2 < 12:
             cod2 += 1
             for p_c in mod_cod:
@@ -92,20 +97,19 @@ for pre_cod in pre_codage:
                         mod += '1'
                     else:
                         mod += '0'
-            # C’est une section des premiers degrés, des noms gammes et des numéros des gammes.
+            "# C’est une section des premiers degrés, les noms et les numéros des gammes."
             if cod2 == 1:
                 zob = gam_classic[mod_cod], mod
-                # self.dic_indice = Dictionnaire, clé = Nom_gamme, valeur = Rang_gamme.
+                "# self.dic_indice = Dictionnaire, clé = Nom_gamme, valeur = Rang_gamme."
                 dic_indice[gam_classic[mod_cod][0]] = cod1
                 (lineno(), "cod1", cod1, "dic_indice", dic_indice[gam_classic[mod_cod][0]])
             else:
                 zob = cod1, cod2, mod
             dic_codage[cod1, pre_cod[:12]].append(zob)
-            # print("dic_codage[cod1, pre_cod[:12]]", dic_codage[cod1, pre_cod[:12]])
             dic_binary[zob[-1]] = []  # 'dic_mode01' = Clé Binaire, = Rang numérique.
             dic_binary[zob[-1]].append(zob)
             (lineno(), "zob", zob, "zob[-1]")
-            (lineno(), "dic_codage :", dic_codage[cod1, pre_cod[:12]])
+            (lineno(), "pre_cod[:12] :", pre_cod[:12])
             mod = ''
             "# Renversements diatoniques."
             mod_cod = mod_cod[1:] + mod_cod[:1]
@@ -120,10 +124,46 @@ for pre_cod in pre_codage:
                 else:
                     mut += '0'
             mod_cod = mut
+            (lineno(), "pre_cod", pre_cod[:12], "mod_cod", mod_cod, "cod1", cod1, "code_ages", code_ages[cod1])
+            (lineno(), "dic_codage[cod1, pre_cod[:12]]", dic_codage[cod1, pre_cod[:12]])
+            # 126 dic_codage[cod1, pre_cod[:12]] [(['0', 336], '1111111'), (44, 2, '1101110'), (44, 3, '1001100'),
+            # (44, 4, '1110111'), (44, 5, '1111110'), (44, 6, '1101100'), (44, 7, '1001000')]
             if mod_cod == pre_cod[:12]:
                 break
         cod1 += 1  # ("dic_codage", dic codage, "Les gammes formatées.")
 pre_codage.close()
+
+"# Construire un dictionnaire avec les modes ordonnés."
+(lineno(), "code_ages", code_ages)
+for clef1 in code_ages.keys():
+    clef2 = code_ages[clef1][0]
+    num = 0
+    for c in clef2:
+
+        if num != 0 and clef2 == code_ages[clef1][0]:
+            (lineno(), "clef2", clef2, "clef1", clef1)
+            break
+        elif clef2 not in code_ages[clef1]:
+            age, num2 = "", 0
+            for c2 in clef2:
+                if c2 != "0":
+                    num2 += 1
+                    age += str(num2)
+                else:
+                    age += "0"
+            code_ages[clef1].append(age)
+            (lineno(), "age", age)
+        num += 1
+        (lineno(), "c", c, "clef2", clef2, "clef1", clef1)
+        # 141 c 1 clef2 100234050067 clef1 62 num 1
+        "# Renversements diatoniques."
+        clef2 = clef2[1:] + clef2[:1]
+        while clef2[0] == '0':
+            clef2 = clef2[1:] + clef2[:1]
+(lineno(), "code_ages", code_ages)  # Copie du mode naturel '102034050607'
+# 159 code_ages {44: ['102034050607', '102304050670', '120304056070', '102030450607', '102034050670',
+# '102304056070', '120304506070'],
+"# dic_codage[cod1, pre_cod[:12]]"
 
 "# Construire un dictionnaire 'dic_force' avec les valeurs ayant les mêmes binaires, de dic_codage original."
 liste_keys, liste_copy = list(dic_codage.keys()), []  # Liste les clés de dic_codage original.
@@ -144,20 +184,10 @@ for lk in liste_keys:
 (lineno(), "dic_force", list(dic_force)[0], dic_force[list(dic_force)[0]], len(dic_force.keys()))
 (lineno(), "dic_force", dic_force.keys())
 
-'''def bouton_bin(bb, cc):
-    """Pratiquer les redirections des boutons d'en-tête[noms des gammes] et latéral gauche[binaires].
-        Cette fonction est située après avoir initialisé les dictionnaires nécessaires."""
-    (lineno(), "**   Fonction bouton_bin bb ", bb, "cc", cc)
-    if len(str(bb)) < 7:
-        a = "# Jonction module gammes_audio"
-    else:
-        a = "# Jonction module binomes_audio"
-    print(lineno(), "Bb", bb, len(str(bb)), "cc", cc, "\t A", a)'''
-
 
 def func_ima(ami, ute):
     """Fonction de récupération des données de la fonction def clic image(), ami = Paramètre de clic_image,
-    ami[0] = Type de conversion. # item_id : (1=iso, 2=int, 3=bin, 4=hex, 5=oct)."""
+    ami[0] = Type de conversion. # item_id : (1=ego, 2=anti-ego, 3=iso, 3=anti-iso, 2=int, 3=bin, 3=anti-bin)."""
     (lineno(), "ami[0]", ami[0], list(dic_codage)[0], "dic_codage, dic_binary, dic_indice, dic_force, dic_colon\n")
     # 160 ami[0] 2 (1, '123400000567') dic_codage, dic_binary, dic_indice, dic_force, dic_colon
     (lineno(), "func_ima", ami[0])
@@ -201,10 +231,16 @@ class Relance(Tk):
     """Elle permet de relancer l'affichage avec une nouvelle orientation"""
 
     # Relance(dic_codage, dic_binary, dic_indice, dic_force, dic_colon, dic_titres).mainloop()
-    def __init__(self, di_code=None, di_bine=None, di_indi=None, di_fort=None, di_colon=None, di_ute=None):
+    def __init__(self, di_code=None, di_ages=None, di_bine=None, di_indi=None, di_fort=None, di_colon=None,
+                 di_ute=None):
         """ Initialisation du visuel, sous forme d'un tableur.
-        di_code = dic_codage ; di_indi = dic_indice ; di_bine = dic_binary
-        di_fort = dic_force ; di_colon = dic_colon ; di_nom = dic_titres"""
+        Di_code = dic_codage. Dictionnaire des gammes et de leurs modes.
+        Di_indi = dic_indice. Dictionnaire, clé = Nom de la gamme, valeur = Numéro de la gamme.
+        Di_bine = dic_binary. Dictionnaire, clé = binaire, valeur = zob (['o45x', 1], '1000001'), (1, 2, '1000001').
+        Di_fort = dic_force. Dictionnaire, clé = binaire, valeur = dic_codage avec le même binaire.
+        Di_colon = dic_colon. Liste, clés binaires liées aux choix de conversions.
+        Di_ages = dic_ages. Dictionnaire, clé = Numéro, valeur = Modes diatoniques.
+        Di_ute = tri. """
         Tk.__init__(self)
         self.title("Base illusion")
         self.geometry("1824x1000+30+10")
@@ -214,6 +250,7 @@ class Relance(Tk):
         "# Assemblage, clé = binaire, valeur = dic_codage.keys() à même binaire."
         self.dic_force = di_fort  # Dictionnaire clé=Binaire valeur=Clé_dic_codage original
         self.dic_codage = di_code  # Dictionnaire des gammes et de leurs modes.
+        "# di_ages  # Dictionnaire, clé = Numéro, valeur = Renversements diatoniques énumérés."
         self.dic_binary = di_bine  # Clé = binaire, valeur = zob (['o45x', 1], '1000001'), (1, 2, '1000001')
         self.dic_indice = di_indi  # Dictionnaire, clé = Nom de la gamme, valeur = Numéro de la gamme.
         self.font_coins = "Courrier 18 bold"
@@ -248,9 +285,9 @@ class Relance(Tk):
         self.tableau.config(borderwidth=3, relief=RAISED)
 
         "# Initialisation métrique de l'affichage."
-        self.police1, self.police2 = "Courier 8 bold", "Courrier 10"
+        self.police1, self.police2 = "Courier 8 bold", "Courrier 10 bold"
         '''Pour une colonne binaire de soixante-six éléments, un intervalle de treize = Hauteur (67*13 = 871).
-        Ayant un nombre de colonnes égal aux gammes (66), plus une pour les binaires = Longueur (67*24 = 1608).'''
+        Ayant un nombre de colonnes égal aux gammes (66), pulsif une pour les binaires = Longueur (67*24 = 1608).'''
         long1, haut1, long2, haut2 = 1656, 884, 1608, 871
         self.deb_col, self.deb_lin = (long1 - long2) // 2, (haut1 - haut2) // 2
         self.col, self.lin = 24, 13  # Espace entre les colonnes_26 et espace entre les lignes_13.
@@ -259,15 +296,29 @@ class Relance(Tk):
         "# Tracer le quadrillage principal en bleu clair."
         self.fin_col, self.fin_lin = self.deb_col + self.tot_col, self.deb_lin + self.tot_lin
         self.deb_col0, self.deb_lin0 = self.deb_col, self.deb_lin
+        (lineno(), "col, lin", self.col, self.lin)
+        (lineno(), "fin_col, fin_lin", self.fin_col, self.fin_lin)
+        (lineno(), "deb_col, deb_lin", self.deb_col, self.deb_lin)
+        (lineno(), "deb_col0, deb_lin0", self.deb_col0, self.deb_lin0)
+        tab_rec, bouc = [], "0"
         for i in range(68):
+            "# Les rectangles peuvent être colorisés."
+            if self.deb_col0 > 48:
+                bouc = self.tableau.create_rectangle(self.deb_col0 - 10, self.deb_lin, self.deb_col0 + 12,
+                                                     self.fin_lin + 3,
+                                                     fill="lightsteelblue", width=0)
+                tab_rec.append(bouc)
+                # For rec in tab_rec: self.tableau.itemconfig(rec, fill="red") : Change la couleur.
+                # For rec in tab_rec: coords = self.tableau.coords(rec) : Donne les coordonnées.
+                (lineno(), "tab_rec", tab_rec)
+                # 262 tab_rec [5, 8, 11, 14, 17, 20, 23, 26, 29, 32, 35, 38, 41, 44, 47, 50]
             self.tableau.create_line(self.deb_col, self.deb_lin0, self.fin_col, self.deb_lin0,
-                                     fill="lightblue", dash=(1, 1))
+                                     fill="lightblue", dash=(1, 1))  # Lignes horizontales.
             self.tableau.create_line(self.deb_col0, self.deb_lin, self.deb_col0, self.fin_lin,
-                                     fill="lightblue", dash=(1, 1))
+                                     fill="hotpink", dash=(1, 1))  # Lignes verticales.
             self.deb_col0 += self.col
             self.deb_lin0 += self.lin
 
-        (lineno(), "di_colon", di_colon[:6])
         if di_colon == [""]:
             di_colon = []
         self.colonne_bin = di_colon  # Première colonne aux modes binaires uniques. L’index de l'élément = La ligne.
@@ -319,10 +370,11 @@ class Relance(Tk):
         coq0 = 0
         poli0, poli1 = Font(size=5, weight="bold"), Font(size=7, weight="bold")
         for colin in range(len(self.table_bin)):
-            if self.table_bin[colin]:
+            if self.table_bin[colin]:  # self.table_bin = self.colonne_bin.copy()
                 nom0 = self.table_bin[colin]
                 self.table_bin[colin] = Button(self.frame_b, font=poli0, text=nom0,
-                                               command=lambda bab=self.table_bin[colin]: self.bouton_bin(bab))
+                                               command=lambda bab=self.table_bin[colin], ages=di_ages:
+                                               self.bouton_bin(bab, ages))
                 self.table_bin[colin].grid(pady=1)
                 coq0 += 1
 
@@ -346,7 +398,6 @@ class Relance(Tk):
 
         "# Écriture des noms et les degrés des soixante-six gammes."
         #  gammes_bin = Les gammes aux modes binaires existants.
-        (lineno(), "self.gammes_bin", self.gammes_bin, " ")
         # 342 self.gammes_bin {'x26-': 'Ok', '*5': 'Ok', '-34': 'Ok', 'o63-': 'Ok', 'o34x': 'Ok', '-25o': 'Ok',
         # '-45x': 'Ok', '-46o': 'Ok', '*6': 'Ok', 'o65-': 'Ok', '+34x': 'Ok', 'x36+': 'Ok', '^3': 'Ok', '^2': 'Ok',
         # '+35x': 'Ok', '+23x': 'Ok', 'o35-': 'Ok', '+45x': 'Ok', 'x46+': 'Ok', '^4': 'Ok', 'o6': 'Ok', '+56': 'Ok',
@@ -365,7 +416,7 @@ class Relance(Tk):
             for val in v_lin:
                 if k_col[1] == 0:
                     if val in self.gammes_bin.keys():
-                        color1 = "red"
+                        color1 = "saddlebrown"
                         color2 = "pink"
                     else:
                         color1 = "black"
@@ -389,7 +440,8 @@ class Relance(Tk):
                             row0 = 2
                             recaler = True
                         gam_bouton = Button(self.frame_g, font=poli1, text=str(val), bg=color2,
-                                            command=lambda bag=str(val): self.bouton_bin(bag))
+                                            command=lambda bag=str(val), ages=di_ages:
+                                            self.bouton_bin(bag, ages))
                         gam_bouton.grid(row=row0, column=coq2)
                     if v_lin[0] == '1':
                         col3, lin3 = (col1 - 6, lin1 - 6), (col1 + 6, lin1 + 6)
@@ -600,7 +652,7 @@ class Relance(Tk):
         du traitement original, qui découvrait les gammes selon les dispositions binaires.
         Elle compose l'intégralité des définitions binaires, qui de par celles-ci, va structurer
         la série des gammes fondamentales en fonction de leurs dispositions binaires. Soit,
-        qu'elles sont les gammes qui contiennent le plus de binaires rapprochés, en rapport
+        qu'elles sont les gammes qui contiennent le pulsif de binaires rapprochés, en rapport
         avec la liste intégrale des modes binaires."""
         ("\t", lineno(), "**   Fonction gammes_log, self.dic_force", list(self.dic_force)[0])
         "# Définir les contenants par quantité des sept premiers binaires cumulatifs."
@@ -835,7 +887,7 @@ class Relance(Tk):
         # , "codage_cop" = Transformé de "dic_codage"
         # print("dic_indice", "dic_indice", "dic_binary", "dic_binary", "\n liste_iso", liste_iso, len(liste_iso))
         x, y = event.x, event.y
-        item_id = self.table_o.find_closest(x, y)[0]  # Récupère l'ID de l'objet le plus proche
+        item_id = self.table_o.find_closest(x, y)[0]  # Récupère l'ID de l'objet le pulsif proche
         # item_id : (1=iso[non trié], 2=int[trié])
         (lineno(), "item_id", item_id, "liste_iso0", liste_iso0, "\ncolonne_bin", self.colonne_bin)
         if item_id == 1:  # Conversion des modes originaux en nombres entiers.
@@ -907,21 +959,89 @@ class Relance(Tk):
         (lineno(), "clic_image retour_func", retour_func[1])
         (lineno(), "\n _______________________________________________ \n")
 
-        Relance(dic_codage, dic_binary, dic_indice, dic_force, retour_func[0], retour_func[1])
+        Relance(dic_codage, code_ages, dic_binary, dic_indice, dic_force, retour_func[0], retour_func[1])
 
-
-    def bouton_bin(self, bb):
+    def bouton_bin(self, bb, cc):
         """Pratiquer les redirections des boutons d'en-tête[noms des gammes] et latéral gauche[binaires].
-            Cette fonction est située après avoir initialisé les dictionnaires nécessaires."""
-        (lineno(), "**   Fonction bouton_bin bb ", bb)
+            Cette fonction est située après avoir initialisé les dictionnaires nécessaires. """
+        '''Colonnes-gam {(1, 0) : ['0'], (1, 2) : ['1'], (1, 3) : ['2'], (1, 4) : ['3']}
+        Tri None
+        Dic-indice {'o45x' : 1, 'o46-' : 2, 'o4' : 3, 'o46+' : 4, 'o45-' : 5, 'o54-' : 6}
+        Dic-codage {(1, '123400000567') : [(['o45x', 1], '1000001'), (1, 2, '1000001'), (1, 3, '1000001')}
+        Colonne-bin ['', '', '1111111', '1101110', '1001100', '1110111', '1111110', '1101100']
+        Cc {1 : ['123400000567', '123000004567', '120000034567', '100000234567', '123456700000']}
+        Bb x26-
+        Di_fort = dic_force. Dictionnaire, clé = binaire, valeur = dic_codage avec le même binaire.'''
+        (lineno(), "**   Fonction bouton_bin bb ", bb, "\n cc", cc[1])
+        (lineno(), "\nbb ", bb, "\ncc ", cc, "\ncolonne_gam ", self.colonne_gam, "\ncolonne_bin ",
+         self.colonne_bin,
+         "\ndic_indice ", self.dic_indice, "\ndic_codage ", self.dic_codage, "\nself.dic_force", self.dic_force,
+         "\ntri ", self.tri)
+
+        "# Production des listes des fréquences hertziennes de chacune des notes et des octaves."
+        # Selon l'aptitude auditive humaine allant de 20 hz à 20 000 hz.
+        ref = 440  # Au niveau de la clé de verrouillage du piano.
+        notes = ["A", "", "B", "C", "", "D", "", "E", "F", "", "G", "", ]
+        dic_notes = {}  # Dictionnaire, clé = note et valeur = fréquence hz
+        octaves = [13.75, 27.5, 55, 110, 220, 440, 880, 1760, 3520, 7040, 14080, 28160]
+        dic_octaves = {}  # Dictionnaire des octaves, clés = octave, valeur = fréquences hz
+        lis_octaves = []
+        y = 0  # Pour compter l'espace chromatique.
+        (lineno(), ref, notes, dic_notes, octaves, dic_octaves, lis_octaves)
+        for octa in octaves:  # Les octaves une par une.
+            i = 0  # Pour compter l'espace chromatique.
+            dic_octaves[octa] = []
+            num_a = "A" + str(y)
+            dic_notes[num_a] = []
+            for x in range(1, 13):  # Les emplacements chromatiques.
+                note_freq = octa * 2 ** ((x - 1) / 12)
+                dic_octaves[octa].append(note_freq)
+                passe = ""
+                if note_freq not in lis_octaves:
+                    lis_octaves.append(note_freq)
+                    passe = notes[i], note_freq
+                    dic_notes[num_a].append(passe)
+                (lineno(), notes[y], "passe", passe, "i", i)
+                i += 1
+                (lineno(), octa, "note_freq", note_freq, i)
+            (lineno(), "\n dic_notes", dic_notes[num_a], "num_a", num_a)
+            y += 1
+        # Résultat sous la forme de dic_notes, clé = A numéroté, valeur = note et sa fréquence hz.
+        (lineno(), "dic_octaves", dic_octaves.keys(), "dic_notes", dic_notes)
+
+        "# Nettoyage des vides contenus dans la liste colonne-bin."
+        vide = self.colonne_bin.count("")
+        if vide:
+            for v in range(vide):
+                self.colonne_bin.remove("")
+
+        "# Envoyer les données à la fonction respective, en attente de réponse."
+        colis1 = bb, cc, self.colonne_gam, self.colonne_bin, self.dic_indice, self.dic_codage, self.dic_force, self.tri
+        colis2 = dic_notes
+        "Bb varie selon la sélection"
+        # colis1[0] = bb  +34x
+        "Cc est invariant."
+        # ..1[1] = cc  {1: ['123400000567', '123000004567', '120000034567', '100000234567', '123456700000', '',
+        "Colonne_gam et colonne_bin varient selon la sélection."
+        # ..1[2] = colonne_gam  {(1, 0): ['0'], (1, 2): ['1'], (1, 3): ['2'], (1, 4): ['3'],
+        # ..1[3] = colonne_bin  ['', '', '1111111', '1101110', '1001100', '1110111', '1111110', '1101100', '1001000',
+        "Dic_indice, dic_codage, dic_force sont produits au début et sont invariants."
+        # ..1[4] = dic_indice  {'o45x': 1, 'o46-': 2, 'o4': 3, 'o46+': 4, 'o45-': 5, 'o54-': 6, '*5': 7, '-34': 8,
+        # ..1[5] = dic_codage  {(1, '123400000567'): [(['o45x', 1], '1000001'), (1, 2, '1000001'), (1, 3, '1000001'),
+        # ..1[6] = self.dic_force {'1000001': [((1, '123400000567'), (['o45x', 1], '1000001')), (1, 2, '1000001'),
+        "Le tri varie selon la sélection"
+        # ..1[7] = tri  None
+        # colis2[0] {'A0': [('A', 13.75), ('', 14.56761754744031), ('B', 15.433853164253879), ('C', 16.351597831287414)
         if len(str(bb)) < 7:
-            a = "# Jonction module gammes_audio"
-            gamma.audio_gam("colonne_gam", self.colonne_gam)
-            (lineno(), "Gam bb", bb, len(str(bb)), "\t\t A", a)
+            "# Jonction module gammes_audio"
+            ga = gamma.audio_gam(colis1, colis2)
+            (lineno(), "Gam *", ga)
         else:
-            a = "# Jonction module binomes_audio"
-            biner.audio_bin("colonne_bin", self.dic_binary, self.tri)
-            (lineno(), "Bin bb", bb, len(str(bb)), "\t\t A", a)
+            "# Jonction module binomes_audio"
+            ga = biner.audio_bin(colis1, colis2)
+            (lineno(), "Bin *", ga)
+
+        (lineno(), self.colonne_gam)
 
     # , "gammes_copie" : Remplace : "gammes_col" par une autre demande utilisateur.
     # , "gammes_mode" : Informe pour le remplacement de "gammes_copie", True ou False.
@@ -930,4 +1050,4 @@ class Relance(Tk):
 
 
 (lineno(), "dic_indice", dic_indice)
-Relance(dic_codage, dic_binary, dic_indice, dic_force, dic_colon).mainloop()
+Relance(dic_codage, code_ages, dic_binary, dic_indice, dic_force, dic_colon).mainloop()
