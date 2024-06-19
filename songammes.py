@@ -13,7 +13,6 @@ from tkinter.font import *
 from PIL import ImageTk, Image
 # Les modules personnels.
 import gammes_audio as gamma  # Faire sonner les gammes.
-import binomes_audio as biner  # Faire sonner les gammes.
 
 # lineno() Pour consulter le programme grâce au suivi des print’s
 lineno: Callable[[], int] = lambda: inspect.currentframe().f_back.f_lineno
@@ -482,6 +481,9 @@ class Relance(Tk):
                              "BoutonAntiIso.png", "BoutonTriInt.png", "BoutonAntiInt.png"]
         self.images_references = []
         self.charger_image()
+
+        "# Traitement de la sonorisation des gammes retournées du module 'gammes_audio.py'"
+        self.gam_son = None
 
     def charger_image(self):
         """Placer les boutons-images sur le volet de droite 'table_o'"""
@@ -962,7 +964,7 @@ class Relance(Tk):
         Relance(dic_codage, code_ages, dic_binary, dic_indice, dic_force, retour_func[0], retour_func[1])
 
     def bouton_bin(self, bb, cc):
-        """Pratiquer les redirections des boutons d'en-tête[noms des gammes] et latéral gauche[binaires].
+        """Pratiquer les redirections des boutons d'en-tête[noms des gammes] et latéral gauche[binômes].
             Cette fonction est située après avoir initialisé les dictionnaires nécessaires. """
         '''Colonnes-gam {(1, 0) : ['0'], (1, 2) : ['1'], (1, 3) : ['2'], (1, 4) : ['3']}
         Tri None
@@ -970,7 +972,7 @@ class Relance(Tk):
         Dic-codage {(1, '123400000567') : [(['o45x', 1], '1000001'), (1, 2, '1000001'), (1, 3, '1000001')}
         Colonne-bin ['', '', '1111111', '1101110', '1001100', '1110111', '1111110', '1101100']
         Cc {1 : ['123400000567', '123000004567', '120000034567', '100000234567', '123456700000']}
-        Bb x26-
+        Bb x26- ou binaire
         Di_fort = dic_force. Dictionnaire, clé = binaire, valeur = dic_codage avec le même binaire.'''
         (lineno(), "**   Fonction bouton_bin bb ", bb, "\n cc", cc[1])
         (lineno(), "\nbb ", bb, "\ncc ", cc, "\ncolonne_gam ", self.colonne_gam, "\ncolonne_bin ",
@@ -1034,12 +1036,12 @@ class Relance(Tk):
         # colis2[0] {'A0': [('A', 13.75), ('', 14.56761754744031), ('B', 15.433853164253879), ('C', 16.351597831287414)
         if len(str(bb)) < 7:
             "# Jonction module gammes_audio"
-            ga = gamma.audio_gam(colis1, colis2)
-            (lineno(), "Gam *", ga)
+            self.gam_son = gamma.audio_gam(colis1, colis2, "Gammes")
+            (lineno(), "Gam *", self.gam_son)
         else:
             "# Jonction module binomes_audio"
-            ga = biner.audio_bin(colis1, colis2)
-            (lineno(), "Bin *", ga)
+            self.gam_son = gamma.audio_gam(colis1, colis2, "Binomes")
+            (lineno(), "Bin *", self.gam_son)
 
         (lineno(), self.colonne_gam)
 
