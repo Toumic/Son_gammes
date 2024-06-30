@@ -340,12 +340,16 @@ class Relance(Tk):
             ("self borne[1]", self.borne[1], type(self.borne[1]), "|", di_colon[0], lineno())
             # self borne[1] 1000001 <class 'int'> | 1000001 287
 
+        "# Mise en place des listes comparatives"
+        self.test_bin1, self.test_bin2 = [], []
+
         # Clé = iso, valeur = (iso, int, bin, hex, oct)
         self.dic_ego, self.dic_iso, self.dic_int = {}, {}, {}
         self.dic_ego_inv, self.dic_iso_inv, self.dic_int_inv = {}, {}, {}
         self.mod_type = []
         self.dic_trans = {}
         self.table_bin = self.colonne_bin.copy()
+        self.test_bin2 = self.colonne_bin.copy()
         (lineno(), "colonne_bin", self.colonne_bin, "\n colonne_gam", self.colonne_gam.keys())
         (lineno(), "Long colonne_bin", len(self.colonne_bin), "Long colonne_gam", len(self.colonne_gam.keys()))
 
@@ -361,6 +365,7 @@ class Relance(Tk):
         for colin in range(len(self.colonne_bin)):
             self.tableau.create_text(deb_col1, deb_lin1, text=self.colonne_bin[colin], font=self.police1)
             deb_lin1 += self.lin
+            self.test_bin1.append(self.colonne_bin[colin])
             (lineno(), " colonne_bin[colin]", self.colonne_bin[colin], "colin", colin)
 
         "# Mise en place des boutons binaires sur le panneau gauche."
@@ -369,13 +374,18 @@ class Relance(Tk):
         coq0 = 0
         poli0, poli1 = Font(size=5, weight="bold"), Font(size=7, weight="bold")
         for colin in range(len(self.table_bin)):
-            if self.table_bin[colin]:  # self.table_bin = self.colonne_bin.copy()
+            if self.table_bin[colin]:  # Self.table_bin = self.colonne_bin.copy(). Avant l'ajout des ("","")
                 nom0 = self.table_bin[colin]
                 self.table_bin[colin] = Button(self.frame_b, font=poli0, text=nom0,
                                                command=lambda bab=self.table_bin[colin], ages=di_ages:
                                                self.bouton_bin(bab, ages))
                 self.table_bin[colin].grid(pady=1)
                 coq0 += 1
+
+        "# Résultat des tests sur binaires."
+        for stb in range(len(self.test_bin1)):
+            if self.test_bin1[stb] == self.test_bin2[stb]:
+                (lineno(), self.test_bin1[stb])  # Pour transfert sur le classeur Excel
 
         "# Repérer les gammes ayant deux ensembles de degrés séparés."
         multi, sage, passe = {}, 0, 0
@@ -420,6 +430,7 @@ class Relance(Tk):
                     else:
                         color1 = "black"
                         color2 = "lavender"
+                    (lineno(), self.colonne_gam[k_col][0])
                 lin1 = (k_col[1] * self.lin) + lin0
                 (lineno(), "___   col1", col1, "lin1", lin1, "v_lin", v_lin)
                 (lineno(), "*** k_col", k_col[1], "val", type(val), len(val), val)
@@ -1033,7 +1044,7 @@ class Relance(Tk):
         # ..1[6] = self.dic_force {'1000001': [((1, '123400000567'), (['o45x', 1], '1000001')), (1, 2, '1000001'),
         "Le tri varie selon la sélection"
         # ..1[7] = tri  None
-        # colis2[0] {'A0': [('A', 13.75), ('', 14.56761754744031), ('B', 15.433853164253879), ('C', 16.351597831287414)
+        # colis2 {'A0': [('A', 13.75), ('', 14.56761754744031), ('B', 15.433853164253879), ('C', 16.351597831287414)
         if len(str(bb)) < 7:
             "# Jonction module gammes_audio"
             self.gam_son = gamma.audio_gam(colis1, colis2, "Gammes")
@@ -1046,7 +1057,6 @@ class Relance(Tk):
         (lineno(), self.colonne_gam)
 
     # , "gammes_copie" : Remplace : "gammes_col" par une autre demande utilisateur.
-    # , "gammes_mode" : Informe pour le remplacement de "gammes_copie", True ou False.
     # _________________________________________________________________________________________
     # _________________________________________________________________________________________
 
