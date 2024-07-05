@@ -44,8 +44,11 @@ C’est ainsi, que grâce aux gammes fondamentales, la colonne des binaires a é
     En transformant le tri en ordre croissant remplace la séquence originale.
     En inversant l'ordre croissant trié, on opère sur le tempérament original.
 ##### Le bouton ego et le bouton iso.
-##### Le bouton ego et le bouton iso, sont inversés.
+* Ego est produit lors du traitement de l'application.
+* Iso est produit à la préparation des données binaires.
+##### Le bouton ego et le bouton iso, inversés.
 ##### Les boutons int, l'un est ordonné et l'autre est inversé.
+* Int = Les données binaires ont été triées en ordre croissant et inversement.
 _______________________________________________________________________________
 ### Les réglages
 

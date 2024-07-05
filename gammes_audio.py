@@ -91,6 +91,7 @@ def audio_gam(gammic, pulsif, selon):
     colis2 = pulsif  # Colis2
     titre1 = selon  # Le titre est selon le type de données en entrée, soit gamme ou binôme.
     liste_gen = []  # Retour de la liste des gammes à lire.
+    num_mem2 = {}  # Deuxième dictionnaire de passage.
     ("gammes :", "colis1", colis1, "colis2", colis2, "titre1", titre1)
 
     "Bb varie selon la sélection"
@@ -99,6 +100,12 @@ def audio_gam(gammic, pulsif, selon):
     # ..1[1] = cc  {1: ['123400000567', '123000004567', '120000034567', '100000234567', '123456700000', '',
     "Colonne_gam et colonne_bin varient selon la sélection."
     # ..1[2] = colonne_gam  {(1, 0): ['0'], (1, 2): ['1'], (1, 3): ['2'], (1, 4): ['3'],
+    for co in list(colis1[2].keys()):  # Montrer un amalgame de degrés.
+        if 3 == co[0]:
+            (lineno(), "Colis1[2]", co, colis1[2][co])
+            # 104 Colis1[2] (3, 0) ['o45x']
+            # 104 Colis1[2] (3, 12) ['1', '2', '3', '4', '6', '7']
+            # 104 Colis1[2] (3, 13) ['5']
     # ..1[3] = colonne_bin  ['', '', '1111111', '1101110', '1001100', '1110111', '1111110', '1101100', '1001000',
     "Dic_indice, dic_codage, dic_force sont produits au début et sont invariants."
     # ..1[4] = dic_indice  {'o45x': 1, 'o46-': 2, 'o4': 3, 'o46+': 4, 'o45-': 5, 'o54-': 6, '*5': 7, '-34': 8,
@@ -112,12 +119,11 @@ def audio_gam(gammic, pulsif, selon):
     "# Liste des notes = Notes de musique."
     num_mem = {('0', 1): [('1', 'C'), ('2', 'D'), ('3', 'E'), ('4', 'F'), ('5', 'G'), ('6', 'A'), ('7', 'B')]}
     notes = [nm[1] for nm in num_mem['0', 1]]
-    # ["C", "D", "E", "F", "G", "A", "B"]
-    num_mem.clear()
+    del num_mem['0', 1]
     notes_maj = notes.copy()
     gam_maj = '102034050607'
-    (lineno(), "Gammes. notes[0]", notes[0], gam_maj)
-    # 33 Gammes-sup_inf[-1] - notes[0] C 102034050607
+    (lineno(), "Gammes. notes", notes, gam_maj)
+    # 125 Gammes. notes ['C', 'D', 'E', 'F', 'G', 'A', 'B'] 102034050607
 
     if titre1 == "Gammes":
         """C’est une fonction de trouver la gamme sélectionnée et de séparer sa valeur invariable et variable. Le
@@ -195,7 +201,7 @@ def audio_gam(gammic, pulsif, selon):
                     (lineno(), "co2", co2, colis1[2][co2])
         (lineno(), "liste_gen", liste_gen)
 
-    print(lineno(), "colis1[0]", colis1[0], "Liste_gen :", liste_gen[:8], "\n")
+    (lineno(), "colis1[0]", colis1[0], "Liste_gen :", liste_gen[:8], "\n")
     # 197 colis1[0] -3 Liste_gen : [(64, 0), (64, 59), (64, 57), (64, 44), (64, 60)...
     ("# La liste 'liste_gen' contient des tuples ayant (numéro de colonne, numéro de ligne)."
      "Ces tuples ont été produits selon le bouton (nom ou binôme) sélectionné par l'utilisateur."
@@ -248,19 +254,22 @@ def audio_gam(gammic, pulsif, selon):
                     # dic_dic {('-4', '1100111'): [1], ('-4', '1001110'): [2], ('-4', '1010011'): [3]
             (lineno(), "\n dic_dic", dic_dic[colis1[0]], "\n dic_deg", dic_deg)
             #  dic_deg {('-3', '1101111'): ['102304050607', 1], ('-3', '1001110'): [2], ('-3', '1110011'): [3]
+
     "# À ce niveau, le dictionnaire de dictionnaire a rangé les degrés dans leurs binaires respectifs."
     (lineno(), "* dic_dic", dic_dic.keys(), "\n dic_deg", list(dic_deg.keys())[:5])
     # 251 * dic_dic dict_keys(['-3'])
     #  dic_deg [('-3', '1101111'), ('-3', '1001110'), ('-3', '1110011'), ('-3', '1110110'), ('-3', '1111100')]
 
     "# Détailler la gamme sélectionnée diatoniquement à l'aide d'un dictionnaire à une seule clé."
-    tab_gen, tab_ok = {}, True  # Dictionnaire, clef = nom gamme, valeur = numéro dynamique de la gamme.
+    tab_gen, tab_ok = {}, True  # Dictionnaire, clef = nom gamme, valeur = numéro statique/dynamique.
     for ddc in dic_dic.keys():
-        # deg_note, deg_mode = 0, 0
-        (lineno(), "premier_tour = Clé dictionnaire principal,", "ddc", ddc)
-        # 258 premier_tour = Clé dictionnaire principal, ddc -3
+        (lineno(), "\n Premier_tour = Clé dictionnaire principal,", "ddc", ddc)
+        # 266 premier_tour = Clé dictionnaire principal, ddc -3
 
-        "# Le dictionnaire 'dic_deg' a la séquence des gammes suivantes."
+        "# Nous avons besoin d'une mémorisation de la gamme précédente."
+        mem0 = {}  # Dictionnaire (gammes, degrés, notes, lignes). Facilite le traitement (mem1, mem2).
+
+        "# Le dictionnaire secondaire 'dic_deg' a la séquence des gammes suivantes."
         for ddg in dic_deg.keys():
             num_mem[ddg[0], 1] = []  # Le dictionnaire 'num_mem' et ses valeurs diatoniques en mode tonique.
             (lineno(), "ddg[0]", ddg[0], "num_mem", num_mem)
@@ -275,13 +284,19 @@ def audio_gam(gammic, pulsif, selon):
 
                 "# Trouver le numéro dynamique de la gamme dans la liste 'liste_gen'"
                 if tab_ok:
-                    tab_gen[ddg[0]] = []
                     for lg2 in liste_gen:
-                        if lg2[0] not in tab_gen[ddg[0]]:
-                            tab_gen[ddg[0]].append(lg2[0])
-                            (lineno(), ddg[0], "tab_gen", tab_gen[ddg[0]], "lg2", lg2)
-                            # 215 -3 tab_gen [64, 65, 66] lg2 (66, 0)
+                        if lg2[1] == 0:
+                            nom_dyn = colis1[2][lg2][0]
+                            num_sto = colis1[4][nom_dyn]
+                            for c15 in colis1[5].keys():
+                                if num_sto in c15:
+                                    tab_gen[nom_dyn] = c15 + lg2
+                                    (lineno(), "tab_gen2", tab_gen[nom_dyn])
+                                    break
                     tab_ok = False
+                    (lineno(), ddg[0], "tab_gen", tab_gen)
+                    # 298 -3 tab_gen {'-3': (36, '102304050607', 64, 0), '-6': (41, '102034056007', 65, 0),
+                    # '+6': (46, '102034050067', 66, 0)}
 
                 "# Lecture de la liste des formes énumérées (num_dia). Mode tonique uniquement."
                 deg_note = deg_gam = 0
@@ -316,6 +331,7 @@ def audio_gam(gammic, pulsif, selon):
                         # 317 0 *Note originale num_note C deg_gam 1
                         deg_note += 1
 
+                    "# Élaboration du dictionnaire 'num_mem', qui comprend les degrés et les notes en tonalité de DO."
                     passage = deg_niv, num_note
                     (lineno(), "passage", passage, "", deg_niv, num_note)
                     if passage != ('', ''):
@@ -332,26 +348,98 @@ def audio_gam(gammic, pulsif, selon):
                 notes = [nm[1] for nm in num_mem[ddg[0], 1]]
                 (lineno(), "\n Notes", notes, "ddg[0]", ddg[0])
 
-            "# Lecture des gammes mémorisées, seule la précédente compte pour le passage de la tonalité."
+            "# Lecture des gammes et seule la précédente compte pour le passage de la tonalité."
+            # Les tests sélectionnant la gamme mélodique[-3] donnent deux gammes relatives qui
+            # n'ont pas de points communs avec leurs origines. La première [-3] n'a pas de point commun
+            # avec la seconde [-6] qui a plusieurs points communs avec la tierce [+6].
+            # Dans ce cas, n'ayant aucun commun, la gamme repart en DO.
             for knm in num_mem.keys():
                 if num_mem[knm]:
-                    (lineno(), "num_mem", knm, num_mem[knm])
-                    # 333 num_mem ('-3', 1) [('1', 'C'), ('2', 'D'), ('-3', '-E'), ('4', 'F'),
-                    # ('5', 'G'), ('6', 'A'), ('7', 'B')]...
+                    ("\n", lineno(), "knm", knm, "num_mem[knm]", num_mem[knm], "\n ****************************")
+                    # 359 knm ('-3', 1) num_mem[knm] [('1', 'C'), ('2', 'D'), ('-3', '-E'), ('4', 'F'), ('5', 'G'),
+                    # ('6', 'A'), ('7', 'B')]
+                    num_mem2[knm[0]] = num_mem[knm].copy()
+                    ind_knm = tab_gen[knm[0]][-2]  # Le dico tab_gen a les numéros des gammes.
+                    (lineno(), "knm[0]", knm[0], "tab_gen[knm[0]][-2] = ind_knm", ind_knm)
+                    # 362 knm[0] -3 tab_gen[knm[0]][-2] = ind_knm 64
+                    if colis1[2][ind_knm, 0][0] == knm[0]:  # La clé [ind knm, 0] vérifie le nom de la gamme.
+                        ("# Poursuite de la gamme concernée parmi les gammes dans 'colis1[2]. (colonne_gam)"
+                         "Ce qui rend possible l'incrémentation des données de 'colis1[2]'.")
+                        mem0[knm[0]] = []  # Déclaration d'une liste pour ce nom(knm[0]).
+                        for c12 in range(1, len(colis1[3]) + 1):  # Nombre de lignes qui étalent les degrés modaux.
+                            if (ind_knm, c12) in colis1[2].keys():  # Dans colonne_gam dynamique (colis1[2])
+                                trans = (ind_knm, c12), colis1[2][ind_knm, c12]
+                                mem0[knm[0]].append(trans)
+                                (lineno(), (ind_knm, c12), "colis1", colis1[2][ind_knm, c12], "c12", c12)
+                                # 372 (60, 12) colis1 ['4', '5'] c12 12
 
             code_dg = dic_deg[ddg]
             (lineno(), "code_dg", code_dg, "dic_deg", dic_deg[ddg])
-            # 338 code_dg ['102304050607', 1] dic_deg ['102304050607', 1], 338 code_dg [2] dic_deg [2]
-            # 338 code_dg [3] dic_deg [3], 338 code_dg [4] dic_deg [4], 338 code_dg [5] dic_deg [5]
-            # 338 code_dg [6] dic_deg [6], 338 code_dg [7] dic_deg [7]
-        (lineno(), "ddc", ddc)
-        # 208 ddc -3
+            # 377 code_dg ['102304050607', 1] dic_deg ['102304050607', 1], 338 code_dg [2] dic_deg [2]
+            # 377 code_dg [3] dic_deg [3], 338 code_dg [4] dic_deg [4], 338 code_dg [5] dic_deg [5]
+            # 377 code_dg [6] dic_deg [6], 338 code_dg [7] dic_deg [7]
+
+        (lineno(), "num_mem2", num_mem2)
+        # 382 num_mem2 {'-3': [('1', 'C'), ('2', 'D'), ('-3', '-E'), ('4', 'F'), ('5', 'G'), ('6', 'A'), ('7', 'B')],
+        # '-6': [('1', 'C'), ('2', 'D'), ('3', 'E'), ('4', 'F'), ('5', 'G'), ('-6', '-A'), ('7', 'B')],
+        # '+6': [('1', 'C'), ('2', 'D'), ('3', 'E'), ('4', 'F'), ('5', 'G'), ('+6', '+A'), ('7', 'B')]}
+        (lineno(), list(mem0)[0], "Mem0", mem0[list(mem0)[0]])
+        # 381 o5 Mem0 [((60, 12), ['4', '5']), ((60, 13), ['7']), ((60, 20), ['3']), ((60, 50), ['1']),
+        # ((60, 51), ['2']), ((60, 53), ['6'])]
+        mem0_key, len0_key = list(mem0.keys()), len(mem0.keys())
+        for rng1 in range(len0_key):
+            for rng2 in range(len0_key):
+                if rng1 == rng2 - 1:
+                    "# Comparaison des deux gammes mémorisées."
+                    un, u2 = mem0[mem0_key[rng1]], mem0_key[rng1]
+                    de, d2 = mem0[mem0_key[rng2]], mem0_key[rng2]
+                    print(lineno(), "_________________________", "U2", u2, "D2", d2)
+                    print(lineno(), "_________________________", "\n Un", u2, un, "\n De", d2, de)
+                    # 391 _________________________
+                    #  Un [((60, 12), ['4', '5']), ((60, 13), ['7']), ((60, 20), ['3']), ((60, 50), ['1']),
+                    #  ((60, 51), ['2']), ((60, 53), ['6'])] o5
+                    #  De [((61, 13), ['5']), ((61, 25), ['7']), ((61, 50), ['3']), ((61, 51), ['2']),
+                    #  ((61, 52), ['6']), ((61, 54), ['1']), ((61, 55), ['4'])] -35+
+                    nbr_idem, deg_idem = 0, 0
+                    for un2 in un:
+                        for de2 in de:
+                            if un2[0][1] == de2[0][1]:  # Comparaison des lignes binaires.
+                                "# Condition requise pour une recherche de tonalité approximative."
+                                nbr_idem += 1
+                                print(lineno(), "Lignes un2", un2, un2[0][1], "de2", de2, de2[0][1], "||", nbr_idem)
+                                # 409 Lignes un2 ((65, 17), ['3']) 17 de2 ((66, 17), ['3']) 17 || 1
+                                if un2[1][0] == de2[1][0]:  # Comparaison des degrés diatoniques.
+                                    "# Condition requise pour une recherche du degré approximatif."
+                                    deg_idem += 1
+                                    (lineno(), "Degrés un2", un2, un2[1][0], "de2", de2, de2[1][0], "|", deg_idem)
+                                    # 414 Degrés un2 ((65, 17), ['3']) 3 de2 ((66, 17), ['3']) 3 | 1
+                                    ("# Plusieurs degrés sont semblables, ils enchainent "
+                                     "une analyse ses notes diatoniques.")
+                                    for nm2 in range(len(num_mem2[u2])):
+                                        anm1, anm2 = num_mem2[u2][nm2], num_mem2[d2][nm2]
+                                        if anm2[0][0] == str(de2[1][0]):
+                                            print(lineno(), "anm1", u2, anm1, "\t anm2", d2, anm2)
+                                            break
+
+                                (lineno(), u2, "* Un2", un2, "tab_gen", tab_gen[u2])
+                                (lineno(), d2, "** De2", de2, "tab_gen", tab_gen[d2], "\n ______   ______")
+                                # 412 -6 * Un2 ((65, 61), ['1']) tab_gen (41, '102034056007', 65, 0)
+                                # 413 +6 ** De2 ((66, 61), ['1']) tab_gen (46, '102034050067', 66, 0)
+                                #  ______   ______
+
+                    if nbr_idem > 3:
+                        "# Le nombre de degrés est fort."
+                        if deg_idem > 3:
+                            "# Nombre de degrés et de notes est fort."
+                    break
 
     "# colis2 {'A0': [('A', 13.75), ('', 14.56761754744031), ('B', 15.433853164253879),"
     for khz in colis2.keys():
-        (lineno(), "\n khz", khz, colis2[khz])
+        print(lineno(), "\n khz", khz, "colis2.keys()", len(colis2.keys()), "Octaves.")
+        break
 
     "# Situer les degrés diatoniques : grâce au dictionnaire 'colis1[1]'."
     (lineno(), "\n colis1[1]", colis1[1].keys())
+    print(lineno())
 
     return liste_gen

@@ -383,6 +383,17 @@ class Relance(Tk):
                 coq0 += 1
 
         "# Résultat des tests sur binaires."
+        if len(self.test_bin1) != len(self.test_bin2):
+            if self.test_bin1.count("") == 0:
+                self.test_bin1.insert(0, "")
+                self.test_bin1.insert(0, "")
+            elif self.test_bin1.count("") == 1:
+                self.test_bin1.insert(0, "")
+            if self.test_bin2.count("") == 0:
+                self.test_bin2.insert(0, "")
+                self.test_bin2.insert(0, "")
+            elif self.test_bin2.count("") == 1:
+                self.test_bin2.insert(0, "")
         for stb in range(len(self.test_bin1)):
             if self.test_bin1[stb] == self.test_bin2[stb]:
                 (lineno(), self.test_bin1[stb])  # Pour transfert sur le classeur Excel
@@ -1048,11 +1059,11 @@ class Relance(Tk):
         if len(str(bb)) < 7:
             "# Jonction module gammes_audio"
             self.gam_son = gamma.audio_gam(colis1, colis2, "Gammes")
-            (lineno(), "Gam *", self.gam_son)
+            print(lineno(), "Gam *", self.gam_son)
         else:
             "# Jonction module binomes_audio"
             self.gam_son = gamma.audio_gam(colis1, colis2, "Binomes")
-            (lineno(), "Bin *", self.gam_son)
+            print(lineno(), "Bin *", self.gam_son)
 
         (lineno(), self.colonne_gam)
 
