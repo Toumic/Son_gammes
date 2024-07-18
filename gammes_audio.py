@@ -22,65 +22,147 @@ tab_inf = ['********', 'o*******', '-*******', '*******', 'o******', '-******', 
 (lineno(), "Inverser convenablement (12 * -1 = -12) tab_inf", tab_inf[::-1])
 
 
-def initie(neo_maj):
+def initie(neo_maj=None, dico=None):
     """Recoder les infos[]. Nouvelle gamme majeure pour 'dic_maj' """
     "# Processus de reconnaissance de la signature tonique."
-    signe_nat, note_classic = "", "CDEFGAB"
-    for sn in neo_maj:
-        if sn not in note_classic:
-            signe_nat += sn
-    # Valeur numérique de 'sign_nat'.
-    ind_signe = 0
-    if signe_nat in tab_inf:
-        ind_signe = tab_inf.index(signe_nat) - len(tab_inf)
-        (lineno(), "inf", signe_nat, len(tab_inf))
-    elif signe_nat in tab_sup:
-        ind_signe = tab_sup.index(signe_nat)
-        (lineno(), "sup", signe_nat)
-    (lineno(), "Valeur du signe entrant", ind_signe)
-    note_nat = neo_maj[-1]
-    (lineno(), "Fonction initie neo_maj", neo_maj, "signe et note", signe_nat, note_nat)
-    # 32 Fonction/initie neo_maj -E Le signe et la note - E
+    if neo_maj:
+        (lineno(), "Neo", neo_maj)
+        signe_nat, note_classic = "", "CDEFGAB"
+        for sn in neo_maj:
+            if sn not in note_classic:
+                signe_nat += sn
+        # Valeur numérique de 'sign_nat'.
+        ind_signe = 0
+        if signe_nat in tab_inf:
+            ind_signe = tab_inf.index(signe_nat) - len(tab_inf)
+            (lineno(), "inf", signe_nat, len(tab_inf))
+        elif signe_nat in tab_sup:
+            ind_signe = tab_sup.index(signe_nat)
+            (lineno(), "sup", signe_nat)
+        (lineno(), "Valeur du signe entrant", ind_signe)
+        note_nat = neo_maj[-1]
+        (lineno(), "Fonction initie neo_maj", neo_maj, "signe et note", signe_nat, note_nat)
+        # 32 Fonction/initie neo_maj -E Le signe et la note - E
 
-    "# Calcul de la nouvelle gamme majeure et enregistrement dans le dictionnaire 'dic_maj"
-    dic_maj[neo_maj] = []
-    ind_signe2 = ind_signe3 = 0
-    for nm in dic_maj[note_nat]:
-        nm2, signe2, nm3, signe3 = "", "", "", 0
-        if nm != "":
-            if len(nm) == 1:
-                nm2 += signe_nat + nm
-                (lineno(), "Nm unique", nm, "nm2", nm2)
-            else:
-                note2 = nm[-1]
-                for sn2 in nm:
-                    if sn2 not in note_classic:
-                        signe2 += sn2
-                if signe2 in tab_inf:
-                    ind_signe2 = tab_inf.index(signe2) - len(tab_inf)  # Signature majeure originale.
-                    ind_signe3 = ind_signe + ind_signe2
-                    if ind_signe3 > -1:
-                        signe3 = tab_sup[ind_signe3]
+        "# Calcul de la nouvelle gamme majeure et enregistrement dans le dictionnaire 'dic_maj"
+        if neo_maj not in dic_maj.keys():
+            dic_maj[neo_maj] = []
+            ind_signe2 = ind_signe3 = 0
+            for nm in dic_maj[note_nat]:
+                nm2, signe2, nm3, signe3 = "", "", "", 0
+                if nm != "":
+                    if len(nm) == 1:
+                        nm2 += signe_nat + nm
+                        (lineno(), "Nm unique", nm, "nm2", nm2)
                     else:
-                        signe3 = tab_inf[ind_signe3]
-                    nm3 = signe3 + note2
-                    (lineno(), "inf", signe2, len(tab_inf), signe3)
-                elif signe2 in tab_sup:
-                    ind_signe2 = tab_sup.index(signe2)  # Signature avant modification.
-                    ind_signe3 = ind_signe + ind_signe2
-                    if ind_signe3 < 0:
-                        signe3 = tab_inf[ind_signe3]
-                    else:
-                        signe3 = tab_sup[ind_signe3]
-                    nm3 = signe3 + note2
-                    (lineno(), "sup", signe2, signe3)
-                nm2 = nm3
-                (lineno(), "Nm pluriel", nm, "nm2", nm2, "signe2", signe2, "signe3", signe3)
-                (lineno(), "ind_signe", ind_signe, "ind_signe2", ind_signe2, "ind_signe3", ind_signe3)
-            (lineno(), "Nm", nm, "signe_nat", signe_nat)
-        dic_maj[neo_maj].append(nm2)
-    (lineno(), "Fonction Majeure neo_maj", neo_maj, "dic_maj", dic_maj[neo_maj])
-    # 82 Fonction Majeure neo_maj -E dic_maj ['-E', '', 'F', '', 'G', '-A', '', '-B', '', 'C', '', 'D']
+                        note2 = nm[-1]
+                        for sn2 in nm:
+                            if sn2 not in note_classic:
+                                signe2 += sn2
+                        if signe2 in tab_inf:
+                            ind_signe2 = tab_inf.index(signe2) - len(tab_inf)  # Signature majeure originale.
+                            ind_signe3 = ind_signe + ind_signe2
+                            if ind_signe3 > -1:
+                                signe3 = tab_sup[ind_signe3]
+                            else:
+                                signe3 = tab_inf[ind_signe3]
+                            nm3 = signe3 + note2
+                            (lineno(), "inf", signe2, len(tab_inf), signe3)
+                        elif signe2 in tab_sup:
+                            ind_signe2 = tab_sup.index(signe2)  # Signature avant modification.
+                            ind_signe3 = ind_signe + ind_signe2
+                            if ind_signe3 < 0:
+                                signe3 = tab_inf[ind_signe3]
+                            else:
+                                signe3 = tab_sup[ind_signe3]
+                            nm3 = signe3 + note2
+                            (lineno(), "sup", signe2, signe3)
+                        nm2 = nm3
+                        (lineno(), "Nm pluriel", nm, "nm2", nm2, "signe2", signe2, "signe3", signe3)
+                        (lineno(), "ind_signe", ind_signe, "ind_signe2", ind_signe2, "ind_signe3", ind_signe3)
+                    (lineno(), "Nm", nm, "signe_nat", signe_nat)
+                dic_maj[neo_maj].append(nm2)
+        (lineno(), "Fonction Majeure neo_maj", neo_maj, "dic_maj", dic_maj[neo_maj])
+        # 82 Fonction Majeure neo_maj -E dic_maj ['-E', '', 'F', '', 'G', '-A', '', '-B', '', 'C', '', 'D']
+
+    "# Processus de conception de la gamme relative à la demande du dico."
+    retour_dico = {}
+    nkd_maj, note_classic = '102034050607', "CDEFGAB"
+    if dico:
+        print(lineno(), "Dico", dico)
+        for kdc, vdc in dico.items():
+            # , vdc = Les notes recueillies correspondantes aux lignes couplées.
+            for dc2 in vdc:  # Lire les notes toniques une par une.
+                (lineno(), kdc, "DC2", dc2, dic_maj[dc2])
+                tonique = dc2  # Premier degré de la gamme à développer et à comparer.
+                retour_dico[tonique] = []
+                cdm = -1
+                for dm in dic_maj[dc2]:  # Diatoniser les toniques pour comparaisons.
+                    cdm += 1  # Donne les indices de la gamme à comparer.
+                    nkd = kdc[cdm]  # Séquence la gamme à développer.
+                    mkd = nkd_maj[cdm]  # Séquence la gamme majeure.
+                    if nkd != "0":
+                        ind_mkd = nkd_maj.index(nkd)  # Donne l'indice du degré majeur.
+                        dif_dia = cdm - ind_mkd  # Donne la différence pour signer les notes à développer.
+                        sig, ind_sig = "", None
+                        for sdm in dic_maj[dc2][ind_mkd]:
+                            if sdm not in note_classic:
+                                sig += sdm
+                        note0, deg_note = sig + dic_maj[dc2][ind_mkd][-1], ""
+                        (lineno(), note0, " sig", sig)
+
+                        "# Première évaluation de la signature. Traitement de la note."
+                        if sig in tab_inf:
+                            ind_sig0 = tab_inf.index(sig) - len(tab_inf)
+                            ind_sig0 += dif_dia
+                            (lineno(), note0, "IF ind_sig0", ind_sig0)
+                        else:
+                            ind_sig0 = tab_sup.index(sig)
+                            ind_sig0 += dif_dia
+                            (lineno(), note0, "ELSE ind_sig0", ind_sig0)
+                        (lineno(), note0, "**1er** ind_sig0", ind_sig0, "dif_dia", dif_dia)
+
+                        if ind_sig0 > -1:
+                            sig = tab_sup[ind_sig0]
+                            (lineno(), note0, " sig", sig)
+                        else:
+                            # ind_sig2 = tab_inf.index(ind_sig0)
+                            sig = tab_inf[ind_sig0]
+                            (lineno(), note0, " sig", sig)
+                        (lineno(), note0, "**2me** sig", sig, "dif_dia", dif_dia)
+
+                        "# Deuxième évaluation de la signature."
+                        if dif_dia == 0:  # La signature des notes est majeure.
+                            deg_note = nkd, note0
+                            (lineno(), "deg_note", deg_note)
+                        else:  # La signature est modifiée.
+                            if sig in tab_inf:
+                                ind_sig = tab_inf.index(sig) - len(tab_inf)
+                                note1 = tab_inf[ind_sig] + dic_maj[dc2][ind_mkd][-1]
+                                if dif_dia < 0:
+                                    ind_deg = tab_inf[dif_dia]
+                                else:
+                                    ind_deg = tab_sup[dif_dia]
+                                deg1 = ind_deg + nkd
+                                deg_note = deg1, note1
+                                (lineno(), "INF note1", deg1, note1, "signe_note", ind_sig)
+                            elif sig in tab_sup:
+                                ind_sig = tab_sup.index(sig)
+                                note1 = tab_sup[ind_sig] + dic_maj[dc2][ind_mkd][-1]
+                                if dif_dia < 0:
+                                    ind_deg = tab_inf[dif_dia]
+                                else:
+                                    ind_deg = tab_sup[dif_dia]
+                                deg1 = ind_deg + nkd
+                                deg_note = deg1, note1
+                                (lineno(), "SUP note1", deg1, note1, "signe_note", ind_sig)
+                            (lineno(), "signe", sig, "Majeure", note0, "dif_dia", dif_dia, "ind_sig", ind_sig)
+                        retour_dico[tonique].append(deg_note)
+                        (lineno(), "dic_maj", dic_maj[dc2][ind_mkd], "deg_note", deg_note)
+                        (lineno(), "nkd", nkd, "ind_mkd", ind_mkd, dic_maj[dc2][ind_mkd])
+                    (lineno(), kdc, "DC2", dc2, "nkd", nkd, "mkd", mkd, dm, "\t cdm", cdm)
+                (lineno(), "retour_dico", retour_dico)
+        return retour_dico
 
 
 def audio_gam(gammic, pulsif, selon):
@@ -342,7 +424,7 @@ def audio_gam(gammic, pulsif, selon):
                             # ('4', 'F'), ('5', 'G'), ('6', 'A'), ('7', 'B')]}
                             if len(passage[1]) > 1:
                                 if passage[1] not in dic_maj.keys():
-                                    initie(passage[1])  # passage[1] (a servi de test pour les signatures).
+                                    initie(passage[1], None)  # passage[1] (a servi de test pour les signatures).
                                     (lineno(), "ddg[0], 1", ddg[0], 1, "passage", passage)
                 notes.clear()
                 notes = [nm[1] for nm in num_mem[ddg[0], 1]]
@@ -379,59 +461,229 @@ def audio_gam(gammic, pulsif, selon):
             # 377 code_dg [3] dic_deg [3], 338 code_dg [4] dic_deg [4], 338 code_dg [5] dic_deg [5]
             # 377 code_dg [6] dic_deg [6], 338 code_dg [7] dic_deg [7]
 
+        (lineno(), "tab_gen", tab_gen)
+        # 382 tab_gen {'-3': (36, '102304050607', 64, 0), '-6': (41, '102034056007', 65, 0),
+        # '+6': (46, '102034050067', 66, 0)}
         (lineno(), "num_mem2", num_mem2)
         # 382 num_mem2 {'-3': [('1', 'C'), ('2', 'D'), ('-3', '-E'), ('4', 'F'), ('5', 'G'), ('6', 'A'), ('7', 'B')],
         # '-6': [('1', 'C'), ('2', 'D'), ('3', 'E'), ('4', 'F'), ('5', 'G'), ('-6', '-A'), ('7', 'B')],
         # '+6': [('1', 'C'), ('2', 'D'), ('3', 'E'), ('4', 'F'), ('5', 'G'), ('+6', '+A'), ('7', 'B')]}
+        "# ((Colonne = 60, Ligne = 12), Degrés = ['4', '5'])"
         (lineno(), list(mem0)[0], "Mem0", mem0[list(mem0)[0]])
         # 381 o5 Mem0 [((60, 12), ['4', '5']), ((60, 13), ['7']), ((60, 20), ['3']), ((60, 50), ['1']),
         # ((60, 51), ['2']), ((60, 53), ['6'])]
-        mem0_key, len0_key = list(mem0.keys()), len(mem0.keys())
+        mem0_key, len0_key, count_gam = list(mem0.keys()), len(mem0.keys()), 0
         for rng1 in range(len0_key):
             for rng2 in range(len0_key):
                 if rng1 == rng2 - 1:
+                    count_gam += 1
                     "# Comparaison des deux gammes mémorisées."
                     un, u2 = mem0[mem0_key[rng1]], mem0_key[rng1]
                     de, d2 = mem0[mem0_key[rng2]], mem0_key[rng2]
-                    print(lineno(), "_________________________", "U2", u2, "D2", d2)
-                    print(lineno(), "_________________________", "\n Un", u2, un, "\n De", d2, de)
-                    # 391 _________________________
+                    print(lineno(), "______________________________________________", count_gam, "U2", u2, "D2", d2)
+                    (lineno(), "_________________________", "\n Un", u2, un, "\n De", d2, de)
+                    # 402 _________________________
                     #  Un [((60, 12), ['4', '5']), ((60, 13), ['7']), ((60, 20), ['3']), ((60, 50), ['1']),
                     #  ((60, 51), ['2']), ((60, 53), ['6'])] o5
                     #  De [((61, 13), ['5']), ((61, 25), ['7']), ((61, 50), ['3']), ((61, 51), ['2']),
                     #  ((61, 52), ['6']), ((61, 54), ['1']), ((61, 55), ['4'])] -35+
-                    nbr_idem, deg_idem = 0, 0
+                    lig, deg = 0, 0
+                    tab_adn, tab_anm = [], []  # Tables de récupération.
                     for un2 in un:
                         for de2 in de:
-                            if un2[0][1] == de2[0][1]:  # Comparaison des lignes binaires.
+                            "# Comparaison des lignes binaires."
+                            if un2[0][1] == de2[0][1]:
                                 "# Condition requise pour une recherche de tonalité approximative."
-                                nbr_idem += 1
-                                print(lineno(), "Lignes un2", un2, un2[0][1], "de2", de2, de2[0][1], "||", nbr_idem)
-                                # 409 Lignes un2 ((65, 17), ['3']) 17 de2 ((66, 17), ['3']) 17 || 1
-                                if un2[1][0] == de2[1][0]:  # Comparaison des degrés diatoniques.
+                                lig += 1
+                                (lineno(), "Lig u2", u2, un2, un2[0][1], "d2", d2, de2, de2[0][1], "LIG", lig)
+                                # 414 Lig u2 -6 ((65, 17), ['3']) 17 d2 +6 ((66, 17), ['3']) 17 LIG 1
+                                ("# Des lignes binaires concordent et les notes correspondantes de la gamme précédente"
+                                 "sont utiles. Elles peuvent jouer un rôle pour tonifier la gamme suivante.")
+                                for nm1 in range(len(num_mem2[u2])):  # Comparaison des notes diatoniques.
+                                    # adn1 = Instance pour les notes inégales, elle est la référence tonale.
+                                    adn1, adn2 = num_mem2[u2][nm1], num_mem2[d2][nm1]
+                                    "# La note précédente est vue, elle est différente de la suivante."
+                                    if adn1[0] == un2[1][0] or un2[0][1] == de2[0][1]:
+                                        if adn1 not in tab_adn:
+                                            adn12 = u2, adn1, un2, d2, de2
+                                            tab_adn.append(adn12)
+                                        (lineno(), "\t Inégaux adn1", u2, adn1, un2, "adn2", d2, adn2, de2)
+                                        # 425 	 Inégaux adn1 o35x ('4', 'F') ((8, 17), ['4']) adn2 x26- ('+4', '+F')
+                                        break
+                                "# Comparaison des degrés diatoniques aux mêmes lignes binaires."
+                                if un2[1][0] == de2[1][0]:
                                     "# Condition requise pour une recherche du degré approximatif."
-                                    deg_idem += 1
-                                    (lineno(), "Degrés un2", un2, un2[1][0], "de2", de2, de2[1][0], "|", deg_idem)
-                                    # 414 Degrés un2 ((65, 17), ['3']) 3 de2 ((66, 17), ['3']) 3 | 1
+                                    deg += 1
+                                    (lineno(), "Deg u2", u2, un2, un2[1][0], "d2", d2, de2, de2[1][0], "DEG", deg)
+                                    # 432 Deg u2 -6 ((65, 17), ['3']) 3 d2 +6 ((66, 17), ['3']) 3 DEG 1
                                     ("# Plusieurs degrés sont semblables, ils enchainent "
                                      "une analyse ses notes diatoniques.")
-                                    for nm2 in range(len(num_mem2[u2])):
+                                    for nm2 in range(len(num_mem2[u2])):  # Comparaison des notes diatoniques.
+                                        # anm1 = anm2 = Instances de référence des degrés aux notes égales.
                                         anm1, anm2 = num_mem2[u2][nm2], num_mem2[d2][nm2]
-                                        if anm2[0][0] == str(de2[1][0]):
-                                            print(lineno(), "anm1", u2, anm1, "\t anm2", d2, anm2)
+                                        if anm1[0][0] == anm2[0][0]:
+                                            if anm1 not in tab_anm:
+                                                anm12 = u2, anm1, un2, d2, anm2, de2
+                                                tab_anm.append(anm12)
+                                            (lineno(), "\t Égaux anm1", u2, anm1, "\t anm2", d2, anm2)
+                                            # 443 		 Égaux anm1 -6 ('3', 'E') 	 anm2 +6 ('3', 'E')
                                             break
-
                                 (lineno(), u2, "* Un2", un2, "tab_gen", tab_gen[u2])
                                 (lineno(), d2, "** De2", de2, "tab_gen", tab_gen[d2], "\n ______   ______")
-                                # 412 -6 * Un2 ((65, 61), ['1']) tab_gen (41, '102034056007', 65, 0)
-                                # 413 +6 ** De2 ((66, 61), ['1']) tab_gen (46, '102034050067', 66, 0)
+                                # 446 -6 * Un2 ((65, 61), ['1']) tab_gen (41, '102034056007', 65, 0)
+                                # 447 +6 ** De2 ((66, 61), ['1']) tab_gen (46, '102034050067', 66, 0)
                                 #  ______   ______
 
-                    if nbr_idem > 3:
-                        "# Le nombre de degrés est fort."
-                        if deg_idem > 3:
-                            "# Nombre de degrés et de notes est fort."
+                    if 0 < lig >= deg > 0:
+                        "# Le nombre de lignes est supérieur à zéro et il est égal à celui des degrés."
+                        print(lineno(), "elif 0 < lig >= deg > 0: =================", lig, deg)
+                        print(lineno(), "ADN num_mem2[u2]", u2, num_mem2[u2])
+                        (lineno(), "ANM num_mem2", d2, num_mem2[d2])
+                        anm0, dico_anm = False, {}
+                        dico_anm[tab_gen[d2][1]] = []
+                        if tab_anm:
+                            (lineno(), " DEG", deg, "\n ANM", tab_anm, "Long", len(tab_anm))
+                            for td_anm1 in num_mem2[u2]:
+                                for td_anm2 in num_mem2[d2]:
+                                    "# Relevé des mêmes notes"
+                                    (lineno(), "td_anm1", td_anm1[-1], "|2", td_anm2[-1], tab_gen[d2][1])
+                                    if td_anm1[-1] == td_anm2[-1] and td_anm1[-1] not in dico_anm[tab_gen[d2][1]]:
+                                        dico_anm[tab_gen[d2][1]].append(td_anm1[-1])
+                                        (lineno(), "td_anm1", td_anm1[-1], td_anm2[-1], dico_anm[tab_gen[d2][1]])
+                            "# Il y a six notes égales et une seule différence qui est la tonique."
+                            if len(dico_anm[tab_gen[d2][1]]) == 6:
+                                dico_anm[tab_gen[d2][1]].clear()
+
+                            for da in dico_anm[tab_gen[d2][1]]:
+                                if da not in dic_maj.keys():
+                                    initie(da, dico=None)
+                                    (lineno(), "Initie Da", da)
+                            (lineno(), " dico_anm", dico_anm)
+
+                        retour_init = initie("", dico_anm)
+                        for ri_gam in retour_init.values():
+                            print(lineno(), " retour_init", ri_gam, len(retour_init))
+                            # 584  retour_init {'xG': [('1', 'xG'), ('2', 'xA'), ('3', 'xB'), ('x4', '+^C'),
+                            # ('x5', '+^D'), ('+6', '^E'), ('7', '^F')]} 1
+                        if retour_init:
+                            (lineno(), "tab_gen", d2, tab_gen[d2])
+                            if len(retour_init) == 1:
+                                del num_mem2[d2]
+                                passe = retour_init.values()
+                                num_mem2[d2] = list(passe)[0]
+                                print(lineno(), "Une clé passe", list(passe)[0])
+                            else:
+                                key_riz = list(retour_init.keys())
+                                dic_vrai, tab_vrai, nbr_vrai = {}, [], 0
+                                ton_u2 = num_mem2[u2][0][1]
+                                (lineno(), "Key_riz", key_riz, "ton_u2", ton_u2, "\n num_mem2", num_mem2[u2])
+
+                                for varie in key_riz:  # Lecture par clés délivrées de la fonction[initie].
+                                    dic_vrai[varie] = 0
+                                    for rive in retour_init[varie]:  # Lecture de chacune des gammes à clés.
+                                        (lineno(), "Varie", varie, rive[1])
+                                        for carie in num_mem2[u2]:
+                                            if carie[1] == rive[1]:
+                                                nbr_vrai += 1
+                                                (lineno(), "carie[1]", carie[1])
+                                    dic_vrai[varie] = nbr_vrai
+                                    tab_vrai.append(nbr_vrai)
+                                    nbr_vrai = 0
+                                    (lineno(), "dic_vrai", varie, dic_vrai[varie])
+                                max_vrai = max(tab_vrai)
+                                print(lineno(), "dic_vrai", dic_vrai, "max_vrai", max_vrai, "ton_u2", ton_u2)
+                                if ton_u2 in dic_vrai.keys():
+                                    if dic_vrai[ton_u2] == max_vrai:
+                                        num_mem2[d2] = retour_init[ton_u2]
+                                        (lineno(), "[ton=max] num_mem2[d2]", d2, num_mem2[d2])
+                                    else:
+                                        print(lineno(), "Else[ton=max]")
+                                else:
+                                    for q_vrai in dic_vrai.keys():
+                                        if dic_vrai[q_vrai] == max_vrai:
+                                            num_mem2[d2] = retour_init[q_vrai]
+                                            (lineno(), "ton n'est pas une clé")
+                            (lineno(), "dico_anm", dico_anm)
+
+                    elif 0 == lig == deg:
+                        "# Le nombre de lignes et de degrés égaux est égal à zéro."
+                        "# Quand le nombre de ligne/degré est nul, on ne fait rien, la gamme reste en DO[C]"
+                        print(lineno(), "elif 0 == lig == deg: ================", lig, deg)
+                        print(lineno(), lig, "ADN num_mem2[u2]", u2, num_mem2[u2])
+
+                    else:
+                        "# Les lignes vont de un à plus et les degrés sont toujours à zéro."
+                        print(lineno(), "else: ================================", lig, deg)
+                        adn0, dico_adn = True, {}
+                        dico_adn[tab_gen[d2][1]] = []
+                        (lineno(), "LIG", lig, "ADN", tab_adn, "Long", len(tab_adn))
+                        print(lineno(), lig, "ADN num_mem2[u2]", u2, num_mem2[u2])
+                        (lineno(), deg, "ANM num_mem2", d2, num_mem2[d2])
+                        for tad in tab_adn:
+                            for td in tad:
+                                if td == u2:
+                                    if not adn0:  # Remise à True au second tour
+                                        adn0 = True
+                                    (lineno(), "Nom 1", td, "len", len(td))
+                                elif td == d2:
+                                    adn0 = False
+                                    (lineno(), "Nom 2", td)
+                                elif adn0:
+                                    if isinstance(td[-1], str):
+                                        (lineno(), "elif (str) Nom 1", td, "len", len(td))
+                                    else:
+                                        for td_adn in num_mem2[u2]:
+                                            if td_adn[0][-1] == td[-1][0]:
+                                                dico_adn[tab_gen[d2][1]].append(td_adn[-1])
+                                                (lineno(), "elif Nom 1 td", u2, td, "td_adn", td_adn, tab_gen[d2])
+                                (lineno(), "td", td)
+                            (lineno(), "tad", tad, "Len", len(tad))
+                        for da in dico_adn.values():
+                            for d in da:
+                                if d not in dic_maj.keys():
+                                    initie(d, None)
+                        retour_init = initie("", dico_adn)
+                        "# Retourne les gammes demandées sous les toniques trouvées."
+                        for k_rie, v_rie in retour_init.items():
+                            (lineno(), "retour_init", retour_init[k_rie], len(retour_init))
+                        # 628 retour_init {'-G': [('1', '-G'), ('-2', 'oA'), ('o3', '*B'), ('o4', '*C'), ('5', '-D'),
+                        # ('+6', 'E'), ('7', 'F')], '+D': [('1', '+D'), ('-2', 'E'), ('o3', 'F'), ('o4', '-G'),
+                        # ('5', '+A'), ('+6', 'xB'), ('7', 'xC')]} 2
+                        dic_rit, tab_rit, max_rit = {}, [], ""
+                        for ri in retour_init.keys():
+                            if lig == 1:  # Il n'y a qu'un seul choix pour la note tonique.
+                                del num_mem2[d2]
+                                num_mem2[d2] = retour_init[ri].copy()
+                            else:
+                                tab_rit.clear()
+                                for kiri in retour_init.keys():
+                                    dic_rit[kiri] = 0
+                                    kr = 0
+                                    for rire in retour_init[kiri]:
+                                        # Compter le nombre de similitudes.
+                                        for nmu2 in num_mem2[u2]:
+                                            if rire[1] == nmu2[1]:
+                                                kr += 1
+                                                (lineno(), "num_mem2", rire[1], nmu2[1])
+                                    dic_rit[kiri] = kr
+                                    tab_rit.append(kr)
+                                max_rit = max(tab_rit)
+                                for calor, rigolo in dic_rit.items():
+                                    if max_rit == rigolo:
+                                        del num_mem2[d2]
+                                        num_mem2[d2] = retour_init[calor].copy()
+                                        (lineno(), "calor", calor, "rigolo", rigolo, "\n", retour_init[calor])
+                                        break
+                        "# Quand le nombre de comparaison est nul, on ne fait rien la gamme reste en DO[C]"
+                        (lineno(), "max_rit", max_rit)
+                        print(lineno(), "dic_rit", dic_rit, "tab_rit", tab_rit, "lignes", lig)
+                        (lineno(), "dico_adn", dico_adn, "retour_init", retour_init)
+                    print(lineno(), "ANM num_mem2[d2]", d2, num_mem2[d2])
                     break
+
+    (lineno(), dic_maj.keys())
+    # 514 dict_keys(['C', 'D', 'E', 'F', 'G', 'A', 'B', '-G', '-D', 'oE', 'oF', 'xG', '+A', '-A', 'oA', '+D', 'xD',
+    # '+E', '+F', '*G', 'oG', '-F', 'xF', '+G', '-E', '*A', '^F', 'xE', '^E', '^D'])
 
     "# colis2 {'A0': [('A', 13.75), ('', 14.56761754744031), ('B', 15.433853164253879),"
     for khz in colis2.keys():

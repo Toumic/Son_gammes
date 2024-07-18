@@ -10,6 +10,9 @@
     Nous pouvons avoir des méthodes de lecture :
     La méthode de lire à partir du bouton vertical, les gammes qui utilisent ce bouton (mono-note ou accord).
     Ou, lire les gammes à partir de la hauteur du bouton, la totalité des gammes.
+Par défaut les gammes qui ont ce mode binaire dans leurs corps diatoniques, seront lues de gauche à droite, <br>
+et de haut en bas. La lecture respectera l'ordre des degrés ainsi que l'ascension des octaves.
+
 **On peut créer plusieurs genres de lecture.**
 * Lecture des gammes ayant ce modèle binaire.
   * Cette lecture suit l'ordre affiché, le changement de gamme se fera en respectant la concordance de la tonalité.
@@ -20,6 +23,15 @@
     Nous pouvons avoir des méthodes de lecture :
     Tout comme les boutons verticaux, les boutons horizontaux peuvent lire les gammes qui ont les mêmes propriétés.
     Ou, lire les gammes à partir de ce bouton jusqu'à la fin de la liste.
+Par défaut la gamme sélectionnée sera en DO (tout comme toutes les gammes qui ont été développées en DO). <br>
+Cette première gamme choisie sert de référence à la mise en tonalité de la gamme suivante, la nouvelle tonalité <br>
+dépendra des occurrences entre ces deux gammes voisines, ici, les lignes représentent les hauteurs tonales. <br>
+#### Types de méthodes sur les gammes :
+* La gamme a en commun six notes avec la gamme suivante, la tonique est la même.
+* La gamme n'a pas de lien avec la suivante, la tonique devient en DO.
+* La gamme a un lien avec la suivante, la tonique devient celle de la gamme suivante.
+* La gamme a plusieurs liens avec la suivante, la tonique devient celle qui a le plus de notes communes.
+
 **On peut créer plusieurs genres de lecture.**
 * La lecture de la gamme peut se faire de façon unique ou en accord.
   * Il y a plusieurs choix concernant les sens de lectures :
