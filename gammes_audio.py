@@ -461,6 +461,7 @@ def audio_gam(gammic, pulsif, selon):
             # 377 code_dg [3] dic_deg [3], 338 code_dg [4] dic_deg [4], 338 code_dg [5] dic_deg [5]
             # 377 code_dg [6] dic_deg [6], 338 code_dg [7] dic_deg [7]
 
+        "# Repères obtenus pour la production des tonalités."
         (lineno(), "tab_gen", tab_gen)
         # 382 tab_gen {'-3': (36, '102304050607', 64, 0), '-6': (41, '102034056007', 65, 0),
         # '+6': (46, '102034050067', 66, 0)}
@@ -472,6 +473,8 @@ def audio_gam(gammic, pulsif, selon):
         (lineno(), list(mem0)[0], "Mem0", mem0[list(mem0)[0]])
         # 381 o5 Mem0 [((60, 12), ['4', '5']), ((60, 13), ['7']), ((60, 20), ['3']), ((60, 50), ['1']),
         # ((60, 51), ['2']), ((60, 53), ['6'])]
+
+        "# Commencement de la séquence des modulations dynamiques."
         mem0_key, len0_key, count_gam = list(mem0.keys()), len(mem0.keys()), 0
         for rng1 in range(len0_key):
             for rng2 in range(len0_key):
@@ -571,7 +574,7 @@ def audio_gam(gammic, pulsif, selon):
                                 del num_mem2[d2]
                                 passe = retour_init.values()
                                 num_mem2[d2] = list(passe)[0]
-                                print(lineno(), "Une clé passe", list(passe)[0])
+                                (lineno(), "Une clé passe", list(passe)[0])
                             else:
                                 key_riz = list(retour_init.keys())
                                 dic_vrai, tab_vrai, nbr_vrai = {}, [], 0
