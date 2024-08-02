@@ -6,11 +6,15 @@ L’architecture de cet assemblage ressemble à cette image (images/ClassBooLsII
 # https://cabviva.com/musicmp3/gamcop!s.mp3
 
 import inspect
-from typing import Callable
 from tkinter import *
 from tkinter.constants import *
 from tkinter.font import *
+from typing import Callable
+
 from PIL import ImageTk, Image
+import math
+from pyaudio import PyAudio
+
 # Les modules personnels.
 import gammes_audio as gamma  # Faire sonner les gammes.
 
@@ -231,7 +235,7 @@ class Relance(Tk):
 
     # Relance(dic_codage, dic_binary, dic_indice, dic_force, dic_colon, dic_titres).mainloop()
     def __init__(self, di_code=None, di_ages=None, di_bine=None, di_indi=None, di_fort=None, di_colon=None,
-                 di_ute=None):
+                 di_ute=None, di_mode=None):
         """ Initialisation du visuel, sous forme d'un tableur.
         Di_code = dic_codage. Dictionnaire des gammes et de leurs modes.
         Di_indi = dic_indice. Dictionnaire, clé = Nom de la gamme, valeur = Numéro de la gamme.
@@ -263,6 +267,8 @@ class Relance(Tk):
         self.table_y.grid(row=1, column=3)
         self.table_o = Canvas(self, width=84, height=884, bg="thistle")  # Colonne dédiée aux binaires ordonnés.
         self.table_o.grid(row=2, column=3)
+        self.table_w = Canvas(self, width=1656, height=60, bg="lightgray")  # Colonne dédiée aux options d'affichage.
+        self.table_w.grid(row=3, column=2)
         self.table_z = Canvas(self, width=84, height=60, bg="thistle")  # Coin (bas, droite).
         self.table_z.grid(row=3, column=3)
         self.table_g = Canvas(self, width=1656, height=30, bg="seashell")  # Colonne dédiée aux boutons gammes.
@@ -503,6 +509,20 @@ class Relance(Tk):
                              "BoutonAntiIso.png", "BoutonTriInt.png", "BoutonAntiInt.png"]
         self.images_references = []
         self.charger_image()
+
+        "# Zone de l'interface aux actions dédiées à l'affichage des gammes."
+        # self.table_w = Canvas(self, width=1656, height=60, bg="lightgray") # Colonne dédiée aux options d'affichage.
+
+        ("# Radio-bouton pour sélectionner le type de développement diatonique entre (statique et dynamique)."
+         "Le choix statique a toutes les gammes en DO. Le choix dynamique module les tonalités.")
+        if not di_mode:
+            self.zone_w1 = StringVar(self.table_w, value="Sta")
+        else:
+            self.zone_w1 = StringVar(self.table_w, value=di_mode)
+        rad_bou1 = Radiobutton(self.table_w, variable=self.zone_w1, value="Sta", text="Statique")
+        rad_bou1.grid()
+        rad_bou2 = Radiobutton(self.table_w, variable=self.zone_w1, value="Dyn", text="Dynamique")
+        rad_bou2.grid()
 
         "# Traitement de la sonorisation des gammes retournées du module 'gammes_audio.py'"
         self.gam_son = None
@@ -983,7 +1003,8 @@ class Relance(Tk):
         (lineno(), "clic_image retour_func", retour_func[1])
         (lineno(), "\n _______________________________________________ \n")
 
-        Relance(dic_codage, code_ages, dic_binary, dic_indice, dic_force, retour_func[0], retour_func[1])
+        Relance(dic_codage, code_ages, dic_binary, dic_indice, dic_force, retour_func[0], retour_func[1],
+                self.zone_w1.get())
 
     def bouton_bin(self, bb, cc):
         """Pratiquer les redirections des boutons d'en-tête[noms des gammes] et latéral gauche[binômes].
@@ -1019,19 +1040,21 @@ class Relance(Tk):
             dic_notes[num_a] = []
             for x in range(1, 13):  # Les emplacements chromatiques.
                 note_freq = octa * 2 ** ((x - 1) / 12)
+                note_freq = round(note_freq, 2)
                 dic_octaves[octa].append(note_freq)
                 passe = ""
                 if note_freq not in lis_octaves:
                     lis_octaves.append(note_freq)
-                    passe = notes[i], note_freq
+                    note_y = notes[i] + str(y)
+                    passe = [note_y, note_freq]  # Données modifiables en mode 'liste'.
                     dic_notes[num_a].append(passe)
-                (lineno(), notes[y], "passe", passe, "i", i)
+                (lineno(), notes[y], "passe", passe, "i", i, "y", y)
                 i += 1
                 (lineno(), octa, "note_freq", note_freq, i)
             (lineno(), "\n dic_notes", dic_notes[num_a], "num_a", num_a)
             y += 1
         # Résultat sous la forme de dic_notes, clé = A numéroté, valeur = note et sa fréquence hz.
-        (lineno(), "dic_octaves", dic_octaves.keys(), "dic_notes", dic_notes)
+        (lineno(), "dic_octaves", dic_octaves.keys(), "\ndic_notes", dic_notes)
 
         "# Nettoyage des vides contenus dans la liste colonne-bin."
         vide = self.colonne_bin.count("")
@@ -1058,15 +1081,48 @@ class Relance(Tk):
         # colis2 {'A0': [('A', 13.75), ('', 14.56761754744031), ('B', 15.433853164253879), ('C', 16.351597831287414)
         if len(str(bb)) < 7:
             "# Jonction module gammes_audio"
-            self.gam_son = gamma.audio_gam(colis1, colis2, "Gammes")
-            print(lineno(), "Gam *", self.gam_son)
+            self.gam_son = gamma.audio_gam(colis1, colis2, "Gammes", self.zone_w1.get())
+            (lineno(), "Gam *", self.gam_son)
         else:
             "# Jonction module binomes_audio"
-            self.gam_son = gamma.audio_gam(colis1, colis2, "Binomes")
-            print(lineno(), "Bin *", self.gam_son)
+            self.gam_son = gamma.audio_gam(colis1, colis2, "Binomes", self.zone_w1.get())
+            (lineno(), "Bin *", self.gam_son)
+
+        def sine_tone(frequency, duration, volume=0.3, sample_rate=22050):
+            # Calculer le nombre total d'échantillons
+            n_samples = int(sample_rate * duration)
+            # Initialiser PyAudio
+            p = PyAudio()
+            # Ouvrir un flux de sortie
+            stream = p.open(format=p.get_format_from_width(1),  # 8 bits par échantillon
+                            channels=1,  # mono
+                            rate=sample_rate,  # fréquence d'échantillonnage
+                            output=True)  # flux de sortie
+
+            # Fonction pour générer l'onde sinusoïdale
+            def s(t):
+                (lineno(), "T", t, "frequency", frequency)
+                return volume * math.sin(2 * math.pi * frequency * t / sample_rate)
+
+            # Générer les échantillons de l'onde sinusoïdale
+            samples = (int(s(t) * 0x7f + 0x80) for t in range(n_samples))
+
+            # Écrire les échantillons dans le flux de sortie par blocs
+            for buf in zip(*[samples] * sample_rate):  # écrire plusieurs échantillons à la fois
+                stream.write(bytes(bytearray(buf)))
+
+        "# Générer les sons avec les fréquences et les notes de 'self.gam_son'."
+        for k2, v2 in self.gam_son.items():
+            (lineno(), "k2", k2, "self.gam_son", self.gam_son[k2])
+            # Définir les fréquences pour une gamme heptatonique majeure (par exemple, la gamme de Do)
+            frequencies = [v1 for v1 in v2]
+            (lineno(), "frequencies", frequencies, "k2", k2)
+            for freq in frequencies:
+                # Jouer un son de 1000 Hz pendant 5 secondes
+                (lineno(), "freq1", freq)
+                # sine_tone(freq[1], 1)
 
         (lineno(), self.colonne_gam)
-
     # , "gammes_copie" : Remplace : "gammes_col" par une autre demande utilisateur.
     # _________________________________________________________________________________________
     # _________________________________________________________________________________________

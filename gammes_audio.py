@@ -89,7 +89,7 @@ def initie(neo_maj=None, dico=None):
     retour_dico = {}
     nkd_maj, note_classic = '102034050607', "CDEFGAB"
     if dico:
-        print(lineno(), "Dico", dico)
+        (lineno(), "Dico", dico)
         for kdc, vdc in dico.items():
             # , vdc = Les notes recueillies correspondantes aux lignes couplées.
             for dc2 in vdc:  # Lire les notes toniques une par une.
@@ -165,7 +165,7 @@ def initie(neo_maj=None, dico=None):
         return retour_dico
 
 
-def audio_gam(gammic, pulsif, selon):
+def audio_gam(gammic, pulsif, selon, mode):
     """Ce module[gammes_audio.py] est appliqué au traitement des gammes selon la méthode choisie
      par l'utilisateur. Puis, en retour, il retourne une séquence destinée à être traitée par le module gensound,
      afin d'entendre les sonorités des gammes sélectionnées. """
@@ -174,7 +174,10 @@ def audio_gam(gammic, pulsif, selon):
     titre1 = selon  # Le titre est selon le type de données en entrée, soit gamme ou binôme.
     liste_gen = []  # Retour de la liste des gammes à lire.
     num_mem2 = {}  # Deuxième dictionnaire de passage.
-    ("gammes :", "colis1", colis1, "colis2", colis2, "titre1", titre1)
+    procession = mode  # Les gammes sont statiques en DO ou modulent dynamiquement.
+    dic_htz = {}  # Le dictionnaire des htz-valeurs par noms-clefs.
+    dic_lig = {}  # La série des lignes et des octaves par noms-clefs..
+    ("gammes :", "colis1", list(colis1)[0], "colis2", list(colis2)[0], "titre1", titre1, mode)
 
     "Bb varie selon la sélection"
     # colis1[0] = bb  +34x
@@ -196,7 +199,7 @@ def audio_gam(gammic, pulsif, selon):
     "Le tri varie selon la sélection"
     # ..1[7] = tri  None
     "La répartition des hertz sur douze octaves"
-    # colis2 {'A0': [('A', 13.75), ('', 14.56761754744031), ('B', 15.433853164253879), ('C', 16.351597831287414),
+    # colis2 {'A0': [('A0', 13.75), ('0', 14.56761754744031), ('B0', 15.433853164253879), ('C0', 16.351597831287414),
 
     "# Liste des notes = Notes de musique."
     num_mem = {('0', 1): [('1', 'C'), ('2', 'D'), ('3', 'E'), ('4', 'F'), ('5', 'G'), ('6', 'A'), ('7', 'B')]}
@@ -475,226 +478,406 @@ def audio_gam(gammic, pulsif, selon):
         # ((60, 51), ['2']), ((60, 53), ['6'])]
 
         "# Commencement de la séquence des modulations dynamiques."
-        mem0_key, len0_key, count_gam = list(mem0.keys()), len(mem0.keys()), 0
-        for rng1 in range(len0_key):
-            for rng2 in range(len0_key):
-                if rng1 == rng2 - 1:
-                    count_gam += 1
-                    "# Comparaison des deux gammes mémorisées."
-                    un, u2 = mem0[mem0_key[rng1]], mem0_key[rng1]
-                    de, d2 = mem0[mem0_key[rng2]], mem0_key[rng2]
-                    print(lineno(), "______________________________________________", count_gam, "U2", u2, "D2", d2)
-                    (lineno(), "_________________________", "\n Un", u2, un, "\n De", d2, de)
-                    # 402 _________________________
-                    #  Un [((60, 12), ['4', '5']), ((60, 13), ['7']), ((60, 20), ['3']), ((60, 50), ['1']),
-                    #  ((60, 51), ['2']), ((60, 53), ['6'])] o5
-                    #  De [((61, 13), ['5']), ((61, 25), ['7']), ((61, 50), ['3']), ((61, 51), ['2']),
-                    #  ((61, 52), ['6']), ((61, 54), ['1']), ((61, 55), ['4'])] -35+
-                    lig, deg = 0, 0
-                    tab_adn, tab_anm = [], []  # Tables de récupération.
-                    for un2 in un:
-                        for de2 in de:
-                            "# Comparaison des lignes binaires."
-                            if un2[0][1] == de2[0][1]:
-                                "# Condition requise pour une recherche de tonalité approximative."
-                                lig += 1
-                                (lineno(), "Lig u2", u2, un2, un2[0][1], "d2", d2, de2, de2[0][1], "LIG", lig)
-                                # 414 Lig u2 -6 ((65, 17), ['3']) 17 d2 +6 ((66, 17), ['3']) 17 LIG 1
-                                ("# Des lignes binaires concordent et les notes correspondantes de la gamme précédente"
-                                 "sont utiles. Elles peuvent jouer un rôle pour tonifier la gamme suivante.")
-                                for nm1 in range(len(num_mem2[u2])):  # Comparaison des notes diatoniques.
-                                    # adn1 = Instance pour les notes inégales, elle est la référence tonale.
-                                    adn1, adn2 = num_mem2[u2][nm1], num_mem2[d2][nm1]
-                                    "# La note précédente est vue, elle est différente de la suivante."
-                                    if adn1[0] == un2[1][0] or un2[0][1] == de2[0][1]:
-                                        if adn1 not in tab_adn:
-                                            adn12 = u2, adn1, un2, d2, de2
-                                            tab_adn.append(adn12)
-                                        (lineno(), "\t Inégaux adn1", u2, adn1, un2, "adn2", d2, adn2, de2)
-                                        # 425 	 Inégaux adn1 o35x ('4', 'F') ((8, 17), ['4']) adn2 x26- ('+4', '+F')
-                                        break
-                                "# Comparaison des degrés diatoniques aux mêmes lignes binaires."
-                                if un2[1][0] == de2[1][0]:
-                                    "# Condition requise pour une recherche du degré approximatif."
-                                    deg += 1
-                                    (lineno(), "Deg u2", u2, un2, un2[1][0], "d2", d2, de2, de2[1][0], "DEG", deg)
-                                    # 432 Deg u2 -6 ((65, 17), ['3']) 3 d2 +6 ((66, 17), ['3']) 3 DEG 1
-                                    ("# Plusieurs degrés sont semblables, ils enchainent "
-                                     "une analyse ses notes diatoniques.")
-                                    for nm2 in range(len(num_mem2[u2])):  # Comparaison des notes diatoniques.
-                                        # anm1 = anm2 = Instances de référence des degrés aux notes égales.
-                                        anm1, anm2 = num_mem2[u2][nm2], num_mem2[d2][nm2]
-                                        if anm1[0][0] == anm2[0][0]:
-                                            if anm1 not in tab_anm:
-                                                anm12 = u2, anm1, un2, d2, anm2, de2
-                                                tab_anm.append(anm12)
-                                            (lineno(), "\t Égaux anm1", u2, anm1, "\t anm2", d2, anm2)
-                                            # 443 		 Égaux anm1 -6 ('3', 'E') 	 anm2 +6 ('3', 'E')
+        if procession == "Dyn":
+            mem0_key, len0_key, count_gam = list(mem0.keys()), len(mem0.keys()), 0
+            for rng1 in range(len0_key):
+                for rng2 in range(len0_key):
+                    if rng1 == rng2 - 1:
+                        count_gam += 1
+                        "# Comparaison des deux gammes mémorisées."
+                        un, u2 = mem0[mem0_key[rng1]], mem0_key[rng1]
+                        de, d2 = mem0[mem0_key[rng2]], mem0_key[rng2]
+                        # print(lineno(), "__________________________________________", count_gam, "U2", u2, "D2", d2)
+                        (lineno(), "_________________________", "\n Un", u2, un, "\n De", d2, de)
+                        # 402 _________________________
+                        #  Un [((60, 12), ['4', '5']), ((60, 13), ['7']), ((60, 20), ['3']), ((60, 50), ['1']),
+                        #  ((60, 51), ['2']), ((60, 53), ['6'])] o5
+                        #  De [((61, 13), ['5']), ((61, 25), ['7']), ((61, 50), ['3']), ((61, 51), ['2']),
+                        #  ((61, 52), ['6']), ((61, 54), ['1']), ((61, 55), ['4'])] -35+
+                        lig, deg = 0, 0
+                        tab_adn, tab_anm = [], []  # Tables de récupération.
+                        for un2 in un:
+                            for de2 in de:
+                                "# Comparaison des lignes binaires."
+                                if un2[0][1] == de2[0][1]:
+                                    "# Condition requise pour une recherche de tonalité approximative."
+                                    lig += 1
+                                    (lineno(), "Lig u2", u2, un2, un2[0][1], "d2", d2, de2, de2[0][1], "LIG", lig)
+                                    # 414 Lig u2 -6 ((65, 17), ['3']) 17 d2 +6 ((66, 17), ['3']) 17 LIG 1
+                                    ("# Des lignes binaires et les notes correspondantes de la gamme précédente"
+                                     "sont utiles. Elles peuvent jouer un rôle pour tonifier la gamme suivante.")
+                                    for nm1 in range(len(num_mem2[u2])):  # Comparaison des notes diatoniques.
+                                        # adn1 = Instance pour les notes inégales, elle est la référence tonale.
+                                        adn1, adn2 = num_mem2[u2][nm1], num_mem2[d2][nm1]
+                                        "# La note précédente est vue, elle est différente de la suivante."
+                                        if adn1[0] == un2[1][0] or un2[0][1] == de2[0][1]:
+                                            if adn1 not in tab_adn:
+                                                adn12 = u2, adn1, un2, d2, de2
+                                                tab_adn.append(adn12)
+                                            (lineno(), "\t Inégaux adn1", u2, adn1, un2, "adn2", d2, adn2, de2)
+                                            # 425 	 Inégaux adn1 o35x ('4', 'F') ((8, 17), ['4']) adn2 x26- ('+4', '+F')
                                             break
-                                (lineno(), u2, "* Un2", un2, "tab_gen", tab_gen[u2])
-                                (lineno(), d2, "** De2", de2, "tab_gen", tab_gen[d2], "\n ______   ______")
-                                # 446 -6 * Un2 ((65, 61), ['1']) tab_gen (41, '102034056007', 65, 0)
-                                # 447 +6 ** De2 ((66, 61), ['1']) tab_gen (46, '102034050067', 66, 0)
-                                #  ______   ______
+                                    "# Comparaison des degrés diatoniques aux mêmes lignes binaires."
+                                    if un2[1][0] == de2[1][0]:
+                                        "# Condition requise pour une recherche du degré approximatif."
+                                        deg += 1
+                                        (lineno(), "Deg u2", u2, un2, un2[1][0], "d2", d2, de2, de2[1][0], "DEG", deg)
+                                        # 432 Deg u2 -6 ((65, 17), ['3']) 3 d2 +6 ((66, 17), ['3']) 3 DEG 1
+                                        ("# Plusieurs degrés sont semblables, ils enchainent "
+                                         "une analyse ses notes diatoniques.")
+                                        for nm2 in range(len(num_mem2[u2])):  # Comparaison des notes diatoniques.
+                                            # anm1 = anm2 = Instances de référence des degrés aux notes égales.
+                                            anm1, anm2 = num_mem2[u2][nm2], num_mem2[d2][nm2]
+                                            if anm1[0][0] == anm2[0][0]:
+                                                if anm1 not in tab_anm:
+                                                    anm12 = u2, anm1, un2, d2, anm2, de2
+                                                    tab_anm.append(anm12)
+                                                (lineno(), "\t Égaux anm1", u2, anm1, "\t anm2", d2, anm2)
+                                                # 443 		 Égaux anm1 -6 ('3', 'E') 	 anm2 +6 ('3', 'E')
+                                                break
+                                    (lineno(), u2, "* Un2", un2, "tab_gen", tab_gen[u2])
+                                    (lineno(), d2, "** De2", de2, "tab_gen", tab_gen[d2], "\n ______   ______")
+                                    # 446 -6 * Un2 ((65, 61), ['1']) tab_gen (41, '102034056007', 65, 0)
+                                    # 447 +6 ** De2 ((66, 61), ['1']) tab_gen (46, '102034050067', 66, 0)
+                                    #  ______   ______
 
-                    if 0 < lig >= deg > 0:
-                        "# Le nombre de lignes est supérieur à zéro et il est égal à celui des degrés."
-                        print(lineno(), "elif 0 < lig >= deg > 0: =================", lig, deg)
-                        print(lineno(), "ADN num_mem2[u2]", u2, num_mem2[u2])
-                        (lineno(), "ANM num_mem2", d2, num_mem2[d2])
-                        anm0, dico_anm = False, {}
-                        dico_anm[tab_gen[d2][1]] = []
-                        if tab_anm:
-                            (lineno(), " DEG", deg, "\n ANM", tab_anm, "Long", len(tab_anm))
-                            for td_anm1 in num_mem2[u2]:
-                                for td_anm2 in num_mem2[d2]:
-                                    "# Relevé des mêmes notes"
-                                    (lineno(), "td_anm1", td_anm1[-1], "|2", td_anm2[-1], tab_gen[d2][1])
-                                    if td_anm1[-1] == td_anm2[-1] and td_anm1[-1] not in dico_anm[tab_gen[d2][1]]:
-                                        dico_anm[tab_gen[d2][1]].append(td_anm1[-1])
-                                        (lineno(), "td_anm1", td_anm1[-1], td_anm2[-1], dico_anm[tab_gen[d2][1]])
-                            "# Il y a six notes égales et une seule différence qui est la tonique."
-                            if len(dico_anm[tab_gen[d2][1]]) == 6:
-                                dico_anm[tab_gen[d2][1]].clear()
+                        if 0 < lig >= deg > 0:
+                            "# Le nombre de lignes est supérieur à zéro et il est égal à celui des degrés."
+                            # print(lineno(), "elif 0 < lig >= deg > 0: =================", lig, deg)
+                            # print(lineno(), "ADN num_mem2[u2]", u2, num_mem2[u2])
+                            (lineno(), "ANM num_mem2", d2, num_mem2[d2])
+                            anm0, dico_anm = False, {}
+                            dico_anm[tab_gen[d2][1]] = []
+                            if tab_anm:
+                                (lineno(), " DEG", deg, "\n ANM", tab_anm, "Long", len(tab_anm))
+                                for td_anm1 in num_mem2[u2]:
+                                    for td_anm2 in num_mem2[d2]:
+                                        "# Relevé des mêmes notes"
+                                        (lineno(), "td_anm1", td_anm1[-1], "|2", td_anm2[-1], tab_gen[d2][1])
+                                        if td_anm1[-1] == td_anm2[-1] and td_anm1[-1] not in dico_anm[tab_gen[d2][1]]:
+                                            dico_anm[tab_gen[d2][1]].append(td_anm1[-1])
+                                            (lineno(), "td_anm1", td_anm1[-1], td_anm2[-1], dico_anm[tab_gen[d2][1]])
+                                "# Il y a six notes égales et une seule différence qui est la tonique."
+                                if len(dico_anm[tab_gen[d2][1]]) == 6:
+                                    dico_anm[tab_gen[d2][1]].clear()
 
-                            for da in dico_anm[tab_gen[d2][1]]:
-                                if da not in dic_maj.keys():
-                                    initie(da, dico=None)
-                                    (lineno(), "Initie Da", da)
-                            (lineno(), " dico_anm", dico_anm)
+                                for da in dico_anm[tab_gen[d2][1]]:
+                                    if da not in dic_maj.keys():
+                                        initie(da, dico=None)
+                                        (lineno(), "Initie Da", da)
+                                (lineno(), " dico_anm", dico_anm)
 
-                        retour_init = initie("", dico_anm)
-                        for ri_gam in retour_init.values():
-                            print(lineno(), " retour_init", ri_gam, len(retour_init))
-                            # 584  retour_init {'xG': [('1', 'xG'), ('2', 'xA'), ('3', 'xB'), ('x4', '+^C'),
-                            # ('x5', '+^D'), ('+6', '^E'), ('7', '^F')]} 1
-                        if retour_init:
-                            (lineno(), "tab_gen", d2, tab_gen[d2])
-                            if len(retour_init) == 1:
-                                del num_mem2[d2]
-                                passe = retour_init.values()
-                                num_mem2[d2] = list(passe)[0]
-                                (lineno(), "Une clé passe", list(passe)[0])
-                            else:
-                                key_riz = list(retour_init.keys())
-                                dic_vrai, tab_vrai, nbr_vrai = {}, [], 0
-                                ton_u2 = num_mem2[u2][0][1]
-                                (lineno(), "Key_riz", key_riz, "ton_u2", ton_u2, "\n num_mem2", num_mem2[u2])
-
-                                for varie in key_riz:  # Lecture par clés délivrées de la fonction[initie].
-                                    dic_vrai[varie] = 0
-                                    for rive in retour_init[varie]:  # Lecture de chacune des gammes à clés.
-                                        (lineno(), "Varie", varie, rive[1])
-                                        for carie in num_mem2[u2]:
-                                            if carie[1] == rive[1]:
-                                                nbr_vrai += 1
-                                                (lineno(), "carie[1]", carie[1])
-                                    dic_vrai[varie] = nbr_vrai
-                                    tab_vrai.append(nbr_vrai)
-                                    nbr_vrai = 0
-                                    (lineno(), "dic_vrai", varie, dic_vrai[varie])
-                                max_vrai = max(tab_vrai)
-                                print(lineno(), "dic_vrai", dic_vrai, "max_vrai", max_vrai, "ton_u2", ton_u2)
-                                if ton_u2 in dic_vrai.keys():
-                                    if dic_vrai[ton_u2] == max_vrai:
-                                        num_mem2[d2] = retour_init[ton_u2]
-                                        (lineno(), "[ton=max] num_mem2[d2]", d2, num_mem2[d2])
-                                    else:
-                                        print(lineno(), "Else[ton=max]")
+                            retour_init = initie("", dico_anm)
+                            for ri_gam in retour_init.values():
+                                "# Visionner le dictionnaire revenant de l'initiation."
+                                (lineno(), " retour_init", ri_gam, len(retour_init))
+                                # 584  retour_init {'xG': [('1', 'xG'), ('2', 'xA'), ('3', 'xB'), ('x4', '+^C'),
+                                # ('x5', '+^D'), ('+6', '^E'), ('7', '^F')]} 1
+                            if retour_init:
+                                (lineno(), "tab_gen", d2, tab_gen[d2])
+                                if len(retour_init) == 1:
+                                    del num_mem2[d2]
+                                    passe = retour_init.values()
+                                    num_mem2[d2] = list(passe)[0]
+                                    (lineno(), "Une clé passe", list(passe)[0])
                                 else:
-                                    for q_vrai in dic_vrai.keys():
-                                        if dic_vrai[q_vrai] == max_vrai:
-                                            num_mem2[d2] = retour_init[q_vrai]
-                                            (lineno(), "ton n'est pas une clé")
-                            (lineno(), "dico_anm", dico_anm)
+                                    key_riz = list(retour_init.keys())
+                                    dic_vrai, tab_vrai, nbr_vrai = {}, [], 0
+                                    ton_u2 = num_mem2[u2][0][1]
+                                    (lineno(), "Key_riz", key_riz, "ton_u2", ton_u2, "\n num_mem2", num_mem2[u2])
 
-                    elif 0 == lig == deg:
-                        "# Le nombre de lignes et de degrés égaux est égal à zéro."
-                        "# Quand le nombre de ligne/degré est nul, on ne fait rien, la gamme reste en DO[C]"
-                        print(lineno(), "elif 0 == lig == deg: ================", lig, deg)
-                        print(lineno(), lig, "ADN num_mem2[u2]", u2, num_mem2[u2])
-
-                    else:
-                        "# Les lignes vont de un à plus et les degrés sont toujours à zéro."
-                        print(lineno(), "else: ================================", lig, deg)
-                        adn0, dico_adn = True, {}
-                        dico_adn[tab_gen[d2][1]] = []
-                        (lineno(), "LIG", lig, "ADN", tab_adn, "Long", len(tab_adn))
-                        print(lineno(), lig, "ADN num_mem2[u2]", u2, num_mem2[u2])
-                        (lineno(), deg, "ANM num_mem2", d2, num_mem2[d2])
-                        for tad in tab_adn:
-                            for td in tad:
-                                if td == u2:
-                                    if not adn0:  # Remise à True au second tour
-                                        adn0 = True
-                                    (lineno(), "Nom 1", td, "len", len(td))
-                                elif td == d2:
-                                    adn0 = False
-                                    (lineno(), "Nom 2", td)
-                                elif adn0:
-                                    if isinstance(td[-1], str):
-                                        (lineno(), "elif (str) Nom 1", td, "len", len(td))
+                                    for varie in key_riz:  # Lecture par clés délivrées de la fonction[initie].
+                                        dic_vrai[varie] = 0
+                                        for rive in retour_init[varie]:  # Lecture de chacune des gammes à clés.
+                                            (lineno(), "Varie", varie, rive[1])
+                                            for carie in num_mem2[u2]:
+                                                if carie[1] == rive[1]:
+                                                    nbr_vrai += 1
+                                                    (lineno(), "carie[1]", carie[1])
+                                        dic_vrai[varie] = nbr_vrai
+                                        tab_vrai.append(nbr_vrai)
+                                        nbr_vrai = 0
+                                        (lineno(), "dic_vrai", varie, dic_vrai[varie])
+                                    max_vrai = max(tab_vrai)
+                                    # print(lineno(), "dic_vrai", dic_vrai, "max_vrai", max_vrai, "ton_u2", ton_u2)
+                                    if ton_u2 in dic_vrai.keys():
+                                        if dic_vrai[ton_u2] == max_vrai:
+                                            num_mem2[d2] = retour_init[ton_u2]
+                                            (lineno(), "[ton=max] num_mem2[d2]", d2, num_mem2[d2])
+                                        else:
+                                            "# Je laisse pour évaluer les apparitions."
+                                            # print(lineno(), "Else[ton=max]")
                                     else:
-                                        for td_adn in num_mem2[u2]:
-                                            if td_adn[0][-1] == td[-1][0]:
-                                                dico_adn[tab_gen[d2][1]].append(td_adn[-1])
-                                                (lineno(), "elif Nom 1 td", u2, td, "td_adn", td_adn, tab_gen[d2])
-                                (lineno(), "td", td)
-                            (lineno(), "tad", tad, "Len", len(tad))
-                        for da in dico_adn.values():
-                            for d in da:
-                                if d not in dic_maj.keys():
-                                    initie(d, None)
-                        retour_init = initie("", dico_adn)
-                        "# Retourne les gammes demandées sous les toniques trouvées."
-                        for k_rie, v_rie in retour_init.items():
-                            (lineno(), "retour_init", retour_init[k_rie], len(retour_init))
-                        # 628 retour_init {'-G': [('1', '-G'), ('-2', 'oA'), ('o3', '*B'), ('o4', '*C'), ('5', '-D'),
-                        # ('+6', 'E'), ('7', 'F')], '+D': [('1', '+D'), ('-2', 'E'), ('o3', 'F'), ('o4', '-G'),
-                        # ('5', '+A'), ('+6', 'xB'), ('7', 'xC')]} 2
-                        dic_rit, tab_rit, max_rit = {}, [], ""
-                        for ri in retour_init.keys():
-                            if lig == 1:  # Il n'y a qu'un seul choix pour la note tonique.
-                                del num_mem2[d2]
-                                num_mem2[d2] = retour_init[ri].copy()
-                            else:
-                                tab_rit.clear()
-                                for kiri in retour_init.keys():
-                                    dic_rit[kiri] = 0
-                                    kr = 0
-                                    for rire in retour_init[kiri]:
-                                        # Compter le nombre de similitudes.
-                                        for nmu2 in num_mem2[u2]:
-                                            if rire[1] == nmu2[1]:
-                                                kr += 1
-                                                (lineno(), "num_mem2", rire[1], nmu2[1])
-                                    dic_rit[kiri] = kr
-                                    tab_rit.append(kr)
-                                max_rit = max(tab_rit)
-                                for calor, rigolo in dic_rit.items():
-                                    if max_rit == rigolo:
-                                        del num_mem2[d2]
-                                        num_mem2[d2] = retour_init[calor].copy()
-                                        (lineno(), "calor", calor, "rigolo", rigolo, "\n", retour_init[calor])
-                                        break
-                        "# Quand le nombre de comparaison est nul, on ne fait rien la gamme reste en DO[C]"
-                        (lineno(), "max_rit", max_rit)
-                        print(lineno(), "dic_rit", dic_rit, "tab_rit", tab_rit, "lignes", lig)
-                        (lineno(), "dico_adn", dico_adn, "retour_init", retour_init)
-                    print(lineno(), "ANM num_mem2[d2]", d2, num_mem2[d2])
-                    break
+                                        for q_vrai in dic_vrai.keys():
+                                            if dic_vrai[q_vrai] == max_vrai:
+                                                num_mem2[d2] = retour_init[q_vrai]
+                                                (lineno(), "ton n'est pas une clé")
+                                (lineno(), "dico_anm", dico_anm)
+
+                        elif 0 == lig == deg:
+                            "# Le nombre de lignes et de degrés égaux est égal à zéro."
+                            "# Quand le nombre de ligne/degré est nul, on ne fait rien, la gamme reste en DO[C]"
+                            # print(lineno(), "elif 0 == lig == deg: ================", lig, deg)
+                            # print(lineno(), lig, "ADN num_mem2[u2]", u2, num_mem2[u2])
+
+                        else:
+                            "# Les lignes vont de un à plus et les degrés sont toujours à zéro."
+                            # print(lineno(), "else: ================================", lig, deg)
+                            adn0, dico_adn = True, {}
+                            dico_adn[tab_gen[d2][1]] = []
+                            (lineno(), "LIG", lig, "ADN", tab_adn, "Long", len(tab_adn))
+                            # print(lineno(), lig, "ADN num_mem2[u2]", u2, num_mem2[u2])
+                            (lineno(), deg, "ANM num_mem2", d2, num_mem2[d2])
+                            for tad in tab_adn:
+                                for td in tad:
+                                    if td == u2:
+                                        if not adn0:  # Remise à True au second tour
+                                            adn0 = True
+                                        (lineno(), "Nom 1", td, "len", len(td))
+                                    elif td == d2:
+                                        adn0 = False
+                                        (lineno(), "Nom 2", td)
+                                    elif adn0:
+                                        if isinstance(td[-1], str):
+                                            (lineno(), "elif (str) Nom 1", td, "len", len(td))
+                                        else:
+                                            for td_adn in num_mem2[u2]:
+                                                if td_adn[0][-1] == td[-1][0]:
+                                                    dico_adn[tab_gen[d2][1]].append(td_adn[-1])
+                                                    (lineno(), "elif Nom 1 td", u2, td, "td_adn", td_adn, tab_gen[d2])
+                                    (lineno(), "td", td)
+                                (lineno(), "tad", tad, "Len", len(tad))
+                            for da in dico_adn.values():
+                                for d in da:
+                                    if d not in dic_maj.keys():
+                                        initie(d, None)
+                            retour_init = initie("", dico_adn)
+                            "# Retourne les gammes demandées sous les toniques trouvées."
+                            for k_rie, v_rie in retour_init.items():
+                                (lineno(), "retour_init", retour_init[k_rie], len(retour_init))
+                            # 628 retour_init {'-G': [('1', '-G'), ('-2', 'oA'), ('o3', '*B'), ('o4', '*C'),
+                            # ('5', '-D'), ('+6', 'E'), ('7', 'F')], '+D': [('1', '+D'), ('-2', 'E'), ('o3', 'F'),
+                            # ('o4', '-G'), ('5', '+A'), ('+6', 'xB'), ('7', 'xC')]} 2
+                            dic_rit, tab_rit, max_rit = {}, [], ""
+                            for ri in retour_init.keys():
+                                if lig == 1:  # Il n'y a qu'un seul choix pour la note tonique.
+                                    del num_mem2[d2]
+                                    num_mem2[d2] = retour_init[ri].copy()
+                                else:
+                                    tab_rit.clear()
+                                    for kiri in retour_init.keys():
+                                        dic_rit[kiri] = 0
+                                        kr = 0
+                                        for rire in retour_init[kiri]:
+                                            # Compter le nombre de similitudes.
+                                            for nmu2 in num_mem2[u2]:
+                                                if rire[1] == nmu2[1]:
+                                                    kr += 1
+                                                    (lineno(), "num_mem2", rire[1], nmu2[1])
+                                        dic_rit[kiri] = kr
+                                        tab_rit.append(kr)
+                                    max_rit = max(tab_rit)
+                                    for calor, rigolo in dic_rit.items():
+                                        if max_rit == rigolo:
+                                            del num_mem2[d2]
+                                            num_mem2[d2] = retour_init[calor].copy()
+                                            (lineno(), "calor", calor, "rigolo", rigolo, "\n", retour_init[calor])
+                                            break
+                            "# Quand le nombre de comparaison est nul, on ne fait rien la gamme reste en DO[C]"
+                            (lineno(), "max_rit", max_rit)
+                            # print(lineno(), "dic_rit", dic_rit, "tab_rit", tab_rit, "lignes", lig)
+                            (lineno(), "dico_adn", dico_adn, "retour_init", retour_init)
+                        # print(lineno(), "ANM num_mem2[d2]", d2, num_mem2[d2])
+                        break
 
     (lineno(), dic_maj.keys())
     # 514 dict_keys(['C', 'D', 'E', 'F', 'G', 'A', 'B', '-G', '-D', 'oE', 'oF', 'xG', '+A', '-A', 'oA', '+D', 'xD',
     # '+E', '+F', '*G', 'oG', '-F', 'xF', '+G', '-E', '*A', '^F', 'xE', '^E', '^D'])
 
-    "# colis2 {'A0': [('A', 13.75), ('', 14.56761754744031), ('B', 15.433853164253879),"
+    # Distribution des lignes dans le répertoire des octaves.
+    # Plage commence à la ligne deux et finit à la ligne soixante-trois.
+    plages_lig = [f for f in range(2, 75, 12)]
+    (lineno(), "Lignes. Plages_lig", plages_lig)
+    # 700 Lignes. Plages_lig [2, 14, 26, 38, 50, 62, 74]
+
+    ("\n", lineno(), "ANM num_mem2", num_mem2, "\n liste_gen", liste_gen)
+
+    ("# colis2 {'A0': [('A0', 13.75), ('0', 14.56761754744031), ('B0', 15.433853164253879), ... 'A11':."
+     "Audibilité de A0 : ('E0', 20.60172230705437) Htz à A10 : ('#D10', 19912.12695821318) Htz.")
+    "# Il faut déterminer où commence l'octave un et où finit l'octave six. L'octave va de DO à DO."
+    octave_5, clef_oct = 440, 5  # Cette fréquence correspond à la clé de l'octave A5.
+    oct_min, oct_max = clef_oct - 3, clef_oct + 4  # Calculer les octaves utiles par rapport à A5.
+    clef_min, clef_max = "A" + str(oct_min), "A" + str(oct_max)  # Définir les clefs utiles.
+    (lineno(), "Octaves min et max", oct_min, oct_max)
+    # 730 Octaves min et max 2 9
+    panel, pan = False, []
     for khz in colis2.keys():
-        print(lineno(), "\n khz", khz, "colis2.keys()", len(colis2.keys()), "Octaves.")
-        break
+        if clef_min[1] == khz[1]:
+            panel = True
+        else:
+            val = int(khz[1:])
+            if val >= int(clef_max[1]):
+                break
+        if panel:
+            pan.append(khz)
+        (lineno(), " khz", int(khz[1]), "colis2.keys()", len(colis2.keys()))
+        # 746  khz 1 colis2.keys() 12
+    (lineno(), "Octaves. Pan", pan)
+    # 747 Octaves. Pan ['A2', 'A3', 'A4', 'A5', 'A6', 'A7', 'A8']
 
-    "# Situer les degrés diatoniques : grâce au dictionnaire 'colis1[1]'."
-    (lineno(), "\n colis1[1]", colis1[1].keys())
-    print(lineno())
+    "# Création d'une liste contenant les octaves audibles issues du dictionnaire des fréquences."
+    liste_htz = []  # La liste des fréquences notées du dictionnaire, sur une seule ligne.
+    for k_htz in colis2.keys():
+        if k_htz in pan:
+            liste_htz.extend(colis2[k_htz])
+    (lineno(), "liste_htz", liste_htz)
+    # 731 liste_htz [('A2', 55.0), ('2', 58.27047018976124), ('B2', 61.735412657015516), ('C2', 65.40... )
 
-    return liste_gen
+    def hertz(rang, note, ligne, nom):
+        """Définir la fréquence hertzienne par rapport aux notes et à la liste des hertz."""
+        (lineno(), "******* ******* ******* Fonction HERTZ ******* ", nom)
+        # 737 ******* ******* ******* Fonction HERTZ *******  0
+        (lineno(), "Fonction HERTZ", "rang", rang, "note", note, "ligne", ligne, "nom", nom)
+        # 737 Fonction HERTZ rang 1 note C ligne 61
+        "# Recueillir l'octave correspondante à la ligne."
+        cran = None  # Niveau de lecture de l'octave.
+        if nom not in dic_lig.keys():
+            dic_lig[nom] = []
+        for lig_o in plages_lig:
+            if ligne <= lig_o:
+                ind_lig = plages_lig.index(lig_o)   # Plages_lig [2, 14, 26, 38, 50, 62, 74]
+                cran = pan[ind_lig]                 # Pan = ['A2', 'A3', 'A4', 'A5', 'A6', 'A7', 'A8']
+                pass_lig = note, cran, ligne
+                dic_lig[nom].append(pass_lig)
+                (lineno(), "lig_o", lig_o, "ind_lig", ind_lig, "(la gamme zéro est la gamme naturellement majeure)")
+                (lineno(), "ligne", ligne, "plages", plages_lig[ind_lig], "cran", cran)
+                (lineno(), "nom", nom, "note", note, "dic_lig", dic_lig[nom])
+                # 753 lig_o 2 ind_lig 0 (la gamme zéro est la gamme naturellement majeure).
+                # 754 ligne 2 plages 2 'cran' A2 (le cran est le niveau d'octave).
+                # 755 'nom 0' note C dic_lig [('C', 'A2', 2)]
+                "# Arrangement des suites des octaves par rapport aux lignes."
+                if len(dic_lig[nom]) > 1:
+                    ind_o_inf = pan.index(dic_lig[nom][-2][1])  # Indice basé sur l'octave inférieure
+                    pan_o_inf = pan[ind_o_inf]                      # Pan = ['A2', 'A3', 'A4', 'A5', 'A6', 'A7', 'A8']
+                    lig_o_inf = plages_lig[ind_o_inf]               # Plages_lig [2, 14, 26, 38, 50, 62, 74]
+                    print(lineno(), "Ligne lig_o_inf :", lig_o_inf, "pan_o_inf", pan_o_inf)
+                    # if
+                    "# Les lignes sont en ordre croissant."
+                    if int(dic_lig[nom][-2][2]) < int(dic_lig[nom][-1][2]):
+                        print(lineno(), "dic_lig[Ligne][-2] < [-1]", dic_lig[nom][-2], dic_lig[nom][-1])
+                        # 763 dic_lig[nom][-1] > [-2] 3 2
+                        if int(dic_lig[nom][-2][1][-1]) < int(dic_lig[nom][-1][1][-1]):
+                            print(lineno(), "dic_lig[Octave][-2] < [-1]", dic_lig[nom][-2][1], dic_lig[nom][-1][1])
+                    else:
+                        print(lineno(), "dic_lig[nom][-1] < [-2]", dic_lig[nom][-1][2], dic_lig[nom][-2][2])
+                print(lineno())
+                break
+
+        ("# Trouver la note naturelle et indexer la note altérée."
+         "# 700 Lignes. Plages_lig [2, 14, 26, 38, 50, 62, 74]"
+         "# 747 Octaves. Pan ['A2', 'A3', 'A4', 'A5', 'A6', 'A7', 'A8']")
+        signe_o, note_o, ind_car = None, None, 0
+        if nom not in dic_htz.keys():
+            dic_htz[nom] = []
+        for gen in liste_htz:
+            if gen[0][-1] == cran[-1]:  # 743 ligne 61 plages 62 cran A7. Le cran a été arrangé précédemment.
+                ind_cran = liste_htz.index(gen)  # Indice de l'octave A7 dans la liste des génériques.
+                (lineno(), "Fonction HERTZ", "_______ Gen", gen, "note", note, "cran", cran)
+                # 754 Fonction HERTZ _______ Gen ('A7', 1760.0) note C
+                "# Traitement sur la note entrante signée."
+                if len(note) > 1:
+                    note_o = [n for n in 'CDEFGAB' if n == note[-1]][0]
+                    signe_o = [n for n in note if n not in 'CDEFGAB'][0]
+                    if signe_o in tab_sup:
+                        ind_car = tab_sup.index(signe_o)
+                    elif signe_o in tab_inf:
+                        ind_car = tab_inf.index(signe_o) - len(tab_inf)
+                    (lineno(), "Fonction HERTZ", "ind_car", ind_car, "Valeur de l'altération.")
+                    # 766 Fonction HERTZ ind_car 1 Valeur de l'altération.
+                elif len(note) == 1:
+                    note_o = note
+                (lineno(), "\n Fonction HERTZ", "signe_o", signe_o, "ind_car", ind_car, "note_o", note_o)
+                # 768 Fonction HERTZ signe_o + ind_car 1 note_o A.
+                print(lineno(), nom, "                       ____________________________                   ________")
+                "# Aller à la rencontre de l'indice de la note dans la liste des génériques (htz)."
+                for car in range(ind_cran, ind_cran+13):  # La valeur 'ind_cran' est son numéro d'octave.
+                    if liste_htz[car][0][0] == note[-1]:
+                        print(lineno(), "**** liste_htz[car]", liste_htz[car], note[-1], "note", note, "car", car)
+                        car += ind_car  # La variable 'car' est l'indice dans la liste des génériques.
+                        if liste_htz[car][0].isdigit():  # La valeur 'liste_htz' est numérique.
+                            liste2 = liste_htz[car][0]
+                            liste2 = [note + liste2[0], liste_htz[car][1]]
+                            dic_htz[nom].append(liste2)
+                            (lineno(), "\t\t Isdigit() liste2 2", liste2, "note", note, "car", car)
+                            # print(lineno(), "\t\t Digit dic_htz", dic_htz[nom][-1], "note", note, "car", car)
+                        elif liste_htz[car][0].isalnum():  # La valeur 'liste_htz' est alphanumérique.
+                            liste2 = liste_htz[car][0]
+                            liste2 = [note + liste2[-1], liste_htz[car][1]]
+                            dic_htz[nom].append(liste2)
+                            (lineno(), "\t\t Isalpha() liste2 2", liste2, "note", note, "car", car)
+                            # print(lineno(), "\t\t Alpha dic_htz", dic_htz[nom][-1], note, "car", car)
+                            (lineno(), "Alpha liste_htz dic_htz", liste_htz[car], dic_htz[nom], "note", note)
+                        else:
+                            "# Quand la note est naturelle, la valeur 'liste_htz[car][0]' est naturelle."
+                            # print(lineno(), "ELSE (Digit/Alpha)", "car", car, liste_htz[car], "note", note)
+                        return liste_htz[car]
+                    else:
+                        (lineno(), "ELSE Liste != note", liste_htz[car], note)
+
+    "# Affectation des fréquences aux notes de 'liste_gen'. Première phase : La liste[degre_x, note_x, ligne_x]"
+    # 731 liste_htz [('A2', 55.0), ('2', 58.27047018976124), ('B2', 61.735412657015516), ('C2', 65.40... )
+    # 747 Octaves. Pan ['A2', 'A3', 'A4', 'A5', 'A6', 'A7', 'A8']
+    # 722 plages_lig [2, 14, 26, 38, 50, 62, 74]
+    nom_lgf, dic_lgf, a_dnl = "", {}, 0.0
+    for lgf in liste_gen:
+        doublons = []
+        (lineno(), "_______ for lgf in liste_gen:", nom_lgf, "\n")
+        # 741 _______ for lgf in liste_gen: -6
+        if 0 in lgf:  # Cette clé mène à un nom de gamme.
+            nom_lgf = colis1[2][lgf][0]
+            dic_lgf[nom_lgf] = []
+            (lineno(), "Nom lgf", lgf, nom_lgf)
+            # 746 Nom lgf (66, 0) +6
+        else:  # Cette clé mène à une note diatonique de la gamme.
+            deg_lgf = colis1[2][lgf]
+            if len(deg_lgf) == 1:  # Ici, un degré binaire correspond avec une seule note diatonique.
+                deg_lgf = colis1[2][lgf][0]
+                for nm2_x in num_mem2[nom_lgf]:
+                    if nm2_x[0][-1] == colis1[2][lgf][0][-1]:
+                        degre_x, note_x, ligne_x, nom_x = nm2_x[0], nm2_x[1], lgf[1], nom_lgf
+                        retour_htz = hertz(degre_x, note_x, ligne_x, nom_x)
+                        (lineno(), "Note", note_x, "________________ retour_htz1", retour_htz)
+                        dic_lgf[nom_lgf].append(retour_htz)
+                        (lineno(), "deg_lgf", deg_lgf, "nm2_x", nm2_x, "lgf", lgf)
+                        (lineno(), "degre_x", degre_x, "note_x", note_x, "ligne_x", ligne_x)
+                        # 756 deg_lgf 1 nm2_x ('1', 'C') lgf (66, 61)
+                        # 757 degre_x 1 note_x C ligne_x 61
+                        break
+            else:  # Ce degré binaire a plusieurs notes diatoniques.
+                # La liste des doublons aide à lire la liste 'deg_lgf'.
+                for i_deg in deg_lgf:
+                    deg_lgf2 = i_deg
+                    (lineno(), "deg_lgf", deg_lgf, "Note lgf", lgf, "deg_lgf2", deg_lgf2)
+                    # 763 deg_lgf ['1', '2', '3', '4', '6', '7'] Note lgf (3, 12) deg_lgf2 1
+                    for nm2_x in num_mem2[nom_lgf]:
+                        if nm2_x[0][-1] in colis1[2][lgf]:
+                            if nm2_x[0] not in doublons:
+                                doublons.append(nm2_x[0])
+                                (lineno(), "nm2_x[0]", nm2_x[0][-1], "colis1[2][lgf]", colis1[2][lgf])
+                                # 769 nm2_x[0][-1] 1 colis1[2][lgf] ['1', '2', '3', '4', '6', '7']
+                                degre_x, note_x, ligne_x, nom_x = nm2_x[0], nm2_x[1], lgf[1], nom_lgf
+                                retour_htz = hertz(degre_x, note_x, ligne_x, nom_x)
+                                print(lineno(), "Liste", degre_x, "________________ retour_htz2", retour_htz)
+                                dic_lgf[nom_lgf] += retour_htz
+                                (lineno(), "deg_lgf2", deg_lgf2, "nm2_x", nm2_x, "lgf", lgf)
+                                (lineno(), "degre_x", degre_x, "note_x", note_x, "ligne_x", ligne_x)
+                                # 775 deg_lgf2 1 nm2_x ('1', 'C') lgf (3, 12)
+                                # 776 degre_x 1 note_x C ligne_x 12
+                                break
+
+    (lineno(), "Pied de page du code.", "dic_lgf", dic_lgf)
+    # 837 Pied de page du code. dic_lgf {'+6' : [('C7', 2093.004522404789), ('D7', 2349.3181433392606), ('E4',
+    # 329.6275569128699), ('F7', 2793.825851464031), ('G8', 6271.926975707988), ('+A3', 116.54094037952248),
+    # ('B4', 246.94165062806206)]}
+
+    return dic_lgf
