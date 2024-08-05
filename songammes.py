@@ -526,6 +526,7 @@ class Relance(Tk):
 
         "# Traitement de la sonorisation des gammes retournées du module 'gammes_audio.py'"
         self.gam_son = None
+        self.frequencies = []
 
     def charger_image(self):
         """Placer les boutons-images sur le volet de droite 'table_o'"""
@@ -1113,14 +1114,19 @@ class Relance(Tk):
 
         "# Générer les sons avec les fréquences et les notes de 'self.gam_son'."
         for k2, v2 in self.gam_son.items():
-            (lineno(), "k2", k2, "self.gam_son", self.gam_son[k2])
-            # Définir les fréquences pour une gamme heptatonique majeure (par exemple, la gamme de Do)
-            frequencies = [v1 for v1 in v2]
-            (lineno(), "frequencies", frequencies, "k2", k2)
-            for freq in frequencies:
+            (lineno(), "k2", k2, "v2", v2)
+            self.frequencies.clear()
+            for v1 in v2[0]:
+                self.frequencies.append(v1)
+                (lineno(), "v1", v1, "... \t", k2, "\t\t", self.frequencies[-1])
+                # 1121 v1 ['C6', 1046.5] ... 	 +6 		 ['C6', 1046.5]
+
+            (lineno(), "frequencies", self.frequencies, "k2", k2)
+            for freq in self.frequencies:
                 # Jouer un son de 1000 Hz pendant 5 secondes
                 (lineno(), "freq1", freq)
-                # sine_tone(freq[1], 1)
+                # 1126 freq1 ['C6', 1046.5]
+                sine_tone(freq[1], 1)
 
         (lineno(), self.colonne_gam)
     # , "gammes_copie" : Remplace : "gammes_col" par une autre demande utilisateur.
