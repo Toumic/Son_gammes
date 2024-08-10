@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 # vicenté quantic cabviva
+#
+# Nom de l'application = songammes.py
 """Ce programme consiste à donner une sonorité diatonique aux gammes.
 Cette gamme est en Do et elle retrace les gammes fondamentales.
 L’architecture de cet assemblage ressemble à cette image (images/ClassBooLsIII.png)."""
@@ -12,13 +14,14 @@ from tkinter.font import *
 from typing import Callable
 
 from PIL import ImageTk, Image
-import math
-from pyaudio import PyAudio
+# import math
+import pyaudio
+import numpy as np
 
 # Les modules personnels.
 import gammes_audio as gamma  # Faire sonner les gammes.
 
-# lineno() Pour consulter le programme grâce au suivi des print’s
+# lino() Pour consulter le programme grâce au suivi des print’s
 lineno: Callable[[], int] = lambda: inspect.currentframe().f_back.f_lineno
 
 (lineno(), "Gammes", dir(gamma))
@@ -305,24 +308,28 @@ class Relance(Tk):
         (lineno(), "fin_col, fin_lin", self.fin_col, self.fin_lin)
         (lineno(), "deb_col, deb_lin", self.deb_col, self.deb_lin)
         (lineno(), "deb_col0, deb_lin0", self.deb_col0, self.deb_lin0)
-        tab_rec, bouc = [], "0"
+        self.tab_rec, bouc = [], "0"
+        self.tab_lig, lino = [], ""
         for i in range(68):
             "# Les rectangles peuvent être colorisés."
             if self.deb_col0 > 48:
                 bouc = self.tableau.create_rectangle(self.deb_col0 - 10, self.deb_lin, self.deb_col0 + 12,
                                                      self.fin_lin + 3,
-                                                     fill="lightsteelblue", width=0)
-                tab_rec.append(bouc)
-                # For rec in tab_rec: self.tableau.itemconfig(rec, fill="red") : Change la couleur.
-                # For rec in tab_rec: coords = self.tableau.coords(rec) : Donne les coordonnées.
-                (lineno(), "tab_rec", tab_rec)
-                # 262 tab_rec [5, 8, 11, 14, 17, 20, 23, 26, 29, 32, 35, 38, 41, 44, 47, 50]
-            self.tableau.create_line(self.deb_col, self.deb_lin0, self.fin_col, self.deb_lin0,
-                                     fill="lightblue", dash=(1, 1))  # Lignes horizontales.
+                                                     fill="", width=0)
+                self.tab_rec.append(bouc)
+                (lineno(), "tab_rec", self.tab_rec, "long", len(self.tab_rec))
+                # 262 tab_rec [5, 8, 11, 14, 17, 20, 23, 26, 29, 32, 35, 38, 41, 44, 47, 50, ] long 66
+                # For rec in self.tab_rec: self.tableau.itemconfig(rec, fill="red") : Change la couleur.
+                # For rec in self.tab_rec: coords = self.tableau.coords(rec) : Donne les coordonnées.
+            lino = self.tableau.create_line(self.deb_col, self.deb_lin0, self.fin_col, self.deb_lin0,
+                                            fill="lightblue", dash=(1, 1))  # Lignes horizontales.
+            self.tab_lig.append(lino)
             self.tableau.create_line(self.deb_col0, self.deb_lin, self.deb_col0, self.fin_lin,
                                      fill="hotpink", dash=(1, 1))  # Lignes verticales.
             self.deb_col0 += self.col
             self.deb_lin0 += self.lin
+        (lineno(), "tab_lig", self.tab_lig, "long", len(self.tab_lig))
+        # 328 tab_lig [1, 3, 6, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36, 39, 42, 45, 48, 51, 54, ] long 68
 
         if di_colon == [""]:
             di_colon = []
@@ -512,7 +519,6 @@ class Relance(Tk):
 
         "# Zone de l'interface aux actions dédiées à l'affichage des gammes."
         # self.table_w = Canvas(self, width=1656, height=60, bg="lightgray") # Colonne dédiée aux options d'affichage.
-
         ("# Radio-bouton pour sélectionner le type de développement diatonique entre (statique et dynamique)."
          "Le choix statique a toutes les gammes en DO. Le choix dynamique module les tonalités.")
         if not di_mode:
@@ -678,7 +684,7 @@ class Relance(Tk):
                     # print("Colon", colon, "Ligne", ligne, "gc", gc)
                     # print("Colon / Ligne", colon, ligne, "colonne_gam", colonne_gam[colon, ligne])
                 gammes_col.pop(n_gam)  # Effacement de la gamme traitée, afin de ne pas revenir dessus.
-                # print(lineno(), "self.dic_force", list(self.dic_force.keys())[0], "||", len(self.dic_force.keys()))
+                # print(lino(), "self.dic_force", list(self.dic_force.keys())[0], "||", len(self.dic_force.keys()))
             else:
                 break
             (lineno(), ". len(gammes_col) =", len(gammes_col), "self.dic_force", self.dic_force)
@@ -819,7 +825,7 @@ class Relance(Tk):
                         if halte0:
                             for fg1 in force_g1:  # 'force_g1' = Toutes les gammes aux 'cc1'
                                 if len(fg1) < 3 and len(fg1[1]) < 3:
-                                    fg2 = fg1[0]  # (lineno(), "fg2", fg2)  # = 673 fg2 (['o45x', 1], '1000001')
+                                    fg2 = fg1[0]  # (lino(), "fg2", fg2)  # = 673 fg2 (['o45x', 1], '1000001')
                                     if gn in fg2:
                                         fg2 = fg1[1]
                                         (lineno(), "fg1", fg1[0], "fg2", fg2)
@@ -910,7 +916,7 @@ class Relance(Tk):
                         (lineno(), "If c_col", c_col, "long_k", long_k)
                     else:  # dk[1] in key_lig
                         lo += 1
-                        # print(lineno(), "c_col", c_col, "lo", lo, "self.colonne_gam", self.colonne_gam[c_col, 0])
+                        # print(lino(), "c_col", c_col, "lo", lo, "self.colonne_gam", self.colonne_gam[c_col, 0])
                 if long_k == lo:
                     self.gammes_bin[self.colonne_gam[c_col, 0][0]] = "Ok"
                 (lineno(), "long_k", long_k, "\n dic_keys", dic_keys[c_col], dic_keys)
@@ -1089,44 +1095,59 @@ class Relance(Tk):
             self.gam_son = gamma.audio_gam(colis1, colis2, "Binomes", self.zone_w1.get())
             (lineno(), "Bin *", self.gam_son)
 
-        def sine_tone(frequency, duration, volume=0.3, sample_rate=22050):
-            # Calculer le nombre total d'échantillons
-            n_samples = int(sample_rate * duration)
+        def sine_tone(frequency, duration, sample_rate=44100):
+            """# Calculer le nombre total d'échantillons"""
             # Initialiser PyAudio
-            p = PyAudio()
+            p = pyaudio.PyAudio()
             # Ouvrir un flux de sortie
-            stream = p.open(format=p.get_format_from_width(1),  # 8 bits par échantillon
+            stream = p.open(format=pyaudio.paFloat32,  # 8 bits par échantillon
                             channels=1,  # mono
                             rate=sample_rate,  # fréquence d'échantillonnage
                             output=True)  # flux de sortie
 
-            # Fonction pour générer l'onde sinusoïdale
-            def s(t):
-                (lineno(), "T", t, "frequency", frequency)
-                return volume * math.sin(2 * math.pi * frequency * t / sample_rate)
+            # Génération de l'onde sonore
+            t = np.linspace(0, duration, int(sample_rate * duration), endpoint=False)
+            wave = 0.5 * np.sin(2 * np.pi * frequency * t)
+            # Lecture de l'onde sonore
+            stream.write(wave.astype(np.float32).tobytes())
 
-            # Générer les échantillons de l'onde sinusoïdale
-            samples = (int(s(t) * 0x7f + 0x80) for t in range(n_samples))
+            # Fermeture du flux audio
+            stream.stop_stream()
+            stream.close()
 
-            # Écrire les échantillons dans le flux de sortie par blocs
-            for buf in zip(*[samples] * sample_rate):  # écrire plusieurs échantillons à la fois
-                stream.write(bytes(bytearray(buf)))
+            # Fermeture de PyAudio
+            p.terminate()
 
         "# Générer les sons avec les fréquences et les notes de 'self.gam_son'."
+        liste_gam = list(self.gam_son.keys())  # Les noms des gammes
+        ind_gam = 66 - len(liste_gam)
+        # id_lino = 0  # self.tab_lig (Lignes) et colis1[2] (Noms.Lignes).
+        # 328 tab_lig [1, 3, 6, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36, 39, 42, 45, 48, 51, 54, ] long 68
         for k2, v2 in self.gam_son.items():
-            (lineno(), "k2", k2, "v2", v2)
+            (lineno(), "k2", k2, "v2", v2, "ind_gam", ind_gam)
+            # 1124 k2 0 v2 [['C2', 65.41], ['D2', 73.42], ['E2', 82.41], ['F2', 87.31], ['G2', 98.0], ['A2', 55.0],
+            # ['B2', 61.74]] ind_gam 0
             self.frequencies.clear()
-            for v1 in v2[0]:
+            for v1 in v2:
                 self.frequencies.append(v1)
                 (lineno(), "v1", v1, "... \t", k2, "\t\t", self.frequencies[-1])
-                # 1121 v1 ['C6', 1046.5] ... 	 +6 		 ['C6', 1046.5]
+                # 1130 v1 ['C2', 65.41] ... 	 0 		 ['C2', 65.41]
 
             (lineno(), "frequencies", self.frequencies, "k2", k2)
+            # self.tableau.update_idletasks()  # Forcer la mise à jour de l'interface graphique
             for freq in self.frequencies:
-                # Jouer un son de 1000 Hz pendant 5 secondes
+                # Colorier les rectangles coordonnés aux gammes via 'tab_rec' (ligne-315).
+                # For rec in tab_rec : self.tableau.itemconfig(rec, fill="red") : Change la couleur.
+                self.tableau.itemconfig(self.tab_rec[ind_gam-1], fill="")
+                self.tableau.itemconfig(self.tab_rec[ind_gam], fill="lightsteelblue")
+                self.tableau.update_idletasks()  # Forcer la mise à jour de l'interface graphique
+                # For rec in tab_rec : coords = self.tableau.coords(rec) : Donne les coordonnées.
                 (lineno(), "freq1", freq)
                 # 1126 freq1 ['C6', 1046.5]
-                sine_tone(freq[1], 1)
+                sine_tone(freq[1], 0.5)
+            # self.tableau.itemconfig(self.tab_rec[ind_gam], fill="")
+            self.tableau.itemconfig(self.tab_rec[ind_gam], fill="")
+            ind_gam += 1
 
         (lineno(), self.colonne_gam)
     # , "gammes_copie" : Remplace : "gammes_col" par une autre demande utilisateur.
