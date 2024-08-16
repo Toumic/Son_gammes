@@ -10,13 +10,15 @@
 ### Les boutons verticaux des binaires
     Nous pouvons avoir des méthodes de lecture :
     La méthode de lire à partir du bouton vertical, les gammes qui utilisent ce bouton (mono-note ou accord).
-    Ou, lire les gammes à partir de la hauteur du bouton, la totalité des gammes.
-Par défaut les gammes qui ont ce mode binaire dans leurs corps diatoniques, seront lues de gauche à droite, <br>
-et de haut en bas. La lecture respectera l'ordre des degrés ainsi que l'ascension des octaves. <br>
+Par défaut les gammes qui ont ce mode binaire dans leurs corps diatoniques, seront lues de haut en bas <br>
+et de gauche à droite. La lecture respectera l'ordre des degrés ainsi que l'ascension des octaves. <br>
 
-Par défaut la gamme sélectionnée sera en DO (tout comme toutes les gammes qui ont été développées en DO). <br>
-Cette première gamme choisie sert de référence à la mise en tonalité de la gamme suivante, la nouvelle tonalité <br>
-dépendra des occurrences entre ces deux gammes voisines, ici, les lignes représentent les hauteurs tonales. <br>
+1. [ ] Position du bouton-radio statique : 
+   1. Par défaut la gamme sélectionnée sera en DO (tout comme toutes les gammes qui ont été développées en DO).
+
+2. [ ] Position du bouton-radio dynamique : 
+   1. Cette première gamme sert de référence à la mise en tonalité de la gamme suivante, la nouvelle tonalité <br> 
+   dépendra des occurrences entre ces deux gammes voisines, ici, les lignes représentent les hauteurs tonales.
 
 **On peut créer plusieurs genres de lecture.**
 * Lecture des gammes ayant ce modèle binaire.
@@ -27,10 +29,12 @@ dépendra des occurrences entre ces deux gammes voisines, ici, les lignes repré
 ### Les boutons horizontaux des gammes
     Nous pouvons avoir des méthodes de lecture :
     Tout comme les boutons verticaux, les boutons horizontaux peuvent lire les gammes qui ont les mêmes propriétés.
-    Ou, lire les gammes à partir de ce bouton jusqu'à la fin de la liste.
-Par défaut la gamme sélectionnée sera en DO (tout comme toutes les gammes qui ont été développées en DO). <br>
-Cette première gamme choisie sert de référence à la mise en tonalité de la gamme suivante, la nouvelle tonalité <br>
-dépendra des occurrences entre ces deux gammes voisines, ici, les lignes représentent les hauteurs tonales. <br>
+1. [ ] Position du bouton-radio statique : 
+   1. Par défaut la gamme sélectionnée sera en DO (tout comme toutes les gammes qui ont été développées en DO).
+
+2. [ ] Position du bouton-radio dynamique : 
+   1. Cette première gamme sert de référence à la mise en tonalité de la gamme suivante, la nouvelle tonalité <br> 
+   dépendra des occurrences entre ces deux gammes voisines, ici, les lignes représentent les hauteurs tonales.
 
 **On peut créer plusieurs genres de lecture.**
 * La lecture de la gamme peut se faire de façon unique ou en accord.
@@ -38,7 +42,7 @@ dépendra des occurrences entre ces deux gammes voisines, ici, les lignes repré
     * La gamme de bas en haut, de haut en bas, en suivant les degrés.
     * On peut aussi lire les gammes qui ont des correspondances binaires. De droite à gauche ou l'inverse, en accord.
 
-##### Types de méthodes sur les gammes : Lorsqu'on appuie sur un bouton vertical ou horizontal.
+#### Types de méthodes sur les gammes : Lorsqu'on appuie sur un bouton vertical ou horizontal.
 * La gamme a en commun six notes avec la gamme suivante, la tonique est la même.
 * La gamme n'a pas de lien avec la suivante, la tonique devient en DO.
 * La gamme a un lien avec la suivante, la tonique devient celle de la gamme suivante.

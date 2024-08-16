@@ -14,9 +14,10 @@ from tkinter.font import *
 from typing import Callable
 
 from PIL import ImageTk, Image
-# import math
+import time
 import pyaudio
 import numpy as np
+import ctypes
 
 # Les modules personnels.
 import gammes_audio as gamma  # Faire sonner les gammes.
@@ -247,9 +248,10 @@ class Relance(Tk):
         Di_colon = dic_colon. Liste, clés binaires liées aux choix de conversions.
         Di_ages = dic_ages. Dictionnaire, clé = Numéro, valeur = Modes diatoniques.
         Di_ute = tri. """
-        Tk.__init__(self)
+        super().__init__()
         self.title("Base illusion")
         self.geometry("1824x1000+30+10")
+        # self.protocol("WM_DELETE_WINDOW", self.quit())  # Pose problème au déroulement souhaité.
         self.borne = {1: "       "}
         self.quitter("1111111")
         self.focus_force()  # Donnez l'intérêt à la fenêtre
@@ -313,7 +315,7 @@ class Relance(Tk):
         for i in range(68):
             "# Les rectangles peuvent être colorisés."
             if self.deb_col0 > 48:
-                bouc = self.tableau.create_rectangle(self.deb_col0 - 10, self.deb_lin, self.deb_col0 + 12,
+                bouc = self.tableau.create_rectangle(self.deb_col0 - 5, self.deb_lin, self.deb_col0 + 6,
                                                      self.fin_lin + 3,
                                                      fill="", width=0)
                 self.tab_rec.append(bouc)
@@ -321,9 +323,9 @@ class Relance(Tk):
                 # 262 tab_rec [5, 8, 11, 14, 17, 20, 23, 26, 29, 32, 35, 38, 41, 44, 47, 50, ] long 66
                 # For rec in self.tab_rec: self.tableau.itemconfig(rec, fill="red") : Change la couleur.
                 # For rec in self.tab_rec: coords = self.tableau.coords(rec) : Donne les coordonnées.
-            lino = self.tableau.create_line(self.deb_col, self.deb_lin0, self.fin_col, self.deb_lin0,
-                                            fill="lightblue", dash=(1, 1))  # Lignes horizontales.
-            self.tab_lig.append(lino)
+            linge = self.tableau.create_line(self.deb_col, self.deb_lin0, self.fin_col, self.deb_lin0,
+                                             fill="lightblue", dash=(1, 1))  # Lignes horizontales.
+            self.tab_lig.append(linge)
             self.tableau.create_line(self.deb_col0, self.deb_lin, self.deb_col0, self.fin_lin,
                                      fill="hotpink", dash=(1, 1))  # Lignes verticales.
             self.deb_col0 += self.col
@@ -350,8 +352,8 @@ class Relance(Tk):
             "# self.gammes_log()  # Fonction découvertes des gammes selon les binaires."
             self.gammes_log()  # Fonction découvertes des gammes binarisées.
             self.borne[1] = di_colon[0]
-            ("self borne[1]", self.borne[1], type(self.borne[1]), "|", di_colon[0], lineno())
-            # self borne[1] 1000001 <class 'int'> | 1000001 287
+            ("self borne[1]", self.borne[1], type(self.borne[1]), "|", di_colon, lineno())
+            # self borne[1] 1000001 <class 'int'> | 1000001 287.
 
         "# Mise en place des listes comparatives"
         self.test_bin1, self.test_bin2 = [], []
@@ -509,6 +511,7 @@ class Relance(Tk):
                     break
 
         if self.borne[1] != 1111111:
+            (lineno(), "Borne", self.borne[1])
             self.protocol("WM_DELETE_WINDOW", self.quitter("0000000"))
 
         "# Traitement des images préalable."
@@ -535,7 +538,7 @@ class Relance(Tk):
         self.frequencies = []
 
     def charger_image(self):
-        """Placer les boutons-images sur le volet de droite 'table_o'"""
+        """Placer les boutons imagés sur le volet de droite 'table_o'"""
         # table_o = Canvas(root, width=84, height=884, bg="thistle"), (row=2, column=3)
         self.table_o.delete("all")
         # self.images_references.clear()
@@ -563,6 +566,10 @@ class Relance(Tk):
             self.destroy()
             (lineno(), "Quitter/elif/clic_image borne", self.borne[1], "\t tag", tag)
             # 436 Quitter/elif/clic_image borne 1111111 	 tag clic_image
+        elif tag == "Passer":
+            # Gestion du clic de la souris perturbant.
+            (lineno(), "Quitter/elif/\t tag", tag)
+            pass
         else:  # 'self.borne[1] = "       " ou 1000001
             (lineno(), "Quitter/else borne", self.borne[1], "\t tag", tag)
             # 439 Quitter/else borne 1000001 tag 0000000
@@ -1013,6 +1020,7 @@ class Relance(Tk):
         Relance(dic_codage, code_ages, dic_binary, dic_indice, dic_force, retour_func[0], retour_func[1],
                 self.zone_w1.get())
 
+
     def bouton_bin(self, bb, cc):
         """Pratiquer les redirections des boutons d'en-tête[noms des gammes] et latéral gauche[binômes].
             Cette fonction est située après avoir initialisé les dictionnaires nécessaires. """
@@ -1095,59 +1103,74 @@ class Relance(Tk):
             self.gam_son = gamma.audio_gam(colis1, colis2, "Binomes", self.zone_w1.get())
             (lineno(), "Bin *", self.gam_son)
 
-        def sine_tone(frequency, duration, sample_rate=44100):
-            """# Calculer le nombre total d'échantillons"""
-            # Initialiser PyAudio
-            p = pyaudio.PyAudio()
-            # Ouvrir un flux de sortie
-            stream = p.open(format=pyaudio.paFloat32,  # 8 bits par échantillon
-                            channels=1,  # mono
-                            rate=sample_rate,  # fréquence d'échantillonnage
-                            output=True)  # flux de sortie
+        def sine_tone(frequency, duration, sample_rate=18000):
+            try:
+                """# Calculer le nombre total d'échantillons"""
+                # Initialiser PyAudio
+                p = pyaudio.PyAudio()
+                # Ouvrir un flux de sortie
+                stream = p.open(format=pyaudio.paFloat32,  # 8 bits par échantillon
+                                channels=1,  # mono
+                                rate=sample_rate,  # fréquence d'échantillonnage
+                                output=True)  # flux de sortie
 
-            # Génération de l'onde sonore
-            t = np.linspace(0, duration, int(sample_rate * duration), endpoint=False)
-            wave = 0.5 * np.sin(2 * np.pi * frequency * t)
-            # Lecture de l'onde sonore
-            stream.write(wave.astype(np.float32).tobytes())
+                # Génération de l'onde sonore
+                t = np.linspace(0, duration, int(sample_rate * duration), endpoint=False)
+                wave = 0.5 * np.sin(2 * np.pi * frequency * t)
+                # Lecture de l'onde sonore
+                stream.write(wave.astype(np.float32).tobytes())
 
-            # Fermeture du flux audio
-            stream.stop_stream()
-            stream.close()
+                # Fermeture du flux audio
+                stream.stop_stream()
+                stream.close()
+                time.sleep(0.1)
 
-            # Fermeture de PyAudio
-            p.terminate()
+                # Fermeture de PyAudio
+                p.terminate()
+                print(lineno(), "Sine_tone", frequency)
+            except Exception as f:
+                print(lineno(), "Erreur dans 'sine_tone'", f)
 
-        "# Générer les sons avec les fréquences et les notes de 'self.gam_son'."
-        liste_gam = list(self.gam_son.keys())  # Les noms des gammes
-        ind_gam = 66 - len(liste_gam)
-        # id_lino = 0  # self.tab_lig (Lignes) et colis1[2] (Noms.Lignes).
-        # 328 tab_lig [1, 3, 6, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36, 39, 42, 45, 48, 51, 54, ] long 68
-        for k2, v2 in self.gam_son.items():
-            (lineno(), "k2", k2, "v2", v2, "ind_gam", ind_gam)
-            # 1124 k2 0 v2 [['C2', 65.41], ['D2', 73.42], ['E2', 82.41], ['F2', 87.31], ['G2', 98.0], ['A2', 55.0],
-            # ['B2', 61.74]] ind_gam 0
-            self.frequencies.clear()
-            for v1 in v2:
-                self.frequencies.append(v1)
-                (lineno(), "v1", v1, "... \t", k2, "\t\t", self.frequencies[-1])
-                # 1130 v1 ['C2', 65.41] ... 	 0 		 ['C2', 65.41]
+        # Empêcher la mise en veille de l'ordinateur
+        ctypes.windll.kernel32.SetThreadExecutionState(0x80000002)
 
-            (lineno(), "frequencies", self.frequencies, "k2", k2)
-            # self.tableau.update_idletasks()  # Forcer la mise à jour de l'interface graphique
-            for freq in self.frequencies:
-                # Colorier les rectangles coordonnés aux gammes via 'tab_rec' (ligne-315).
-                # For rec in tab_rec : self.tableau.itemconfig(rec, fill="red") : Change la couleur.
-                self.tableau.itemconfig(self.tab_rec[ind_gam-1], fill="")
-                self.tableau.itemconfig(self.tab_rec[ind_gam], fill="lightsteelblue")
-                self.tableau.update_idletasks()  # Forcer la mise à jour de l'interface graphique
-                # For rec in tab_rec : coords = self.tableau.coords(rec) : Donne les coordonnées.
-                (lineno(), "freq1", freq)
-                # 1126 freq1 ['C6', 1046.5]
-                sine_tone(freq[1], 0.5)
-            # self.tableau.itemconfig(self.tab_rec[ind_gam], fill="")
-            self.tableau.itemconfig(self.tab_rec[ind_gam], fill="")
-            ind_gam += 1
+        # Gestion.
+        self.tableau.bind("<Button-1>", self.quitter("Passer"))  # Du clic de la souris
+        self.focus_force()  # De la fenêtre principale.
+
+        try:
+            "# Générer les sons avec les fréquences et les notes de 'self.gam_son'."
+            liste_gam = list(self.gam_son.keys())  # Les noms des gammes, selon la sélection.
+            ind_gam = 66 - len(liste_gam)
+            # id_lino = 0  # self.tab_lig (Lignes) et colis1[2] (Noms.Lignes).
+            # 328 tab_lig [1, 3, 6, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36, 39, 42, 45, 48, 51, 54, ] long 68
+            for k2, v2 in self.gam_son.items():
+                print(lineno(), "k2", k2, "v2", v2, "ind_gam", ind_gam)
+                # 1124 k2 0 v2 [['C2', 65.41], ['D2', 73.42], ['E2', 82.41], ['F2', 87.31], ['G2', 98.0], ['A2', 55.0],
+                # ['B2', 61.74]] ind_gam 0
+                self.frequencies.clear()
+                for v1 in v2:
+                    self.frequencies.append(v1)
+                    (lineno(), "v1", v1, "... \t", k2, "\t\t", self.frequencies[-1])
+                    # 1130 v1 ['C2', 65.41] ... 	 0 		 ['C2', 65.41]
+
+                (lineno(), "frequencies", self.frequencies, "k2", k2)
+                for freq in self.frequencies:
+                    # Colorier les rectangles coordonnés aux gammes via 'tab_rec' (ligne-315).
+                    # For rec in tab_rec : self.tableau.itemconfig(rec, fill="red") : Change la couleur.
+                    self.tableau.itemconfig(self.tab_rec[ind_gam - 1], fill="")
+                    self.tableau.itemconfig(self.tab_rec[ind_gam], fill="lightsteelblue")
+                    self.tableau.update_idletasks()  # Forcer la mise à jour de l'interface graphique
+                    # For rec in tab_rec : coords = self.tableau.coords(rec) : Donne les coordonnées.
+                    print(lineno(), "freq1", freq)
+                    # 1126 freq1 ['C6', 1046.5]
+                    # sine_tone(freq[1], 0.2)
+
+                # self.tableau.itemconfig(self.tab_rec[ind_gam], fill="")
+                self.tableau.itemconfig(self.tab_rec[ind_gam], fill="")
+                ind_gam += 1
+        except Exception as e:
+            print(lineno(), "Erreur rencontrée", e)
 
         (lineno(), self.colonne_gam)
     # , "gammes_copie" : Remplace : "gammes_col" par une autre demande utilisateur.
@@ -1155,5 +1178,5 @@ class Relance(Tk):
     # _________________________________________________________________________________________
 
 
-(lineno(), "dic_indice", dic_indice)
+(lineno(), "dic_indice", "dic_indice")
 Relance(dic_codage, code_ages, dic_binary, dic_indice, dic_force, dic_colon).mainloop()
