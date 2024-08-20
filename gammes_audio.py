@@ -176,8 +176,8 @@ def audio_gam(gammic, pulsif, selon, mode):
     liste_gen = []  # Retour de la liste des gammes à lire.
     num_mem2 = {}  # Deuxième dictionnaire de passage.
     procession = mode  # Les gammes sont statiques en DO ou modulent dynamiquement.
-    dic_htz = {}  # Le dictionnaire des htz-valeurs par noms-clefs.
-    dic_lig1 = {}  # La série des lignes et des octaves par noms-clefs..
+    dic_htz = {}  # Le dictionnaire des htz-valeurs par nom-clef.
+    dic_lig1 = {}  # La série des lignes et des octaves par nom-clef..
     (lino(), "colis1", list(colis1)[0], "colis2", list(colis2)[0], "titre1", titre1, "procession", procession)
     # 180 colis1 1111101 colis2 A0 titre1 Binomes procession Sta
 
@@ -851,7 +851,7 @@ def audio_gam(gammic, pulsif, selon, mode):
             if gen[0] == cran:  # 743 ligne 61 plages 62 cran A7. Le cran a été arrangé précédemment.
                 ind_cran = liste_htz.index(gen)  # Indice de l'octave A7 dans la liste des génériques.
                 (lino(), nom, "Fonction HERTZ", "____ Gen", gen, "note", note, "cran", cran, "ind_cran", ind_cran)
-                # 836 Fonction HERTZ _______ Gen ['A2', 55.0] note C cran A2
+                # 836 Fonction HERTZ _______ Gen ['A2', 55.0] note C cran A2.
                 "# Traitement sur la note entrante signée."
                 if len(note) > 1:
                     note_o = [n for n in 'CDEFGAB' if n == note[-1]][0]
@@ -920,7 +920,7 @@ def audio_gam(gammic, pulsif, selon, mode):
                             (lino(), "** dic_lgf", dic_lgf[nom_lgf])
                             (lino(), nom_lgf, "deg_lgf", deg_lgf, "nm2_x", nm2_x, "lgf", lgf)
                             # 894 deg_lgf 1 nm2_x ('1', 'C') lgf (66, 61)
-                            # S'affiche à chaque fin de traitement de gamme.
+                            "# S'affiche à chaque fin de traitement de gamme."
                             if len(dic_lgf[nom_lgf]) == 7:
                                 ("\n", lino(), "#######", nom_lgf, "dic_lgf :\n", dic_lgf[nom_lgf], "\n")
                         (lino(), "degre_x", degre_x, "note_x", note_x, "ligne_x", ligne_x)
