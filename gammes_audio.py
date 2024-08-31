@@ -166,7 +166,7 @@ def initie(neo_maj=None, dico=None):
         return retour_dico
 
 
-def audio_gam(gammic, pulsif, selon, mode):
+def audio_gam(gammic, pulsif, selon, mode, lecture):
     """Ce module[gammes_audio.py] est appliqué au traitement des gammes selon la méthode choisie
      par l'utilisateur. Puis, en retour, il retourne une séquence destinée à être traitée par le module gensound,
      afin d'entendre les sonorités des gammes sélectionnées. """
@@ -176,6 +176,7 @@ def audio_gam(gammic, pulsif, selon, mode):
     liste_gen = []  # Retour de la liste des gammes à lire.
     num_mem2 = {}  # Deuxième dictionnaire de passage.
     procession = mode  # Les gammes sont statiques en DO ou modulent dynamiquement.
+    type_lec = lecture
     dic_htz = {}  # Le dictionnaire des htz-valeurs par nom-clef.
     dic_lig1 = {}  # La série des lignes et des octaves par nom-clef..
     (lino(), "colis1", list(colis1)[0], "colis2", list(colis2)[0], "titre1", titre1, "procession", procession)
@@ -247,6 +248,9 @@ def audio_gam(gammic, pulsif, selon, mode):
             if g2[0] >= rng_gam:
                 liste_gen.append(g2)
                 (lino(), "colis1[2] G2", g2, colis1[2][g2])
+                # 249 colis1[2] G2 (3, 0) ['o45x']
+                # 249 colis1[2] G2 (3, 12) ['1', '2', '3', '4', '6', '7']
+                # 249 colis1[2] G2 (3, 13) ['5']
 
     elif titre1 == "Binomes":
         """C’est une fonction de trouver le binaire sélectionné et de séparer sa valeur invariable et variable. Le
@@ -295,7 +299,7 @@ def audio_gam(gammic, pulsif, selon, mode):
                     (lino(), "co2", co2, colis1[2][co2])
         (lino(), "liste_gen", liste_gen)
 
-    (lino(), "colis1[0]", colis1[0], "Liste_gen :", liste_gen[:8], "\n")
+    (lino(), "colis1[0]", colis1[0], "Liste_gen :", liste_gen, "\n")
     # 197 colis1[0] -3 Liste_gen : [(64, 0), (64, 59), (64, 57), (64, 44), (64, 60)...
     ("# La liste 'liste_gen' contient des tuples ayant (numéro de colonne, numéro de ligne)."
      "Ces tuples ont été produits selon le bouton (nom ou binôme) sélectionné par l'utilisateur."
@@ -352,7 +356,7 @@ def audio_gam(gammic, pulsif, selon, mode):
     "# À ce niveau, le dictionnaire de dictionnaire a rangé les degrés dans leurs binaires respectifs."
     (lino(), "* dic_dic", dic_dic.keys(), "\n dic_deg", list(dic_deg.keys())[:5])
     # 251 * dic_dic dict_keys(['-3'])
-    #  dic_deg [('-3', '1101111'), ('-3', '1001110'), ('-3', '1110011'), ('-3', '1110110'), ('-3', '1111100')]
+    # dic_deg [('-3', '1101111'), ('-3', '1001110'), ('-3', '1110011'), ('-3', '1110110'), ('-3', '1111100')]
 
     "# Détailler la gamme sélectionnée diatoniquement à l'aide d'un dictionnaire à une seule clé."
     tab_gen, tab_ok = {}, True  # Dictionnaire, clef = nom gamme, valeur = numéro statique/dynamique.
@@ -369,7 +373,7 @@ def audio_gam(gammic, pulsif, selon, mode):
             (lino(), "ddg[0]", ddg[0], "num_mem", num_mem)
             # 264 ddg[0] -3 num_mem {('-3', 1): []}
             if isinstance(dic_deg[ddg][0], str):  # Va de gamme en gamme
-                num_dia = dic_deg[ddg][0]
+                num_dia = dic_deg[ddg][0]  # Donne la forme énumérée du mode diatonique.
                 num_log = colis1[4][ddg[0]]  # Donne le numéro de la gamme invariante. 'dic_indice'.
                 (lino(), "Forme énumérée num_dia", num_dia, "ddg", ddg, "num_log", num_log)
                 # 269 Forme énumérée num_dia 102304050607 ddg ('-3', '1101111') num_log 36
@@ -440,7 +444,8 @@ def audio_gam(gammic, pulsif, selon, mode):
                                     (lino(), "ddg[0], 1", ddg[0], 1, "passage", passage)
                 notes.clear()
                 notes = [nm[1] for nm in num_mem[ddg[0], 1]]
-                (lino(), "\n Notes", notes, "ddg[0]", ddg[0])
+                (lino(), "Notes", notes, "ddg[0]", ddg[0])
+                # 446 Notes ['C', 'D', 'E', 'F', 'G', 'A', 'B'] ddg[0] 0
 
             "# Lecture des gammes et seule la précédente compte pour le passage de la tonalité."
             # Les tests sélectionnant la gamme mélodique[-3] donnent deux gammes relatives qui
@@ -496,7 +501,7 @@ def audio_gam(gammic, pulsif, selon, mode):
                         "# Comparaison des deux gammes mémorisées."
                         un, u2 = mem0[mem0_key[rng1]], mem0_key[rng1]
                         de, d2 = mem0[mem0_key[rng2]], mem0_key[rng2]
-                        # print(lino(), "__________________________________________", count_gam, "U2", u2, "D2", d2)
+                        (lino(), "__________________________________________", count_gam, "U2", u2, "D2", d2)
                         (lino(), "_________________________", "\n Un", u2, un, "\n De", d2, de)
                         # 402 _________________________
                         #  Un [((60, 12), ['4', '5']), ((60, 13), ['7']), ((60, 20), ['3']), ((60, 50), ['1']),
@@ -745,9 +750,9 @@ def audio_gam(gammic, pulsif, selon, mode):
     def hertz(rang, note, ligne, nom):
         """Définir la fréquence hertzienne par rapport aux notes et à la liste des hertz."""
         (lino(), "******* ******* ******* Fonction HERTZ ******* ", nom)
-        # 737 ******* ******* ******* Fonction HERTZ *******  0
+        # 752 ******* ******* ******* Fonction HERTZ *******  0
         (lino(), "Fonction HERTZ", "rang", rang, "note", note, "ligne", ligne, "nom", nom)
-        # 737 Fonction HERTZ rang 1 note C ligne 61
+        # 754 Fonction HERTZ rang 1 note C ligne 61
 
         def invitation(inf, sup):
             """Effectue une série de comparaisons récurrentes."""
@@ -785,7 +790,6 @@ def audio_gam(gammic, pulsif, selon, mode):
             # 783 Invitation ['C', 'A2', 2] ['D', 'A2', 3]
             return inf, sup
 
-
         "# Recueillir l'octave correspondante à la ligne."
         "# En rapport avec la fonction 'invitation', dictionnaire valable 'dic_lig1[nom]'"
         cran = None  # Niveau de lecture de l'octave.
@@ -797,13 +801,14 @@ def audio_gam(gammic, pulsif, selon, mode):
                 ind_lig = list(plages_lig.keys()).index(lig_o)  # Plages_lig [2, 14, 26, 38, 50, 62, 74]
                 cran = pan[ind_lig]                             # Pan = ['A2', 'A3', 'A4', 'A5', 'A6', 'A7', 'A8']
                 pass_lig = [note, cran, ligne]
+                "# Il faut incrémenter 'pass_lig' au bon emplacement."
                 dic_lig1[nom].append(pass_lig)
                 (lino(), "lig_o", lig_o, "ind_lig", ind_lig, "(la gamme zéro est la gamme naturellement majeure).")
                 (lino(), "ligne", ligne, "plages", plages_lig[lig_o][0], "cran", cran, "(le cran est l'octave).")
-                (lino(), "note", note, "nom", nom, "ligne", ligne, "dic_lig1", dic_lig1[nom][-1])
-                # 752 lig_o 2 ind_lig 0 (la gamme zéro est la gamme naturellement majeure).
-                # 753 ligne 2 plages 2 cran A2 (le cran est l'octave).
-                # 754 nom 0 note C dic_lig1 [['C', 'A2', 2]]
+                (lino(), "note", note, "nom", nom, "cran", cran, "dic_lig1", dic_lig1[nom][-1])
+                # 808 lig_o 2 ind_lig 0 (la gamme zéro est la gamme naturellement majeure).
+                # 809 ligne 2 plages 2 cran A2 (le cran est l'octave).
+                # 810 note C nom 0 ligne 2 dic_lig1 ['C', 'A2', 2]
 
                 "# Arrangement des suites des octaves par rapport aux lignes."
                 (lino(), "titre1", titre1)
@@ -891,18 +896,57 @@ def audio_gam(gammic, pulsif, selon, mode):
                         return dic_htz[nom]
 
     ("Fonction hertz juste au-dessus."
-     "# Affectation des fréquences aux notes de 'liste_gen'. Avec appel fonction HERTZ")
+     "# Affectation des fréquences aux notes de 'liste_gen'. Avec appel fonction HERTZ."
+     "En fin de ce traitement, est mis en évidence l'ordre de lecture des degrés diatoniques.")
     # 731 liste_htz [('A2', 55.0), ('2', 58.27047018976124), ('B2', 61.735412657015516), ('C2', 65.40... )
     # 747 Octaves. Pan ['A2', 'A3', 'A4', 'A5', 'A6', 'A7', 'A8']
     # 722 plages_lig [2, 14, 26, 38, 50, 62, 74]
+
+
+    def ordonnance(donne1, don2):
+        """Mettre de l'ordre parmi les modèles modaux diatoniques.
+        Les ordonnances sont là pour ordonner les degrés désordonnés du dictionnaire 'dic_lgf[gamme]'.
+        Comme les gammes désordonnées sont réordonnées, celles qui ne le sont pas ne passent pas par là."""
+        (lino(), "ordonnance donne1", donne1, cop1, cop2, "\n", dic_lgf[don2])
+        # 908 ordonnance donne1 Diatone [1, 2, 3, 4, 6, 7, 5] [1, 2, 3, 4, 5, 6, 7]
+        # [['C2', 65.41], ['-D2', 69.3], ['oE2', 73.42], ['oF2', 77.78], ['+A2', 58.27], ['B2', 61.74], ['xG3', 110.0]]
+        ("Ordonnance", don2)
+        if donne1 == "Diatone":
+            "Traitement de remise en ordre des degrés diatoniques de la gamme en cours."
+            rng_dld = 0
+            tab_new = []
+            for dld in dic_lgf[don2]:
+                if cop1[rng_dld] != cop2[rng_dld]:
+                    ind_cop = cop1.index(rng_dld+1)
+                    tab_new.append(dic_lgf[don2][ind_cop])
+                    (lino(), "\t cop1_2", cop1[rng_dld], cop2[rng_dld], "ind_cop1", dic_lgf[don2][ind_cop])
+                else:
+                    tab_new.append(dld)
+                rng_dld += 1
+            dic_lgf[don2] = tab_new
+            (lino(), "Diatone", donne1, don2, "cop1", cop1, cop2, "\n", dic_lgf[don2])
+        elif donne1 == "Hertz":
+            ("Aucun traitement de remise en ordre des degrés n'est requis."
+             "Puisque l'ordonnance va agir sur l'ordre croissant des fréquences,"
+             "se situant dans le module principal 'songammes.py'. Reconnaissable par l'extension 'Hertz'.")
+            dic_lgf[don2].append("Hertz")
+            (lino(), "Hertzien", donne1, don2, "cop1", cop1)
+        elif donne1 == "Groupe":
+            "L'ordonnance ajoute la liste désordonnée au dictionnaire 'dic_lgf[don2]'."
+            dic_lgf[don2].append(cop1)
+            (lino(), "Groupement", donne1, don2, "cop1", cop1)
+            # 924 Groupement Groupe o45x cop1 [1, 2, 3, 4, 6, 7, 5]
+
     nom_lgf, dic_lgf, a_dnl = "", {}, 0.0
+    tab_lgf = {}  # Dictionnaire des gammes aux degrés rangés.
     for lgf in liste_gen:
         doublons = []
-        (lino(), "_______ for lgf in liste_gen:", nom_lgf, "\n")
-        # 741 _______ for lgf in liste_gen: -6
+        (lino(), "_______ for lgf in liste_gen:", nom_lgf, "lgf", lgf, "\n")
+        # 906 _______ for lgf in liste_gen:  lgf (1, 0)
         if 0 in lgf:  # Cette clé mène à un nom de gamme.
             nom_lgf = colis1[2][lgf][0]
             dic_lgf[nom_lgf] = []
+            tab_lgf[nom_lgf] = []
             (lino(), "Nom lgf", lgf, nom_lgf)
             # 746 Nom lgf (66, 0) +6
         else:  # Cette clé mène à une note diatonique de la gamme.
@@ -913,8 +957,11 @@ def audio_gam(gammic, pulsif, selon, mode):
                 for nm2_x in num_mem2[nom_lgf]:
                     if nm2_x[0][-1] == colis1[2][lgf][0][-1]:
                         degre_x, note_x, ligne_x, nom_x = nm2_x[0], nm2_x[1], lgf[1], nom_lgf
+                        tab_lgf[nom_lgf].append(degre_x)
                         retour_htz = hertz(degre_x, note_x, ligne_x, nom_x)
+                        (lino(), "degre_x", degre_x, "note_x", note_x, "ligne_x", ligne_x, "nom_x", nom_x)
                         (lino(), nom_lgf, "Note", note_x, "_______ retour_htz1", retour_htz, len(retour_htz))
+                        # 925 degre_x 1 note_x C ligne_x 2 nom_x 0
                         if retour_htz[-1] not in dic_lgf[nom_lgf]:
                             dic_lgf[nom_lgf].append(retour_htz[-1])
                             (lino(), "** dic_lgf", dic_lgf[nom_lgf])
@@ -922,10 +969,13 @@ def audio_gam(gammic, pulsif, selon, mode):
                             # 894 deg_lgf 1 nm2_x ('1', 'C') lgf (66, 61)
                             "# S'affiche à chaque fin de traitement de gamme."
                             if len(dic_lgf[nom_lgf]) == 7:
-                                ("\n", lino(), "#######", nom_lgf, "dic_lgf :\n", dic_lgf[nom_lgf], "\n")
-                        (lino(), "degre_x", degre_x, "note_x", note_x, "ligne_x", ligne_x)
-                        # 896 degre_x 1 note_x C ligne_x 61
-                        break
+                                (lino(), nom_lgf, "** dic_lgf", dic_lgf[nom_lgf])
+                                cop1 = [int(x[-1]) for x in tab_lgf[nom_lgf]]
+                                cop2 = cop1.copy()
+                                cop2.sort()
+                                if cop1 != cop2:
+                                    ordonnance(type_lec, nom_lgf)
+                                    (lino(), dic_lgf[nom_lgf], "\n", tab_lgf[nom_lgf], type_lec, "\n")
             else:  # Ce degré binaire a plusieurs notes diatoniques.
                 # La liste des doublons aide à lire la liste 'deg_lgf'.
                 for i_deg in deg_lgf:
@@ -937,21 +987,25 @@ def audio_gam(gammic, pulsif, selon, mode):
                             if nm2_x[0] not in doublons:
                                 doublons.append(nm2_x[0])
                                 (lino(), "nm2_x[0]", nm2_x[0][-1], "colis1[2][lgf]", colis1[2][lgf])
-                                # 769 nm2_x[0][-1] 1 colis1[2][lgf] ['1', '2', '3', '4', '6', '7']
+                                # 989 nm2_x[0] 1 colis1[2][lgf] ['1', '2', '3', '4', '6', '7']
                                 degre_x, note_x, ligne_x, nom_x = nm2_x[0], nm2_x[1], lgf[1], nom_lgf
+                                tab_lgf[nom_lgf].append(degre_x)
+                                (lino(), "degre_x", degre_x, "note_x", note_x, "ligne_x", ligne_x, "nom_x", nom_x)
                                 retour_htz = hertz(degre_x, note_x, ligne_x, nom_x)
                                 (lino(), nom_lgf, "Liste", degre_x, "__ retour_htz2", retour_htz, len(retour_htz))
                                 if retour_htz[-1] not in dic_lgf[nom_lgf]:
                                     dic_lgf[nom_lgf] += [retour_htz[-1]]
-                                    (lino(), "** dic_lgf", dic_lgf[nom_lgf])
+                                    (lino(), nom_lgf, "** dic_lgf", dic_lgf[nom_lgf])
                                     (lino(), nom_lgf, "deg_lgf2", deg_lgf2, "nm2_x", nm2_x, "lgf", lgf)
                                     # 916 deg_lgf2 1 nm2_x ('1', 'C') lgf (3, 12)
-                                    # S'affiche à chaque fin de traitement de gamme.
+                                    "# S'affiche à chaque fin de traitement de gamme."
                                     if len(dic_lgf[nom_lgf]) == 7:
-                                        ("\n", lino(), "#######", nom_lgf, "dic_lgf :\n", dic_lgf[nom_lgf], "\n")
-                                (lino(), "degre_x", degre_x, "note_x", note_x, "ligne_x", ligne_x)
-                                # 918 degre_x 1 note_x C ligne_x 12
-                                break
+                                        cop1 = [int(x[-1]) for x in tab_lgf[nom_lgf]]
+                                        cop2 = cop1.copy()
+                                        cop2.sort()
+                                        "# Jamais servi jusqu'à maintenant."
+                                        if cop1 != cop2:
+                                            (lino(), "\n", dic_lgf[nom_lgf], "\n", tab_lgf[nom_lgf], type_lec)
 
     (lino(), "Pied de page du code.", "dic_lgf", dic_lgf)
     # 837 Pied de page du code. dic_lgf {'+6' : [('C7', 2093.004522404789), ('D7', 2349.3181433392606), ('E4',
