@@ -924,12 +924,11 @@ def audio_gam(gammic, pulsif, selon, mode, lecture):
                     tab_new.append(dld)
                 rng_dld += 1
             dic_lgf[don2] = tab_new
-            (lino(), "Diatone", donne1, don2, "cop1", cop1, cop2, "\n", dic_lgf[don2])
+            print(lino(), "Diatone", donne1, don2, "cop1", cop1, cop2, "\n", dic_lgf[don2])
         elif donne1 == "Hertz":
-            ("Aucun traitement de remise en ordre des degrés n'est requis."
-             "Puisque l'ordonnance va agir sur l'ordre croissant des fréquences,"
-             "se situant dans le module principal 'songammes.py'. Reconnaissable par l'extension 'Hertz'.")
-            dic_lgf[don2].append("Hertz")
+            ("L'ordonnance va agir sur l'ordre croissant des fréquences,"
+             "elle n'est pas traitée ici, puisque seuls les degrés désordonnés y figurent."
+             "Le rangement croissant des fréquences est dans le module principal 'songammes.py'.")
             (lino(), "Hertzien", donne1, don2, "cop1", cop1)
         elif donne1 == "Groupe":
             "L'ordonnance ajoute la liste désordonnée au dictionnaire 'dic_lgf[don2]'."
@@ -951,7 +950,7 @@ def audio_gam(gammic, pulsif, selon, mode, lecture):
             # 746 Nom lgf (66, 0) +6
         else:  # Cette clé mène à une note diatonique de la gamme.
             deg_lgf = colis1[2][lgf]
-            (lino(), "Introduction : deg_lgf", deg_lgf)
+            (lino(), "Introduction : deg_lgf", nom_lgf, deg_lgf)
             if len(deg_lgf) == 1:  # Ici, un degré binaire correspond avec une seule note diatonique.
                 deg_lgf = colis1[2][lgf][0]
                 for nm2_x in num_mem2[nom_lgf]:
@@ -969,6 +968,9 @@ def audio_gam(gammic, pulsif, selon, mode, lecture):
                             # 894 deg_lgf 1 nm2_x ('1', 'C') lgf (66, 61)
                             "# S'affiche à chaque fin de traitement de gamme."
                             if len(dic_lgf[nom_lgf]) == 7:
+                                if type_lec == "Hertz":
+                                    dic_lgf[nom_lgf].append("Hertz")
+                                    (lino(), "Htz", nom_lgf, type_lec)
                                 (lino(), nom_lgf, "** dic_lgf", dic_lgf[nom_lgf])
                                 cop1 = [int(x[-1]) for x in tab_lgf[nom_lgf]]
                                 cop2 = cop1.copy()
@@ -1000,6 +1002,9 @@ def audio_gam(gammic, pulsif, selon, mode, lecture):
                                     # 916 deg_lgf2 1 nm2_x ('1', 'C') lgf (3, 12)
                                     "# S'affiche à chaque fin de traitement de gamme."
                                     if len(dic_lgf[nom_lgf]) == 7:
+                                        if type_lec == "Hertz":
+                                            dic_lgf[nom_lgf].append("Hertz")
+                                            print(lino(), "Htz", nom_lgf, type_lec)
                                         cop1 = [int(x[-1]) for x in tab_lgf[nom_lgf]]
                                         cop2 = cop1.copy()
                                         cop2.sort()

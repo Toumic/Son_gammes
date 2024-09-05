@@ -240,7 +240,7 @@ class Relance(Tk):
 
     # Relance(dic_codage, dic_binary, dic_indice, dic_force, dic_colon, dic_titres).mainloop()
     def __init__(self, di_code=None, di_ages=None, di_bine=None, di_indi=None, di_fort=None, di_colon=None,
-                 di_ute=None, di_mode=None, di_lec=None):
+                 di_ute=None, di_solo=None, di_mode=None, di_lec=None):
         """ Initialisation du visuel, sous forme d'un tableur.
         Di_code = dic_codage. Dictionnaire des gammes et de leurs modes.
         Di_indi = dic_indice. Dictionnaire, clé = Nom de la gamme, valeur = Numéro de la gamme.
@@ -523,15 +523,42 @@ class Relance(Tk):
 
         "# Zone de l'interface aux actions dédiées à l'affichage des gammes."
         # self.table_w = Canvas(self, width=1656, height=60, bg="lightgray") # Colonne dédiée aux options d'affichage.
+
+        "# Création des cadres destinés à recueillir les boutons-radio."
+        largeur_cad, hauteur_cad = 1656 // 7, 80
+        self.color_cad, rng = ["red", "orange", "yellow", "green", "skyblue", "mediumpurple", "violet"], 0
+        self.table_cad = []
+        for yes in range(7):
+            frame = Frame(self.table_w, width=largeur_cad, height=hauteur_cad, bg=self.color_cad[yes])
+            frame.grid(row=1, column=yes)
+            frame.grid_propagate(False)
+            self.table_cad.append(frame)
+
+        (" Radio-bouton pour sélectionner le type de lecture."
+         "# Conditionner sur une seule gamme est lue, ou sur toutes les gammes.")
+        if not di_solo:
+            self.zone_w0 = StringVar(self.table_cad[0], value="Poly")
+        else:
+            self.zone_w0 = StringVar(self.table_cad[0], value=di_solo)
+        rad_bou0 = Radiobutton(self.table_cad[0], variable=self.zone_w0, value="Poly", text="Global",
+                               bg=self.color_cad[rng])
+        rad_bou0.grid(row=1, column=1)
+        rad_bou01 = Radiobutton(self.table_cad[0], variable=self.zone_w0, value="Solo", text="Unique",
+                                bg=self.color_cad[rng])
+        rad_bou01.grid(row=2, column=1)
+
         ("# Radio-bouton pour sélectionner le type de développement diatonique entre (statique et dynamique)."
          "Le choix statique a toutes les gammes en DO. Le choix dynamique module les tonalités.")
         if not di_mode:
-            self.zone_w1 = StringVar(self.table_w, value="Sta")
+            self.zone_w1 = StringVar(self.table_cad[1], value="Sta")
         else:
-            self.zone_w1 = StringVar(self.table_w, value=di_mode)
-        rad_bou1 = Radiobutton(self.table_w, variable=self.zone_w1, value="Sta", text="Statique")
+            self.zone_w1 = StringVar(self.table_cad[1], value=di_mode)
+        rng += 1
+        rad_bou1 = Radiobutton(self.table_cad[1], variable=self.zone_w1, value="Sta", text="Statique",
+                               bg=self.color_cad[rng])
         rad_bou1.grid(row=1, column=1)
-        rad_bou2 = Radiobutton(self.table_w, variable=self.zone_w1, value="Dyn", text="Dynamique")
+        rad_bou2 = Radiobutton(self.table_cad[1], variable=self.zone_w1, value="Dyn", text="Dynamique",
+                               bg=self.color_cad[rng])
         rad_bou2.grid(row=2, column=1)
 
         ("# Radio-bouton pour sélectionner le type de lecture à réaliser :"
@@ -539,15 +566,18 @@ class Relance(Tk):
          "  2. Ordre diatonique. Il respecte la séquence des notes diatoniques."
          "  3. Ordre hertzien. Il suit les fréquences allant du grave à l'aigü.")
         if not di_lec:
-            self.zone_w2 = StringVar(self.table_w, value="Groupe")
+            self.zone_w2 = StringVar(self.table_cad[2], value="Groupe")
         else:
-            self.zone_w2 = StringVar(self.table_w, value=di_lec)
-        self.zone_w2 = StringVar(self.table_w, value="Groupe")
-        rad_bou3 = Radiobutton(self.table_w, variable=self.zone_w2, value="Groupe", text="Groupement")
+            self.zone_w2 = StringVar(self.table_cad[2], value=di_lec)
+        rng += 1
+        rad_bou3 = Radiobutton(self.table_cad[2], variable=self.zone_w2, value="Groupe", text="Groupement",
+                               bg=self.color_cad[rng])
         rad_bou3.grid(row=1, column=2)
-        rad_bou4 = Radiobutton(self.table_w, variable=self.zone_w2, value="Diatone", text="Diatonique")
+        rad_bou4 = Radiobutton(self.table_cad[2], variable=self.zone_w2, value="Diatone", text="Diatonique",
+                               bg=self.color_cad[rng])
         rad_bou4.grid(row=2, column=2)
-        rad_bou5 = Radiobutton(self.table_w, variable=self.zone_w2, value="Hertz", text="Hertzien")
+        rad_bou5 = Radiobutton(self.table_cad[2], variable=self.zone_w2, value="Hertz", text="Hertzien",
+                               bg=self.color_cad[rng])
         rad_bou5.grid(row=3, column=2)
 
         "# Traitement de la sonorisation des gammes retournées du module 'gammes_audio.py'"
@@ -1043,12 +1073,11 @@ class Relance(Tk):
         (lineno(), "\n _______________________________________________ \n")
 
         Relance(dic_codage, code_ages, dic_binary, dic_indice, dic_force, retour_func[0], retour_func[1],
-                self.zone_w1.get(), self.zone_w2.get())
+                self.zone_w0.get(), self.zone_w1.get(), self.zone_w2.get())
 
     def on_click(self, event):
         """Fonction chargée de la structuration des modèles diatoniques sous la forme de valeurs signées."""
         item = self.tableau.find_closest(event.x, event.y)
-        # item = self.tableau.find_withtag(event.widget.gettags("current")[0])
         note = self.tableau.itemcget(item, 'text')
         tags = self.tableau.gettags(item[0])
         gamme = tags[0]  # Supposons que le deuxième tag soit le nom de la gamme
@@ -1180,7 +1209,7 @@ class Relance(Tk):
         for clef in tab_donne:  # Passage en revue des clés enregistrées.
             (lineno(), "for clef in tab_donne : ======= \t", clef)
             # 1117 for clef in tab_donne : ======= 	 +6
-            num_don = None
+            num_don, rng_don = None, 0
             for kco in colis1[2].keys():  # Chercher la clé dans le dictionnaire 'colis1[2]'.
                 if clef in colis1[2][kco]:  # La gamme est localisée dans le dictionnaire.
                     num_don = kco[0]
@@ -1195,20 +1224,25 @@ class Relance(Tk):
                         if num_don == kco[0]:
                             clef_don = clef, colis1[2][kco][0]
                             self.dic_donne[clef_don] = kco
-                            (lineno(), "clef_don", clef_don, "dic_donne", self.dic_donne[clef_don], "Kco", kco)
+                            rng_don += 1  # Ce compte permet d'éviter des lectures inutiles.
+                            (lineno(), "clef", clef_don, "dic", self.dic_donne[clef_don], "Kco", kco, rng_don)
                             # 1179 clef_don ('o45x', '5') dic_donne (3, 13)
                     else:
                         for ite in colis1[2][kco]:
                             if num_don == kco[0]:
                                 clef_don = clef, ite
                                 self.dic_donne[clef_don] = kco
-                                (lineno(), "clef_don", clef_don, "dic_donne", self.dic_donne[clef_don], "Kco", kco)
+                                rng_don += 1  # Ce compte permet d'éviter des lectures inutiles.
+                                (lineno(), "clef", clef_don, "dic", self.dic_donne[clef_don], "Kco", kco, rng_don)
                                 # 1185 clef_don ('o45x', '1') dic_donne (3, 12)
                                 # 1185 clef_don ('o45x', '2') dic_donne (3, 12)
                                 # 1185 clef_don ('o45x', '3') dic_donne (3, 12)
                                 # 1185 clef_don ('o45x', '4') dic_donne (3, 12)
                                 # 1185 clef_don ('o45x', '6') dic_donne (3, 12)
                                 # 1185 clef_don ('o45x', '7') dic_donne (3, 12)
+                if rng_don == 7:
+                    (lineno(), "rng_don", rng_don)
+                    break
             # break de vérification partielle, à cause des degrés aux mêmes binaires.
 
         def sine_tone(frequency, duration, sample_rate=18000):
@@ -1264,6 +1298,13 @@ class Relance(Tk):
         # 1173 tab_donne ['+6'] dic_donne {('+6', '1'): (66, 61), ('+6', '2'): (66, 62), ('+6', '3'): (66, 17),
         # ('+6', '4'): (66, 56), ('+6', '5'): (66, 63), ('+6', '6'): (66, 13), ('+6', '7'): (66, 18)}
 
+        ("# Il y a trois façons de séquencer les degrés modaux :"
+         "      L'ordre initial interféré par les groupements des modes aux mêmes binaires."
+         "      L'ordre original des degrés modaux selon 'CDEFGAB' :"
+         "          Cette opération de tri est déjà réalisée dans le module 'gammes_audio.py'."
+         "      L'ordre orgisationnel des fréquences hertziennes se fait maintenant, puisque le tri "
+         "      réalisé dans le module 'gammes_audio.py' s'effectuait dans une fonction de remise en ordre"
+         "      diatonique des notes. Et ne concernait pas toutes les gammes, contrairement à ces 'htz'.")
         "# La première boucle pour chaque gamme et ses modes diatoniques."
         for k2, v2 in self.gam_son.items():
             (lineno(), "ind_gam", ind_gam, "k2", k2, "v2", v2)
@@ -1280,15 +1321,31 @@ class Relance(Tk):
                         k_d2.append(k_multi)
                         (lineno(), "k_d2", k_d2, "Dans 'dic_donne.values()'.")
                         # 1224 k_d2 [(66, 62)] Dans 'dic_donne.values()'.
-            "# Une deuxième boucle pour un enregistrement diatonique[Fréquence. Modes binaires multiples.]."
-            for v1 in v2:
-                self.frequencies.append(v1)
-                (lineno(), "v1", v1, "... \t", k2, "\t\t self.frequencies", self.frequencies)
-                # 1183 v1 ['B3', 123.47] ... 	 +6 		 self.frequencies [['C6', 1046.5], ['D7', 2349.32],
-                # ['E3', 164.81], ['F6', 1396.91], ['G7', 3135.96], ['+A2', 58.27], ['B3', 123.47]]
-                # ..1[1] = cc  {1: ['123400000567', '123000004567', '120000034567', '100000234567', '...',
-                ("# On a les notes diatoniques signées[self.frequencies] "
-                 "et les degrés modaux[colis1[1]] diatoniques et statiques.")
+
+            if v2[-1] == "Hertz":  # Si le bouton-radio["Hertz"] est sélectionné.
+                "# Réalisation du tri du dictionnaire en fonction de sa croissance hertzienne."
+                tab_htz = []  # Enregistrer les fréquences, afin de les trier en ordre croissant.
+                for v0 in v2:
+                    if isinstance(v0[1], float):
+                        tab_htz.append(v0[1])
+                        (lineno(), "v0", v0, type(v0[1]), "k2", k2)
+                tab_htz.sort()  # Tri croissant des fréquences hertziennes.
+                (lineno(), "tab_htz", tab_htz, "k2", k2)
+                for seq in tab_htz:
+                    for v0 in v2:
+                        if seq == v0[1]:
+                            self.frequencies.append(v0)
+                            (lineno(), "v0", v0, "k2", k2)
+            else:  # L'enregistrement des fréquences des ordonnances[Diatonique et groupement].
+                "# Une deuxième boucle pour un enregistrement diatonique[Fréquence. Modes binaires multiples.]."
+                for v1 in v2:
+                    self.frequencies.append(v1)
+                    (lineno(), "v1", v1, "... \t", k2, "\t\t self.frequencies", self.frequencies)
+                    # 1183 v1 ['B3', 123.47] ... 	 +6 		 self.frequencies [['C6', 1046.5], ['D7', 2349.32],
+                    # ['E3', 164.81], ['F6', 1396.91], ['G7', 3135.96], ['+A2', 58.27], ['B3', 123.47]]
+                    # ..1[1] = cc  {1: ['123400000567', '123000004567', '120000034567', '100000234567', '...',
+                    ("# On a les notes diatoniques signées[self.frequencies] "
+                     "et les degrés modaux[colis1[1]] diatoniques et statiques.")
 
             (lineno(), "frequencies", self.frequencies, "k2", k2)
             col_0, lig_0 = 24, 26  # Coordonnées d'origine.
@@ -1328,11 +1385,15 @@ class Relance(Tk):
                         stt = self.tableau.create_text(co0, li0 + 6, text=nfq, font=self.police1,
                                                        fill="black", tags=(k2,))
                         self.all_textes.append(stt)
+                        self.tableau.tag_bind(stt, "<Enter>", lambda event: self.tableau.config(cursor="hand2"))
+                        self.tableau.tag_bind(stt, "<Leave>", lambda event: self.tableau.config(cursor=""))
                         self.tableau.tag_bind(stt, "<Button-1>", self.on_click)
                         break
 
-                # sine_tone(freq[1], 0.1)
+                sine_tone(freq[1], 0.2)
                 # break de vérification.
+            if self.zone_w0.get() == "Solo":
+                break
 
             self.tableau.itemconfig(self.tab_rec[ind_gam], fill="")
             ind_gam += 1
