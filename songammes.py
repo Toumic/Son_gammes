@@ -593,6 +593,7 @@ class Relance(Tk):
         self.num_static = {}  # Dictionnaire, clé = Nom, valeur = Numéro.
         self.majeure = '102034050607'  # La gamme de référence.
         self.modaux = ["I", "II", "III", "IV", "V", "VI", "VII"]  # Liste des degrés modaux.
+        self.message = []  # Tableau d'enregistrement des infos destinées à la 'messagebox'.
 
     def charger_image(self):
         """Placer les boutons imagés sur le volet de droite 'table_o'"""
@@ -1100,8 +1101,7 @@ class Relance(Tk):
             tab_notes.append(note)
 
         "# Visiter les notes enregistrées dans la liste 'tab_notes'."
-        # id_note, id_mode, mode_id, tab = "", "", "", ""
-        # mod_diatonic, tone_id = {}, {}
+        self.message.clear()
         for note in tab_notes:
             self.num_static[note] = self.dic_indice[gamme]  # Dictionnaire, clé = Nom, valeur = Numéro.
             mod_diatonic = self.di_ages[self.num_static[note]]  # Le dictionnaire des formes énumérées.
@@ -1124,37 +1124,38 @@ class Relance(Tk):
             id_mode = self.modaux[id_note]
 
             "# La référence 'self_majeure', dans le module 'gammes_audio.py'."
-            print("\n", lineno(), "Gamma majeure", gamma.dic_maj[self.gam_diatonic[gamme][0]])
+            ("\n", lineno(), "Gamma majeure", gamma.dic_maj[self.gam_diatonic[gamme][0]])
             #  1124 Gamma majeure ['C', '', 'D', '', 'E', 'F', '', 'G', '', 'A', '', 'B']
-            print(f"{lineno()} Note {note} Gamme {gamme} Numéro {self.num_static[note]}"
-                  f" Mode {mod_diatonic[id_note]}\nGamme {self.gam_diatonic[gamme]}")
+            (f"{lineno()} Note {note} Gamme {gamme} Numéro {self.num_static[note]}"
+             f" Mode {mod_diatonic[id_note]}\nGamme {self.gam_diatonic[gamme]}")
             # 1126 Note +A Gamme +6 Numéro 46 Mode 123040560700
             # Gamme ['C', 'D', 'E', 'F', 'G', '+A', 'B']
-            print(f"{lineno()} Deg {id_mode} Énuméré {mode_id} Maj {self.majeure} \n Tab {tab} \nTone {tone_id[gamme]}")
+            # (f"{lineno()} Deg {id_mode} Énuméré {mode_id} Maj {self.majeure} \n Tab {tab} \nTone {tone_id[gamme]}")
             # 1113 Deg VI Énuméré 123040560700 Maj 102034050607
             #  Tab ['+A', 'B', 'C', 'D', 'E', 'F', 'G']
             # Tone ['1', '-2', 'o3', '-4', '-5', 'o6', 'o7']
 
             # if len(tab_notes) == 1:
             "# Afficher les informations relatives au choix de l'utilisateur."
-            ton_maj = gamma.dic_maj[self.gam_diatonic[gamme][0]]
             t_dia = ", ".join(map(str, self.gam_diatonic[gamme][0]))
             g_dia = ", ".join(map(str, self.gam_diatonic[gamme]))
             n_choix = t_dia + " " + gamme
             m_dia = ", ".join(map(str, tab))
             f_dia = ", ".join(map(str, tone_id[gamme]))
-            showinfo("Informations", f"La note tonique majeure = {ton_maj[0]}\n"
-                                     f"Le modèle énuméré majeur = {self.majeure}\n"
-                                     f"Le degré modal diatonique = {g_dia}\n"
-                                     f"La gamme choisie = {n_choix}\n"
-                                     f"La note tonique fondamentale = {t_dia}\n"
-                                     f"Le modèle énuméré choisi = {mode_id}\n"
-                                     f"Le degré diatonique = {id_mode}\n"
-                                     f"La note tonique choisie = {note}\n"
-                                     f"Le mode diatonique choisi = {m_dia}\n"
-                                     f"La formule tonale choisie = {f_dia}\n"
-                                     f"\n\n"
-                                     f"* (Pour les degrés ordonnés, choisir le mode 'Diatonique').\n")
+            enr_mess = (f"Le degré modal diatonique = {g_dia}\n"
+                        f"La gamme choisie = {n_choix}\n"
+                        f"Le modèle énuméré = {mode_id}\n"
+                        f"Le degré diatonique = {id_mode}\n"
+                        f"La note tonique = {note}\n"
+                        f"Le mode diatonique choisi = {m_dia}\n"
+                        f"La formule tonale choisie = {f_dia}")
+            if note == tab_notes[-1]:
+                enr_mess += f"\n\n (LE BOUTON-RADIO DIATONIQUE ORDONNE LES DEGRÉS).\n"
+            self.message.append(enr_mess)
+
+        # Joindre tous les messages avec des sauts de ligne
+        texte_complet = "\n---\n".join(self.message)
+        showinfo("Informations", f"{texte_complet}")
 
 
     def bouton_bin(self, bb, cc):
