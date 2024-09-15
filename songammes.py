@@ -332,8 +332,9 @@ class Relance(Tk):
                                      fill="hotpink", dash=(1, 1))  # Lignes verticales.
             self.deb_col0 += self.col
             self.deb_lin0 += self.lin
-        (lineno(), "tab_lig", self.tab_lig, "long", len(self.tab_lig))
-        # 328 tab_lig [1, 3, 6, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36, 39, 42, 45, 48, 51, 54, ] long 68
+        (lineno(), "tab_rec", self.tab_rec, "\ntab_lig", self.tab_lig, "long", len(self.tab_lig))
+        # 335 tab_rec [5, 8, 11, 14, 17, 20, 23, 26, 29, 32, 35, 38, 41, 44, 47, 50, 53, 56, 59, 62,
+        # tab_lig [1, 3, 6, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36, 39, 42, 45, 48, 51, 54, ] long 68
 
         if di_colon == [""]:
             di_colon = []
@@ -342,6 +343,7 @@ class Relance(Tk):
         self.colonne_lis = {}  # Le dictionnaire clé=N°gamme, valeur=Ensemble degrés à même niveau.
         self.gammes_bin = {}  # Dictionnaire des gammes aux modes binaires existants.
         (lineno(), "self.colonne_bin", self.colonne_bin, "\n di_colon", di_colon)
+        (lineno(), "self.colonne_gam", self.colonne_gam, "\n di_colon", "di_colon")
 
         "# Exécution de la fonction qui sert à alimenter les boutons horizontaux et verticaux."
         if len(di_colon) == 0:
@@ -424,7 +426,7 @@ class Relance(Tk):
                 passe = 0
                 sage = k_val[0]
                 multi[sage] = []
-                (lineno(), "k_val", k_val, k_val[0], type(k_val[0]))
+                (lineno(), "k_val", k_val[0], type(k_val[0]), "k_bis", k_bis)
             if len(k_val) > 1:
                 passe += 1
                 multi[sage].append(passe)
@@ -524,7 +526,6 @@ class Relance(Tk):
 
         "# Zone de l'interface aux actions dédiées à l'affichage des gammes."
         # self.table_w = Canvas(self, width=1656, height=60, bg="lightgray") # Colonne dédiée aux options d'affichage.
-
         "# Création des cadres destinés à recueillir les boutons-radio."
         largeur_cad, hauteur_cad = 1656 // 7, 80
         self.color_cad, rng = ["red", "orange", "yellow", "green", "skyblue", "mediumpurple", "violet"], 0
@@ -582,7 +583,7 @@ class Relance(Tk):
         rad_bou5.grid(row=3, column=2)
 
         "# Traitement de la sonorisation des gammes retournées du module 'gammes_audio.py'"
-        self.gam_son = None
+        self.gam_son, self.gam_son1 = None, None  # , 'self.gam_son1'. Afin d'ordonner les clefs.
         self.frequencies = []  # Liste [degré, fréquence].
         self.dic_donne = {}  # Dictionnaire, clé = nom de gamme + degré, valeur = numéro de gamme + ligne.
         self.all_rectangles = []  # Cela correspond aux fonds des notes diatoniques.
@@ -1088,7 +1089,7 @@ class Relance(Tk):
         ("# On commence par vérifier si l'utilisateur a choisi '☺' qui regroupe plusieurs degrés."
          "Ces regroupements sont dans le dictionnaire[self.dic_multiples[gamme]].")
         tab_notes = []
-        if "☺" in note:
+        if note == '☺':
             for dmg in self.dic_multiples[gamme]:
                 if dmg[2] < co_y < dmg[3]:
                     tab_notes.append(dmg[0])
@@ -1135,21 +1136,20 @@ class Relance(Tk):
             #  Tab ['+A', 'B', 'C', 'D', 'E', 'F', 'G']
             # Tone ['1', '-2', 'o3', '-4', '-5', 'o6', 'o7']
 
-            # if len(tab_notes) == 1:
             "# Afficher les informations relatives au choix de l'utilisateur."
             t_dia = ", ".join(map(str, self.gam_diatonic[gamme][0]))
             g_dia = ", ".join(map(str, self.gam_diatonic[gamme]))
             n_choix = t_dia + " " + gamme
             m_dia = ", ".join(map(str, tab))
             f_dia = ", ".join(map(str, tone_id[gamme]))
-            enr_mess = (f"Le degré modal diatonique = {g_dia}\n"
+            enr_mess = (f"Le degré modal fondamental = {g_dia}\n"
                         f"La gamme choisie = {n_choix}\n"
                         f"Le modèle énuméré = {mode_id}\n"
                         f"Le degré diatonique = {id_mode}\n"
                         f"La note tonique = {note}\n"
                         f"Le mode diatonique choisi = {m_dia}\n"
                         f"La formule tonale choisie = {f_dia}")
-            if note == tab_notes[-1]:
+            if note == tab_notes[-1] and self.zone_w2.get() != "Diatone":
                 enr_mess += f"\n\n (LE BOUTON-RADIO DIATONIQUE ORDONNE LES DEGRÉS).\n"
             self.message.append(enr_mess)
 
@@ -1232,19 +1232,26 @@ class Relance(Tk):
         "Le tri varie selon la sélection"
         # ..1[7] = tri  None
         # colis2 {'A0': [('A', 13.75), ('', 14.56761754744031), ('B', 15.433853164253879), ('C', 16.351597831287414)
+        liste_gam = [colis1[2][x][0] for x in colis1[2] if x[1] == 0]  # Les noms des gammes, selon le tri.
         if len(str(bb)) < 7:
             "# Jonction module gammes_audio"
             self.gam_son = gamma.audio_gam(colis1, colis2, "Gammes", self.zone_w1.get(), self.zone_w2.get())
-            (lineno(), "Gam *", self.zone_w1.get(), self.gam_son)
+            (lineno(), "Gam *", self.zone_w1.get(), self.gam_son.keys())
             # 1100 Gam * fréquence {'+6' : [['C6', 1046.5], ['D7', 2349.32], ['E3', 164.81], ['F6', 1396.91],
             # ['G7', 3135.96], ['+A2', 58.27], ['B3', 123.47]]}
         else:
-            "# Jonction module binomes_audio"
-            self.gam_son = gamma.audio_gam(colis1, colis2, "Binomes", self.zone_w1.get(), self.zone_w2.get())
-            (lineno(), "Bin *", self.zone_w1.get(), self.gam_son)
+            ("# Jonction module binomes_audio"
+             "Ordonner les clés est nécessaire dans cette lecture des modes binaires.")
+            self.gam_son = {}  # Nouveau dictionnaire utile.
+            self.gam_son1 = gamma.audio_gam(colis1, colis2, "Binomes", self.zone_w1.get(), self.zone_w2.get())
+            for lg in liste_gam:
+                for k_sgs, v_sgs in self.gam_son1.items():
+                    if k_sgs == lg:
+                        self.gam_son[k_sgs] = v_sgs
+                        (lineno(), "kv_sgs", k_sgs, v_sgs)
+            (lineno(), "Bin *", self.zone_w1.get(), self.gam_son.keys())
             # 1106 Bin * {'-3': [['C6', 1046.5], ['D6', 1174.66], ['-E5', 622.25], ['F6', 1396.91], ['G6', 1567.98],
             # ['A6', 880.0], ['B2', 61.74]]}
-        # 'self.zone_w1.get()' = Bouton radio statique[Sta] ou dynamique[Dyn].
 
         "# Produire les structures nommées (notes, lignes), afin d'aider à l'écriture sur l'interface."
         tab_donne = list(self.gam_son.keys())
@@ -1258,9 +1265,9 @@ class Relance(Tk):
             num_don, rng_don = None, 0
             for kco in colis1[2].keys():  # Chercher la clé dans le dictionnaire 'colis1[2]'.
                 if clef in colis1[2][kco]:  # La gamme est localisée dans le dictionnaire.
-                    num_don = kco[0]
+                    num_don = kco[0]  # La clef est le nom qui n'est vu qu'en 'kco[1] = 0'.
                     (lineno(), "num_don", num_don, "Kco", kco, "colis1_kco", colis1[2][kco])
-                    # 1119 Clef +6 Kco (66, 0) colis1[2][kco] ['+6']
+                    # 1260 num_don 12 Kco (12, 0) colis1_kco ['+6']
                 elif num_don in kco:
                     ("# Construire la clef du dictionnaire 'dic_donne'."
                      "L'ordre des degrés n'est pas constant, le sixième peut paraitre avant le cinquième."
@@ -1336,13 +1343,24 @@ class Relance(Tk):
             self.all_textes.clear()
         (lineno(), "Liste", self.all_rectangles)
         "# Générer les sons avec les fréquences et les notes de 'self.gam_son'."
-        liste_gam = list(self.gam_son.keys())  # Les noms des gammes, selon la sélection.
-        ind_gam = 66 - len(liste_gam)  # Identification de la gamme et rang de la colonne.
-        # id_lino = 0  # self.tab_lig (Lignes) et colis1[2] (Noms.Lignes).
+        # liste_gam = [colis1[2][x][0] for x in colis1[2] if x[1] == 0]  # Les noms des gammes, selon le tri.
         # 328 tab_lig [1, 3, 6, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36, 39, 42, 45, 48, 51, 54, ] long 68
-        (lineno(), "tab_donne", tab_donne, "dic_donne", self.dic_donne)
-        # 1173 tab_donne ['+6'] dic_donne {('+6', '1'): (66, 61), ('+6', '2'): (66, 62), ('+6', '3'): (66, 17),
+        (lineno(), "tab_donne", tab_donne, "dic_donne", self.dic_donne, "\nliste_gam", liste_gam)
+        # 1349 tab_donne ['+6'] dic_donne {('+6', '1'): (66, 61), ('+6', '2'): (66, 62), ('+6', '3'): (66, 17),
         # ('+6', '4'): (66, 56), ('+6', '5'): (66, 63), ('+6', '6'): (66, 13), ('+6', '7'): (66, 18)}
+        # liste_gam ['-2', '0', '-25', '-26', '-6', '-56', '+26', '-26o', 'o6', '-5', 'o45x', 'o46-', 'o4',
+
+        "# Comment obtenir les coordonnées des rectangles toute hauteur."
+        # 262 tab_rec [5, 8, 11, 14, 17, 20, 23, 26, 29, 32, 35, 38, 41, 44, 47, 50, ] long 66
+        # liste_gam ['-2', '0', '-25', '-26', '-6', '-56', '+26', '-26o', 'o6', '-5', 'o45x', 'o46-', 'o4',
+        riz = 0
+        for rec in self.tab_rec:
+            coords = self.tableau.coords(rec)  # Donne les coordonnées.
+            (lineno(), "rec", rec, "coords", coords, self.tab_rec[riz])
+            # 1352 rec 5 coords [67.0, 6.0, 78.0, 880.0] 5
+            # 1352 rec 8 coords [91.0, 6.0, 102.0, 880.0] 8
+            # 1352 rec 11 coords [115.0, 6.0, 126.0, 880.0] 11
+            riz += 1
 
         ("# Il y a trois façons de séquencer les degrés modaux :"
          "      L'ordre initial interféré par les groupements des modes aux mêmes binaires."
@@ -1353,9 +1371,10 @@ class Relance(Tk):
          "      diatonique des notes. Et ne concernait pas toutes les gammes, contrairement à ces 'htz'.")
         "# La première boucle pour chaque gamme et ses modes diatoniques."
         for k2, v2 in self.gam_son.items():
+            ind_gam = liste_gam.index(k2)
             (lineno(), "ind_gam", ind_gam, "k2", k2, "v2", v2)
-            # 1174 ind_gam 65 k2 +6 v2 [['C6', 1046.5], ['D7', 2349.32], ['E3', 164.81], ['F6', 1396.91],
-            # ['G7', 3135.96], ['+A2', 58.27], ['B3', 123.47]]
+            # 1376 ind_gam 63 k2 -3 v2 [['C6', 1046.5], ['D6', 1174.66], ['-E5', 622.25], ['F6', 1396.91],
+            # ['G6', 1567.98], ['A6', 880.0], ['B2', 61.74]]
             self.frequencies.clear()
             self.dic_multiples[k2] = []  # L'enregistrement pour une utilisation ultérieure.
             k_dd = [vy for vy in self.dic_donne.values()]  # Liste des valeurs (colonnes, lignes).
@@ -1413,7 +1432,7 @@ class Relance(Tk):
                         co0, li0 = self.col * co_d, self.lin * li_d
                         col0, lig0 = (co0 - 10, li0 + 1), (co0 + 10, li0 + 11)
                         (lineno(), "freq", freq, "key_don", key_don, "dic_donne", self.dic_donne[key_don])
-                        (lineno(), "col0.1", col_0, lig_0, "co.li", co_d, li_d, "\tco.li", col0, lig0)
+                        (lineno(), "col0.1", col_0, lig_0, "co.li", co_d, li_d, "\tRectangle", col0, lig0)
                         # 1217 freq1['C6', 1046.5] key_don ('+6', '1') dic_donne (66, 61)
                         # 1221 col0.1 24 26 co.li 66 61 	co.li 1584 793
                         "# Dessiner les données correspondantes aux notes de la gamme sélectionnée."
@@ -1424,7 +1443,7 @@ class Relance(Tk):
                         if self.dic_donne[key_don] in k_d2:
                             pas_freq = (freq[0][:len(freq[0]) - 1], key_don[1], col0[1], lig0[1])
                             self.dic_multiples[k2].append(pas_freq)
-                            nfq = "☺" + str(li_d-2)
+                            nfq = "☺"
                             (lineno(), "n_all", self.dic_donne[key_don], "dic_multiples", self.dic_multiples[k2])
                             (lineno(), "co_d, li_d", co_d, li_d, "\t col0[1], lig0[1]", col0[1], lig0[1])
                             # 1391 n_all (5, 12) dic_multiples [('C', '1', 5, 14), ('-D', '2', 5, 14),
@@ -1445,7 +1464,6 @@ class Relance(Tk):
                 # break de vérification.
 
             self.tableau.itemconfig(self.tab_rec[ind_gam], fill="")
-            ind_gam += 1
 
             if self.zone_w0.get() == "Solo":
                 break

@@ -12,11 +12,22 @@ Où la note MI ayant une `ligne inférieure` avec une fréquence plus élevée q
 Voici deux choix d'une même gamme ayant deux assemblages distincts.
 * 1089 self.dic_multiples [('C', '1'), ('+D', '3'), ('E', '4'), ('+A', '7')] gamme +25x note ☺
 * 1089 self.dic_multiples [('C', '1'), ('+D', '3'), ('E', '4'), ('+A', '7')] gamme +25x note ☺
+* Chacune des lignes correspond à un mode binaire dissemblable.<br>
 
-Chacune des lignes correspond à un mode binaire dissemblable.<br>
 **Solution :** <br>
 Modifier les valeurs du dictionnaire, en leur ajoutant les coordonnées des rectangles d'arrière-plan. <br>
 1. [ ] col0[1], lig0[1]. Où, col0 = coin haut-gauche[x, y] et lig0 = coin bas-droit[x, y].
+
+
+    Lors de la sélection d'un bouton binaire, la lecture se comporte anormalement.
+Les gammes ne sont pas lues selon l'ordre apparaissant dans l'interface de l'utilisateur. <br>
+Le rectangle toute hauteur, "celui qui signale le niveau de lecture sonore", ne s'affiche pas. <br>
+**Le problème ne vient pas de :**
+* Le dictionnaire self.colonne_gam, le changement après le tri a bien eu lieu. (Ligne 428) <br>
+
+**Solution :** <br>
+A changé l'identification du rectangle, par un indice équivalant ici : `ind_gam = liste_gam.index(k2)` <br>
+
 
 
 
