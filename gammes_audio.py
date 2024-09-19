@@ -182,6 +182,9 @@ def audio_gam(gammic, pulsif, selon, mode, lecture):
     (lino(), "colis1", list(colis1)[0], "colis2", list(colis2)[0], "titre1", titre1, "procession", procession)
     # 180 colis1 1111101 colis2 A0 titre1 Binomes procession Sta
 
+    "Liste réservée aux testes des fréquences anormales situées dans ces gammes."
+    liste_gam_anormales = ["-26o", "*6", "o6", "-36"]
+    gamme_la = "ABCDEFG"  # La gamme en 'LA' pour assister la gestion des octaves dans la fonction 'invite'.
     "Bb varie selon la sélection"
     # colis1[0] = bb  +34x
     "Cc est invariant."
@@ -711,8 +714,12 @@ def audio_gam(gammic, pulsif, selon, mode, lecture):
     # Distribution des lignes dans le répertoire des octaves.
     # Plage commence à la ligne deux et finit à la ligne soixante-trois.
     plages_lig = {f: [x for x in range(f, f+12)] for f in range(2, 75, 12)}
+    tables_lig = list(plages_lig.keys())
     (lino(), "Lignes. Plages_lig", plages_lig)
-    # 700 Lignes. Plages_lig {2: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13], 14:
+    # 716 Lignes. Plages_lig {2: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13], 14: [14, 15, 16, 17, 18, 19, 20, 21, 22,
+    # 23, 24, 25], 26: [26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37], 38: [38, 39, 40, 41, 42, 43, 44, 45, 46, 47,
+    # 48, 49], 50: [50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61], 62: [62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72,
+    # 73], 74: [74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85]}
 
     ("\n", lino(), "ANM num_mem2", num_mem2, "\n liste_gen", liste_gen)
 
@@ -751,43 +758,85 @@ def audio_gam(gammic, pulsif, selon, mode, lecture):
         """Définir la fréquence hertzienne par rapport aux notes et à la liste des hertz."""
         (lino(), "******* ******* ******* Fonction HERTZ ******* ", nom)
         # 752 ******* ******* ******* Fonction HERTZ *******  0
-        (lino(), "Fonction HERTZ", "rang", rang, "note", note, "ligne", ligne, "nom", nom)
-        # 754 Fonction HERTZ rang 1 note C ligne 61
+        if nom in liste_gam_anormales:
+            (lino(), "Fonction HERTZ", "rang", rang, "note", note, "ligne", ligne, "nom", nom)
+            # 754 Fonction HERTZ rang 1 note C ligne 61
 
         def invitation(inf, sup):
             """Effectue une série de comparaisons récurrentes."""
-            (lino(), "INVITATION inf", inf, "sup", sup)
             if len(sup) == 1:
                 sup = sup[0]
+            il, sl = inf[2], sup[2]  # Référentiel des lignes.
+            io, so = int(inf[1][-1]), int(sup[1][-1])  # Référentiel des octaves[partie numérique].
+            sa = sup[0][-1]  # Référentiel de la note 'LA'.
+            ind_in, ind_sn = gamme_la.index(inf[0][-1]), gamme_la.index(sup[0][-1])
             "# La ligne 'sup' est supérieure."
-            if inf[2] < sup[2]:
-                a0 = "(Ligne 'sup' Super)"
-                "# La différence entre les lignes reste dans l'octave."
-                if (sup[2] - inf[2]) + inf[2] in plages_lig[lig_o]:
+            if il < sl:
+                a0 = "(il<sl) :"
+                "# La différence entre les lignes reste dans l'octave. Chaque clé est un 'LA'."
+                # Octaves. Pan ['A2', 'A3', 'A4', 'A5', 'A6', 'A7', 'A8'].
+                # Plages_lig {2: [2-13], 14: [14-25], 26: [26-37], 38: [38-49], 50: [50-61], 62: [62-73], 74: [74-85]}.
+                # Gamme_la = "ABCDEFG"
+                if (sl - il) + il in plages_lig[lig_o]:  # Approximation des lignes parmi les octaves[plages_lig].
                     "# L'octave 'inf' est infer ou égale."
-                    if int(inf[1][-1]) <= int(sup[1][-1]):
-                        if sup[0][-1] != 'A':
-                            cran1 = pan[ind_lig]
-                            sup[1] = cran1  # Diminuer d'un cran l'octave 'sup'.
-                            (lino(), a0, "(Octave 'sup' Super[=], != 'A') \t", inf, sup, note)
-                        elif sup[0][-1] == 'A':
+                    if io <= so:
+                        if sa != 'A':
+                            if ind_in < ind_sn:
+                                cran1 = inf[1]
+                                sup[1] = cran1  # Garder le cran de l'octave 'sup'.
+                            elif ind_in > ind_sn:
+                                cran1 = pan[ind_lig + 1]
+                                sup[1] = cran1  # Augmenter d'un cran l'octave 'sup'.
+                            print(lino(), nom_lgf, a0, "(io<=so, != 'A') \t", inf, sup, note, "gamme_la", gamme_la)
+                        elif sa == 'A':  # La note est 'LA'.
                             cran1 = pan[ind_lig + 1]
                             sup[1] = cran1  # Augmenter d'un cran l'octave 'sup'.
-                            (lino(), a0, "(Octave 'sup' Super[=], = 'A')  \t", inf, sup, note)
-                    elif int(inf[1][-1]) > int(sup[1][-1]):  # La ligne 'sup' est super, l'octave est infer.
+                            print(lino(), nom_lgf, a0, "(io<=so, = 'A')  \t", inf, sup, note)
+                    elif io > so:  # La ligne 'sup' est super, l'octave est infer.
                         cran1 = pan[ind_lig + 1]
                         sup[1] = cran1  # Augmenter d'un cran l'octave 'sup'.
-                        (lino(), a0, "(Octave 'sup' Infer)              \t", inf, sup, note)
+                        print(lino(), nom_lgf, a0, "(io>so)         \t", inf, sup, note)
                 else:  # La ligne n'est plus dans son octave d'origine.
-                    (lino(), "L'octave change ligne", inf, sup, note)
+                    ("Il faut chercher à quelle octave correspond cette ligne dans 'plages_ig'."
+                     "Suite du traitement par la différence.")
+                    print(lino(), nom_lgf, "/// L'octave change ligne", inf, sup, note)
             "# Les lignes 'inf' et 'sup' sont égales."
-            if inf[2] == sup[2]:
-                (lino(), "(inf[2]=sup[2])                              \t\t\t", inf, sup, note)
+            if il == sl:
+                b0 = "(il=sl) :"
+                if sa == "A":
+                    ind_pan = pan.index(sup[1])
+                    cran1 = pan[ind_pan + 1]
+                    sup[1] = cran1  # Augmenter d'un cran l'octave 'sup'.
+                if io > so:
+                    if ind_in < ind_sn:
+                        cran1 = inf[1]
+                        sup[1] = cran1  # Garder le cran de l'octave 'sup'.
+                    elif ind_in > ind_sn:
+                        ind_pan = pan.index(inf[1])
+                        cran1 = pan[ind_pan + 1]
+                        sup[1] = cran1  # Augmenter d'un cran l'octave 'sup'.
+                if io == so:
+                    if ind_in < ind_sn:
+                        cran1 = inf[1]
+                        sup[1] = cran1  # Garder le cran de l'octave 'sup'.
+                    elif ind_in > ind_sn:
+                        ind_pan = pan.index(inf[1])
+                        cran1 = pan[ind_pan + 1]
+                        sup[1] = cran1  # Augmenter d'un cran l'octave 'sup'.
+                print(lino(), nom_lgf, b0, "(A&io)  \t\t\t", inf, sup, note)
             "# La ligne 'inf' est supérieure."
-            if inf[2] > sup[2]:
-                (lino(), "(inf[2]>sup[2])                              \t\t\t", inf, sup, note)
-            (lino(), "Invitation", inf, sup)
-            # 783 Invitation ['C', 'A2', 2] ['D', 'A2', 3]
+            if il > sl:
+                c0 = "(il>sl) :"
+                ind_oct, nll = pan.index(sup[1]), 0
+                for kll in tables_lig:
+                    nll += 1
+                    if sl > kll:
+                        cran1 = pan[nll - 1]
+                        sup[1] = cran1  # Régler le cran d'octave 'sup'.
+                print(lino(), nom_lgf, c0, "(Diff)   \t\t\t", inf, sup, note)
+            if nom_lgf in liste_gam_anormales:  # ["-26o", "*6", "o6", "-36"]
+                (lino(), nom_lgf, "Invitation", inf, sup)
+                # 794 Invitation ['C', 'A2', 2] ['D', 'A2', 3]
             return inf, sup
 
         "# Recueillir l'octave correspondante à la ligne."
@@ -795,6 +844,8 @@ def audio_gam(gammic, pulsif, selon, mode, lecture):
         cran = None  # Niveau de lecture de l'octave.
         if nom not in dic_lig1.keys():
             dic_lig1[nom] = []
+            if nom in liste_gam_anormales:
+                ("****", lino(), nom, "INVITATION", liste_gam_anormales)
         for lig_o in plages_lig.keys():
             "# Trouver à quelle plage se trouve la ligne."
             if ligne in plages_lig[lig_o]:
@@ -892,13 +943,14 @@ def audio_gam(gammic, pulsif, selon, mode, lecture):
                             (lino(), "Alpha liste_htz dic_htz", liste_htz[car], dic_htz[nom], "note", note)
                         else:
                             "# Quand la note est naturelle, la valeur 'liste_htz[car][0]' est naturelle."
-                            print(lino(), nom, "***** ELSE (Digit/Alpha)", "car", car, liste_htz[car], "note", note)
+                            (lino(), nom, "***** ELSE (Digit/Alpha)", "car", car, liste_htz[car], "note", note)
                         return dic_htz[nom]
 
     ("Fonction hertz juste au-dessus."
      "# Affectation des fréquences aux notes de 'liste_gen'. Avec appel fonction HERTZ."
      "En fin de ce traitement, est mis en évidence l'ordre de lecture des degrés diatoniques.")
-    # 731 liste_htz [('A2', 55.0), ('2', 58.27047018976124), ('B2', 61.735412657015516), ('C2', 65.40... )
+    (lino(), "liste_htz", liste_htz, len(liste_htz)/12)
+    # 731 liste_htz [('A2', 55.0), ('2', 58.27047018976124), ('B2', 61.735412657015516), ('C2', 65.40... )] 7
     # 747 Octaves. Pan ['A2', 'A3', 'A4', 'A5', 'A6', 'A7', 'A8']
     # 722 plages_lig [2, 14, 26, 38, 50, 62, 74]
 
@@ -971,7 +1023,10 @@ def audio_gam(gammic, pulsif, selon, mode, lecture):
                                 if type_lec == "Hertz":
                                     dic_lgf[nom_lgf].append("Hertz")
                                     (lino(), "Htz", nom_lgf, type_lec)
-                                (lino(), nom_lgf, "** dic_lgf", dic_lgf[nom_lgf])
+                                if nom_lgf in liste_gam_anormales:
+                                    (lino(), nom_lgf, "\t\t IF dic_lgf", dic_lgf[nom_lgf])
+                                    # 977 -26o 		 IF dic_lgf [['C3', 130.81], ['-D3', 138.59],
+                                    # ['E3', 164.81], ['F3', 174.61], ['-G3', 185.0], ['oA8', 6271.93], ['B2', 61.74]]
                                 cop1 = [int(x[-1]) for x in tab_lgf[nom_lgf]]
                                 cop2 = cop1.copy()
                                 cop2.sort()
@@ -1004,7 +1059,9 @@ def audio_gam(gammic, pulsif, selon, mode, lecture):
                                     if len(dic_lgf[nom_lgf]) == 7:
                                         if type_lec == "Hertz":
                                             dic_lgf[nom_lgf].append("Hertz")
-                                            print(lino(), "Htz", nom_lgf, type_lec)
+                                            (lino(), "Htz", nom_lgf, type_lec)
+                                        if nom_lgf in liste_gam_anormales:
+                                            (lino(), nom_lgf, "ELSE dic_lgf", dic_lgf[nom_lgf])
                                         cop1 = [int(x[-1]) for x in tab_lgf[nom_lgf]]
                                         cop2 = cop1.copy()
                                         cop2.sort()

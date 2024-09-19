@@ -595,6 +595,7 @@ class Relance(Tk):
         self.majeure = '102034050607'  # La gamme de référence.
         self.modaux = ["I", "II", "III", "IV", "V", "VI", "VII"]  # Liste des degrés modaux.
         self.message = []  # Tableau d'enregistrement des infos destinées à la 'messagebox'.
+        self.tab_ind = []  # Tableau utilisé pour gérer la coloration des lignes des boutons binaires.
 
     def charger_image(self):
         """Placer les boutons imagés sur le volet de droite 'table_o'"""
@@ -1372,9 +1373,14 @@ class Relance(Tk):
         "# La première boucle pour chaque gamme et ses modes diatoniques."
         for k2, v2 in self.gam_son.items():
             ind_gam = liste_gam.index(k2)
+            if len(bb) == 7:
+                ind_bin = colis1[3].index(bb) + 4  # Liste des lignes 'self.tab_lig', 'fill="lightblue"'.
+                self.tab_ind.append(ind_bin)
+                (lineno(), "ind_gam", ind_gam, "ind_bin", bb, ind_bin, "k2", k2, "v2", v2)
+                (lineno(), "tab_ind.1", self.tab_ind)
             (lineno(), "ind_gam", ind_gam, "k2", k2, "v2", v2)
-            # 1376 ind_gam 63 k2 -3 v2 [['C6', 1046.5], ['D6', 1174.66], ['-E5', 622.25], ['F6', 1396.91],
-            # ['G6', 1567.98], ['A6', 880.0], ['B2', 61.74]]
+            # 1376 ind_gam 0 k2 0 v2 [['C2', 65.41], ['D2', 73.42], ['E2', 82.41],
+            # ['F2', 87.31], ['G2', 98.0], ['A3', 110.0], ['B3', 123.47]]
             self.frequencies.clear()
             self.dic_multiples[k2] = []  # L'enregistrement pour une utilisation ultérieure.
             k_dd = [vy for vy in self.dic_donne.values()]  # Liste des valeurs (colonnes, lignes).
@@ -1423,6 +1429,12 @@ class Relance(Tk):
                 # For rec in self.tab_rec : coords = self.tableau.coords(rec) : Donne les coordonnées.
                 self.tableau.itemconfig(self.tab_rec[ind_gam - 1], fill="")
                 self.tableau.itemconfig(self.tab_rec[ind_gam], fill="lightsteelblue")
+                if len(bb) == 7:
+                    if len(self.tab_ind) == 2:
+                        self.tableau.itemconfig(self.tab_lig[self.tab_ind[0]], fill="lightblue", width=1)
+                        self.tab_ind.pop(0)
+                        (lineno(), "tab_ind.2", self.tab_ind)
+                    self.tableau.itemconfig(self.tab_lig[self.tab_ind[0]], fill="red", width=3)
                 self.tableau.update_idletasks()  # Forcer la mise à jour de l'interface graphique.
                 id_freq = self.frequencies.index(freq) + 1  # Rang actuel parmi les fréquences.
                 "# Les clefs du dictionnaire dic_donne ont un nom de gamme et un rang diatonique."
@@ -1460,7 +1472,7 @@ class Relance(Tk):
                         self.tableau.tag_bind(stt, "<Button-1>", self.on_click)
                         break
 
-                sine_tone(freq[1], 0.05)
+                # sine_tone(freq[1], 0.05)
                 # break de vérification.
 
             self.tableau.itemconfig(self.tab_rec[ind_gam], fill="")

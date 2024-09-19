@@ -5,7 +5,12 @@
 Le problème vient à cause du manque de précision du rapport (ligne/octave). Par exemple : <br>
 * 1212 freq1 ['E3', 164.81] key_don ('+6', '3') dic_donne (66, 17)
 * 1212 freq1 ['B3', 123.47] key_don ('+6', '7') dic_donne (66, 18) <br>
-Où la note MI ayant une `ligne inférieure` avec une fréquence plus élevée que la note SI.
+Où la note MI ayant une `ligne inférieure` avec une fréquence plus élevée que la note SI. <br>
+Y a besoin de calibrer les octaves à l'aide des notes réelles signées.
+
+
+    Les fréquences hertziennes anormalement élevées, dans cette série de gammes.
+Cette liste a des fréquences anormales [-26o, *6, o6, -36].
 
 ## Problématique liée aux mêmes modes binaires
     Le dictionnaire 'self.dic_multiples' ne distingue pas les différents rassemblements.
