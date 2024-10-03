@@ -527,7 +527,10 @@ class Relance(Tk):
         "# Zone de l'interface aux actions dédiées à l'affichage des gammes."
         # self.table_w = Canvas(self, width=1656, height=60, bg="lightgray") # Colonne dédiée aux options d'affichage.
         "# Création des cadres destinés à recueillir les boutons-radio."
-        largeur_cad, hauteur_cad = 1656 // 7, 80
+        largeur_cad, hauteur_cad = 1656 // 7, 100
+        self.frame_lab = ["Toutes ou une seule gamme ?",
+                          "En DO ou des modulations dynamiques ?",
+                          "Quel est votre ordonnance ?"]
         self.color_cad, rng = ["red", "orange", "yellow", "green", "skyblue", "mediumpurple", "violet"], 0
         self.table_cad = []
         for yes in range(7):
@@ -535,6 +538,10 @@ class Relance(Tk):
             frame.grid(row=1, column=yes)
             frame.grid_propagate(False)
             self.table_cad.append(frame)
+            # Ajout des labels dans les frames
+            if yes < len(self.frame_lab):
+                label = Label(frame, text=self.frame_lab[yes], bg=self.color_cad[yes])
+                label.grid(row=1, column=yes)
 
         (" Radio-bouton pour sélectionner le type de lecture."
          "# Conditionner sur une seule gamme est lue, ou sur toutes les gammes.")
@@ -544,10 +551,10 @@ class Relance(Tk):
             self.zone_w0 = StringVar(self.table_cad[0], value=di_solo)
         rad_bou0 = Radiobutton(self.table_cad[0], variable=self.zone_w0, value="Poly", text="Global",
                                bg=self.color_cad[rng])
-        rad_bou0.grid(row=1, column=1)
+        rad_bou0.grid(row=2, column=1)
         rad_bou01 = Radiobutton(self.table_cad[0], variable=self.zone_w0, value="Solo", text="Unique",
                                 bg=self.color_cad[rng])
-        rad_bou01.grid(row=2, column=1)
+        rad_bou01.grid(row=3, column=1)
 
         ("# Radio-bouton pour sélectionner le type de développement diatonique entre (statique et dynamique)."
          "Le choix statique a toutes les gammes en DO. Le choix dynamique module les tonalités.")
@@ -558,10 +565,10 @@ class Relance(Tk):
         rng += 1
         rad_bou1 = Radiobutton(self.table_cad[1], variable=self.zone_w1, value="Sta", text="Statique",
                                bg=self.color_cad[rng])
-        rad_bou1.grid(row=1, column=1)
+        rad_bou1.grid(row=2, column=1)
         rad_bou2 = Radiobutton(self.table_cad[1], variable=self.zone_w1, value="Dyn", text="Dynamique",
                                bg=self.color_cad[rng])
-        rad_bou2.grid(row=2, column=1)
+        rad_bou2.grid(row=3, column=1)
 
         ("# Radio-bouton pour sélectionner le type de lecture à réaliser :"
          "  1. Ordre des groupes. Il est ce qui ressort en premier."
@@ -574,13 +581,13 @@ class Relance(Tk):
         rng += 1
         rad_bou3 = Radiobutton(self.table_cad[2], variable=self.zone_w2, value="Groupe", text="Groupement",
                                bg=self.color_cad[rng])
-        rad_bou3.grid(row=1, column=2)
+        rad_bou3.grid(row=2, column=2)
         rad_bou4 = Radiobutton(self.table_cad[2], variable=self.zone_w2, value="Diatone", text="Diatonique",
                                bg=self.color_cad[rng])
-        rad_bou4.grid(row=2, column=2)
+        rad_bou4.grid(row=3, column=2)
         rad_bou5 = Radiobutton(self.table_cad[2], variable=self.zone_w2, value="Hertz", text="Hertzien",
                                bg=self.color_cad[rng])
-        rad_bou5.grid(row=3, column=2)
+        rad_bou5.grid(row=4, column=2)
 
         "# Traitement de la sonorisation des gammes retournées du module 'gammes_audio.py'"
         self.gam_son, self.gam_son1 = None, None  # , 'self.gam_son1'. Afin d'ordonner les clefs.
@@ -1138,7 +1145,7 @@ class Relance(Tk):
             # Tone ['1', '-2', 'o3', '-4', '-5', 'o6', 'o7']
 
             "# Afficher les informations relatives au choix de l'utilisateur."
-            t_dia = ", ".join(map(str, self.gam_diatonic[gamme][0]))
+            t_dia = "".join(map(str, self.gam_diatonic[gamme][0]))
             g_dia = ", ".join(map(str, self.gam_diatonic[gamme]))
             n_choix = t_dia + " " + gamme
             m_dia = ", ".join(map(str, tab))
@@ -1373,10 +1380,10 @@ class Relance(Tk):
         "# La première boucle pour chaque gamme et ses modes diatoniques."
         for k2, v2 in self.gam_son.items():
             ind_gam = liste_gam.index(k2)
-            if len(bb) == 7:
+            if len(str(bb)) == 7:
                 ind_bin = colis1[3].index(bb) + 4  # Liste des lignes 'self.tab_lig', 'fill="lightblue"'.
                 self.tab_ind.append(ind_bin)
-                (lineno(), "ind_gam", ind_gam, "ind_bin", bb, ind_bin, "k2", k2, "v2", v2)
+                print(lineno(), "ind_gam", ind_gam, "ind_bin", bb, ind_bin, "k2", k2, "v2", v2)
                 (lineno(), "tab_ind.1", self.tab_ind)
             (lineno(), "ind_gam", ind_gam, "k2", k2, "v2", v2)
             # 1376 ind_gam 0 k2 0 v2 [['C2', 65.41], ['D2', 73.42], ['E2', 82.41],
@@ -1429,7 +1436,7 @@ class Relance(Tk):
                 # For rec in self.tab_rec : coords = self.tableau.coords(rec) : Donne les coordonnées.
                 self.tableau.itemconfig(self.tab_rec[ind_gam - 1], fill="")
                 self.tableau.itemconfig(self.tab_rec[ind_gam], fill="lightsteelblue")
-                if len(bb) == 7:
+                if len(str(bb)) == 7:
                     if len(self.tab_ind) == 2:
                         self.tableau.itemconfig(self.tab_lig[self.tab_ind[0]], fill="lightblue", width=1)
                         self.tab_ind.pop(0)

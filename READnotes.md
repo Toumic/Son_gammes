@@ -1,5 +1,8 @@
 # BLOC NOTES songammes.py
 
+
+## Défaut de lecture au type 'Anti iso'
+    Une erreur se produit lorsque l'organisation des binaires est au type 'Anti iso'
 ## Vérification des fréquences.
     Seulement à corriger si besoin.
 Le problème vient à cause du manque de précision du rapport (ligne/octave). Par exemple : <br>
@@ -11,6 +14,15 @@ Y a besoin de calibrer les octaves à l'aide des notes réelles signées.
 
     Les fréquences hertziennes anormalement élevées, dans cette série de gammes.
 Cette liste a des fréquences anormales [-26o, *6, o6, -36].
+
+**Solution :** <br>
+Se corrige avec l'amélioration du code.
+
+## Dissociation des analyses intermodales
+    Les réparations intermodales ne sont pas réalisées en mode de lecture binaire.
+À la ligne 889 du module `gammes_audio.py` l'instruction `if titre1 == 'Gammes':` est arbitraire. <br>
+En effet, les modes terminaux binaires pouvant recevoir cette analyse, n'y sont pas traités.
+
 
 ## Problématique liée aux mêmes modes binaires
     Le dictionnaire 'self.dic_multiples' ne distingue pas les différents rassemblements.
