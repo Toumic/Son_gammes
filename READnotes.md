@@ -23,6 +23,9 @@ Se corrige avec l'amélioration du code.
 À la ligne 889 du module `gammes_audio.py` l'instruction `if titre1 == 'Gammes':` est arbitraire. <br>
 En effet, les modes terminaux binaires pouvant recevoir cette analyse, n'y sont pas traités.
 
+**Solution :** <br>
+L'arrangement a été produit grâce à la création, d'une nouvelle liste située à `if titre1 == 'Binomes':`.
+
 
 ## Problématique liée aux mêmes modes binaires
     Le dictionnaire 'self.dic_multiples' ne distingue pas les différents rassemblements.
@@ -46,13 +49,10 @@ Le rectangle toute hauteur, "celui qui signale le niveau de lecture sonore", ne 
 A changé l'identification du rectangle, par un indice équivalant ici : `ind_gam = liste_gam.index(k2)` <br>
 
 
-
-
-
-
 ## Constitution des paramètres.
-    Interfaçage des sonorités (volume, tempo,)
-    Interfaçage des méthodes (lire une seule gamme, en ordre des degrés ou des niveaux Htz,)
+    Interfaçage des sonorités (volume, tempo, audio ou pas)
+    Paramétrer les fréquences aux positions réelles, quand (ligne//8 = Octave)
+    -   Il y a soixante-trois lignes liées aux modes binaires et huit octaves pan['A2'...'A9']
 
 ## Contrôler la lecture sonore.
     En ajoutant des boutons[marche, arrêt, pause,]

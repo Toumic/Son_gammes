@@ -1383,7 +1383,7 @@ class Relance(Tk):
             if len(str(bb)) == 7:
                 ind_bin = colis1[3].index(bb) + 4  # Liste des lignes 'self.tab_lig', 'fill="lightblue"'.
                 self.tab_ind.append(ind_bin)
-                print(lineno(), "ind_gam", ind_gam, "ind_bin", bb, ind_bin, "k2", k2, "v2", v2)
+                (lineno(), "ind_gam", ind_gam, "ind_bin", bb, ind_bin, "k2", k2, "v2", v2)
                 (lineno(), "tab_ind.1", self.tab_ind)
             (lineno(), "ind_gam", ind_gam, "k2", k2, "v2", v2)
             # 1376 ind_gam 0 k2 0 v2 [['C2', 65.41], ['D2', 73.42], ['E2', 82.41],
@@ -1479,7 +1479,7 @@ class Relance(Tk):
                         self.tableau.tag_bind(stt, "<Button-1>", self.on_click)
                         break
 
-                # sine_tone(freq[1], 0.05)
+                sine_tone(freq[1], 0.05)
                 # break de vérification.
 
             self.tableau.itemconfig(self.tab_rec[ind_gam], fill="")
