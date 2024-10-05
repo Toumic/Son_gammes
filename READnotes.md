@@ -55,7 +55,8 @@ A changé l'identification du rectangle, par un indice équivalant ici : `ind_ga
     -   Il y a soixante-trois lignes liées aux modes binaires et huit octaves pan['A2'...'A9']
 
 ## Contrôler la lecture sonore.
-    En ajoutant des boutons[marche, arrêt, pause,]
+    En ajoutant des boutons[marche, arrêt, pause, enregistrement]
+Un bouton radio a été ajouté offrant le choix d'entendre ou pas les gammes lors de la sélection.
 
 ## Utilisation des gammes fantômes.
     ???

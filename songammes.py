@@ -529,8 +529,9 @@ class Relance(Tk):
         "# Création des cadres destinés à recueillir les boutons-radio."
         largeur_cad, hauteur_cad = 1656 // 7, 100
         self.frame_lab = ["Toutes ou une seule gamme ?",
-                          "En DO ou des modulations dynamiques ?",
-                          "Quel est votre ordonnance ?"]
+                          "En DO ou tonalité dynamique ?",
+                          "Quel est votre ordonnance ?",
+                          "Couper l'audio ?"]
         self.color_cad, rng = ["red", "orange", "yellow", "green", "skyblue", "mediumpurple", "violet"], 0
         self.table_cad = []
         for yes in range(7):
@@ -551,10 +552,10 @@ class Relance(Tk):
             self.zone_w0 = StringVar(self.table_cad[0], value=di_solo)
         rad_bou0 = Radiobutton(self.table_cad[0], variable=self.zone_w0, value="Poly", text="Global",
                                bg=self.color_cad[rng])
-        rad_bou0.grid(row=2, column=1)
+        rad_bou0.grid(row=2, columnspan=1)
         rad_bou01 = Radiobutton(self.table_cad[0], variable=self.zone_w0, value="Solo", text="Unique",
                                 bg=self.color_cad[rng])
-        rad_bou01.grid(row=3, column=1)
+        rad_bou01.grid(row=3, columnspan=1)
 
         ("# Radio-bouton pour sélectionner le type de développement diatonique entre (statique et dynamique)."
          "Le choix statique a toutes les gammes en DO. Le choix dynamique module les tonalités.")
@@ -588,6 +589,16 @@ class Relance(Tk):
         rad_bou5 = Radiobutton(self.table_cad[2], variable=self.zone_w2, value="Hertz", text="Hertzien",
                                bg=self.color_cad[rng])
         rad_bou5.grid(row=4, column=2)
+
+        "# Radio-bouton pour ne pas effectuer l'écoute audio des gammes."
+        rng += 1
+        self.zone_w3 = StringVar(self.table_cad[3], value="Inaudible")
+        rad_bou6 = Radiobutton(self.table_cad[3], variable=self.zone_w3, value="Inaudible", text="Couper l'audio",
+                               bg=self.color_cad[rng])
+        rad_bou6.grid(row=2, column=1)
+        rad_bou7 = Radiobutton(self.table_cad[3], variable=self.zone_w3, value="Audible", text="Entendre",
+                               bg=self.color_cad[rng])
+        rad_bou7.grid(row=3, column=1)
 
         "# Traitement de la sonorisation des gammes retournées du module 'gammes_audio.py'"
         self.gam_son, self.gam_son1 = None, None  # , 'self.gam_son1'. Afin d'ordonner les clefs.
@@ -1479,7 +1490,8 @@ class Relance(Tk):
                         self.tableau.tag_bind(stt, "<Button-1>", self.on_click)
                         break
 
-                sine_tone(freq[1], 0.05)
+                if self.zone_w3.get() == "Audible":
+                    sine_tone(freq[1], 0.05)
                 # break de vérification.
 
             self.tableau.itemconfig(self.tab_rec[ind_gam], fill="")
