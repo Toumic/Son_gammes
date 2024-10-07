@@ -535,14 +535,14 @@ class Relance(Tk):
         self.color_cad, rng = ["red", "orange", "yellow", "green", "skyblue", "mediumpurple", "violet"], 0
         self.table_cad = []
         for yes in range(7):
-            frame = Frame(self.table_w, width=largeur_cad, height=hauteur_cad, bg=self.color_cad[yes])
-            frame.grid(row=1, column=yes)
+            frame = Frame(self.table_w, width=largeur_cad, height=hauteur_cad, bg=self.color_cad[yes], relief=GROOVE)
+            frame.grid(row=1, column=yes, ipadx=1)
             frame.grid_propagate(False)
             self.table_cad.append(frame)
             # Ajout des labels dans les frames
             if yes < len(self.frame_lab):
                 label = Label(frame, text=self.frame_lab[yes], bg=self.color_cad[yes])
-                label.grid(row=1, column=yes)
+                label.grid(row=1, column=1)
 
         (" Radio-bouton pour sélectionner le type de lecture."
          "# Conditionner sur une seule gamme est lue, ou sur toutes les gammes.")
@@ -552,10 +552,10 @@ class Relance(Tk):
             self.zone_w0 = StringVar(self.table_cad[0], value=di_solo)
         rad_bou0 = Radiobutton(self.table_cad[0], variable=self.zone_w0, value="Poly", text="Global",
                                bg=self.color_cad[rng])
-        rad_bou0.grid(row=2, columnspan=1)
+        rad_bou0.grid(row=2, column=1)
         rad_bou01 = Radiobutton(self.table_cad[0], variable=self.zone_w0, value="Solo", text="Unique",
                                 bg=self.color_cad[rng])
-        rad_bou01.grid(row=3, columnspan=1)
+        rad_bou01.grid(row=3, column=1)
 
         ("# Radio-bouton pour sélectionner le type de développement diatonique entre (statique et dynamique)."
          "Le choix statique a toutes les gammes en DO. Le choix dynamique module les tonalités.")
@@ -582,13 +582,13 @@ class Relance(Tk):
         rng += 1
         rad_bou3 = Radiobutton(self.table_cad[2], variable=self.zone_w2, value="Groupe", text="Groupement",
                                bg=self.color_cad[rng])
-        rad_bou3.grid(row=2, column=2)
+        rad_bou3.grid(row=2, column=1)
         rad_bou4 = Radiobutton(self.table_cad[2], variable=self.zone_w2, value="Diatone", text="Diatonique",
                                bg=self.color_cad[rng])
-        rad_bou4.grid(row=3, column=2)
+        rad_bou4.grid(row=3, column=1)
         rad_bou5 = Radiobutton(self.table_cad[2], variable=self.zone_w2, value="Hertz", text="Hertzien",
                                bg=self.color_cad[rng])
-        rad_bou5.grid(row=4, column=2)
+        rad_bou5.grid(row=4, column=1)
 
         "# Radio-bouton pour ne pas effectuer l'écoute audio des gammes."
         rng += 1
