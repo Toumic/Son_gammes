@@ -1451,8 +1451,11 @@ class Relance(Tk):
                     if len(self.tab_ind) == 2:
                         self.tableau.itemconfig(self.tab_lig[self.tab_ind[0]], fill="lightblue", width=1)
                         self.tab_ind.pop(0)
-                        (lineno(), "tab_ind.2", self.tab_ind)
+                        (lineno(), "len(str(bb)) == 7, tab_ind.2", self.tab_ind)
                     self.tableau.itemconfig(self.tab_lig[self.tab_ind[0]], fill="red", width=3)
+                else:  # Pour effacer la ligne binaire précédente en cas de changement de ligne nom de gamme.
+                    self.tableau.itemconfig(self.tab_lig[self.tab_ind[0]], fill="lightblue", width=1)
+                    (lineno(), "len(str(bb)) != 7, tab_ind.2", self.tab_ind)
                 self.tableau.update_idletasks()  # Forcer la mise à jour de l'interface graphique.
                 id_freq = self.frequencies.index(freq) + 1  # Rang actuel parmi les fréquences.
                 "# Les clefs du dictionnaire dic_donne ont un nom de gamme et un rang diatonique."
