@@ -1453,7 +1453,7 @@ class Relance(Tk):
                         self.tab_ind.pop(0)
                         (lineno(), "len(str(bb)) == 7, tab_ind.2", self.tab_ind)
                     self.tableau.itemconfig(self.tab_lig[self.tab_ind[0]], fill="red", width=3)
-                else:  # Pour effacer la ligne binaire précédente en cas de changement de ligne nom de gamme.
+                elif self.tab_ind:  # Pour effacer la ligne binaire précédente au changement de ligne nom de gamme.
                     self.tableau.itemconfig(self.tab_lig[self.tab_ind[0]], fill="lightblue", width=1)
                     (lineno(), "len(str(bb)) != 7, tab_ind.2", self.tab_ind)
                 self.tableau.update_idletasks()  # Forcer la mise à jour de l'interface graphique.
