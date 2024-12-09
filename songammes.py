@@ -28,6 +28,231 @@ lineno: Callable[[], int] = lambda: inspect.currentframe().f_back.f_lineno
 
 (lineno(), "Gammes", dir(gamma))
 
+("# Ces deux dictionnaires possèdent les caractéristiques des noms des gammes et de leurs modes binarisés."
+ "Le _m_ veut dire venant du pôle 'Modes', le _g_ vient du pôle gammes. Aide dans le fichier 'READ notes_songammes.md'")
+dic_m_analytic = {
+    "dic_m_noms_ego": ['0', '-5', 'o45x', 'o46+', 'o46-', '-26o', '+25x', 'o35x', 'x26-', 'o45-', '*5', 'o4', 'o54-',
+                       '-34', 'o63-', 'o34x', '-25o', '-45x', '-46o', '*6', 'o65-', '+34x', 'x36+', '^3', '^2', '-24',
+                       '+35x', '+23x', 'o35+', 'o35-', 'o3', 'o36+', '-23', '+45x', 'x45+', 'x46+', '^4', 'x5', 'o6',
+                       '+56', '-56', '-56+', '-25', '+25-', '-25+', '-46+', '-36', '-36+', '-26', '-26+', '+26-', '+26',
+                       '-2', '+2', '-45+', '-34x', '+34', 'x3', '-45', 'o5', '-35+', '-35', '-4', '-3', '-6', '+6'],
+    "dic_m_noms_ego_inv": ['o35-', '-24', '-23', '-25+', '-26+', '-46o', '-45', '-35+', '-3', '-35', '+56', '+6',
+                           'x45+', 'x46+', '+35x', '+34', '+25x', '+26-', '+2', 'o45x', 'o46-', 'o4', 'o46+', 'o45-',
+                           'o54-', '*5', '-34', 'o63-', 'o35x', 'o35+', 'o3', 'o36+', 'o34x', '-25o', '-45x', '-45+',
+                           '*6', '-4', 'o65-', '-46+', 'o5', '-34x', 'x5', '-56+', '+45x', '^4', '+34x', 'x3', 'x36+',
+                           '^3', '+25-', '+23x', 'x26-', '^2', '-36+', '-36', '-26', '-26o', '-6', 'o6', '-56', '+26',
+                           '-2', '-25', '-5', '0'],
+    "dic_m_noms_iso": ['o45x', 'o46-', 'o46+', 'o4', '*5', 'o45-', 'o35x', '+25x', 'x26-', 'o54-', '-34', 'o63-',
+                       'o34x', '-25o', '-45x', '-46o', '*6', 'o65-', '+34x', 'x36+', '^3', '^2', 'o35+', 'o35-', 'o3',
+                       'o36+', '-24', '+35x', '+23x', '-23', '+45x', '+25-', '-25+', '-26+', '-26', '-26o', '+26',
+                       '-25', '-2', '+2', '-45+', '-34x', '+34', 'x3', '-46+', '+26-', '-4', '-45', 'o5', '-35+',
+                       '-35', '-36', '-36+', '-3', 'x5', 'o6', '+56', '-56', '-56+', 'x45+', 'x46+', '^4', '-6', '+6',
+                       '0', '-5'],
+    "dic_m_noms_iso_inv": ['0', '-26', '-6', '-2', '-56', '-25', '+26', 'o35-', '-24', '-23', '-25+', '-26+', '-46o',
+                           '-45', '-35+', '-36', '-3', '-35', '+56', '+6', 'x45+', 'x46+', '+35x', '+34', '+25x',
+                           '+26-', '+2', 'o45x', 'o46-', 'o4', 'o46+', 'o45-', 'o54-', '*5', '-34', 'o63-', 'o35x',
+                           'o35+', 'o3', 'o36+', 'o34x', '-25o', '-26o', '-45x', '-45+', '*6', '-4', 'o65-', '-46+',
+                           'o5', '-36+', '-34x', 'x5', 'o6', '-5', '-56+', '+45x', '^4', '+34x', 'x3', 'x36+', '^3',
+                           '+25-', '+23x', 'x26-', '^2'],
+    "dic_m_noms_int": ['o45x', 'o35x', 'o46+', 'o46-', '-26o', '+25x', 'x26-', 'o45-', '*5', 'o35-', 'o54-', 'o63-',
+                       'o35+', 'o34x', '-25o', '-45x', '-46o', '*6', 'o65-', '+35x', '+34x', 'x36+', '^3', '+23x',
+                       '^2', 'o36+', '-25', '+25-', '-25+', '-26', '-26+', '-46+', '+26-', '+26', '-45', 'o5',
+                       '-45+', '-34x', '+34', 'x3', '-35+', '-35', 'x45+', 'x46+', '^4', '+45x', '-36+', 'o4',
+                       '-34', 'o3', '-24', '-23', 'x5', 'o6', '+56', '-56', '-56+', '-2', '+2', '-36', '-5', '-4',
+                       '-3', '-6', '+6', '0'],
+    "dic_m_noms_int_inv": ['-2', '0', '-25', '-26', '-6', '-56', '+26', '-26o', 'o6', '-5', 'o45x', 'o46-', 'o4',
+                           'o46+', 'o45-', 'o54-', '*5', '-34', 'o63-', 'o35x', 'o35+', 'o3', 'o36+', 'o35-',
+                           'o34x', '-24', '-25o', '-23', '-25+', '-26+', '-45x', '-45+', '-46o', '*6', '-4', 'o65-',
+                           '-46+', '-45', 'o5', '-35+', '-36', '-3', '-36+', '-35', '-34x', 'x5', '+56', '+6',
+                           '-56+', '+45x', 'x45+', 'x46+', '^4', '+35x', '+34', '+34x', 'x3', 'x36+', '^3', '+25x',
+                           '+26-', '+2', '+25-', '+23x', 'x26-', '^2'],
+    "dic_m_bins_ego": ['1111111', '1101110', '1001100', '1110111', '1111110', '1101100', '1001000', '1111011',
+                       '1100110', '1010111', '1000001', '1000000', '1000101', '1011000', '1011001', '1000100',
+                       '1001001', '1010001', '1000011', '1100000', '1000111', '1111000', '1100001', '1000010',
+                       '1010010', '1001011', '1010100', '1001111', '1110100', '1001101', '1100100', '1110001',
+                       '1110010', '1100010', '1111001', '1011011', '1010101', '1011100', '1100101', '1001010',
+                       '1010011', '1101101', '1110011', '1011101', '1011010', '1011111', '1110101', '1111010',
+                       '1100011', '1000110', '1101001', '1101000', '1101011', '1010110', '1100111', '1001110',
+                       '1111100', '1101111', '1110110', '1111101', '1101010', '1011110'],
+    "dic_m_bins_ego_inv": ['1011110', '1101010', '1111101', '1110110', '1101111', '1111100', '1001110', '1100111',
+                           '1010110', '1101011', '1101000', '1101001', '1000110', '1100011', '1111010', '1110101',
+                           '1011111', '1011010', '1011101', '1110011', '1101101', '1010011', '1001010', '1100101',
+                           '1011100', '1010101', '1011011', '1111001', '1100010', '1110010', '1110001', '1100100',
+                           '1001101', '1110100', '1001111', '1010100', '1001011', '1010010', '1000010', '1100001',
+                           '1111000', '1000111', '1100000', '1000011', '1010001', '1001001', '1000100', '1011001',
+                           '1011000', '1000101', '1000000', '1000001', '1010111', '1100110', '1111011', '1001000',
+                           '1101100', '1111110', '1110111', '1001100', '1101110', '1111111'],
+    "dic_m_bins_iso": ['1000001', '1000000', '1000101', '1011000', '1011001', '1000111', '1111000', '1100000',
+                       '1000011', '1001001', '1010001', '1000100', '1100001', '1000010', '1001011', '1010100',
+                       '1001111', '1110100', '1001101', '1100100', '1010010', '1110001', '1110010', '1011011',
+                       '1011100', '1010101', '1100101', '1001010', '1011101', '1011010', '1001000', '1011111',
+                       '1001100', '1110101', '1111010', '1100011', '1000110', '1101001', '1100111', '1001110',
+                       '1010011', '1111100', '1101000', '1101011', '1010110', '1101101', '1111011', '1100110',
+                       '1010111', '1101111', '1110011', '1110110', '1111001', '1100010', '1111101', '1101010',
+                       '1011110', '1111111', '1101110', '1110111', '1111110', '1101100'],
+    "dic_m_bins_iso_inv": ['1101100', '1111110', '1110111', '1101110', '1111111', '1011110', '1101010', '1111101',
+                           '1100010', '1111001', '1110110', '1110011', '1101111', '1010111', '1100110', '1111011',
+                           '1101101', '1010110', '1101011', '1101000', '1111100', '1010011', '1001110', '1100111',
+                           '1101001', '1000110', '1100011', '1111010', '1110101', '1001100', '1011111', '1001000',
+                           '1011010', '1011101', '1001010', '1100101', '1010101', '1011100', '1011011', '1110010',
+                           '1110001', '1010010', '1100100', '1001101', '1110100', '1001111', '1010100', '1001011',
+                           '1000010', '1100001', '1000100', '1010001', '1001001', '1000011', '1100000', '1111000',
+                           '1000111', '1011001', '1011000', '1000101', '1000000', '1000001'],
+    "dic_m_bins_int": ['1000000', '1000001', '1000010', '1000011', '1000100', '1000101', '1000110', '1000111',
+                       '1001000', '1001001', '1001010', '1001011', '1001100', '1001101', '1001110', '1001111',
+                       '1010001', '1010010', '1010011', '1010100', '1010101', '1010110', '1010111', '1011000',
+                       '1011001', '1011010', '1011011', '1011100', '1011101', '1011110', '1011111', '1100000',
+                       '1100001', '1100010', '1100011', '1100100', '1100101', '1100110', '1100111', '1101000',
+                       '1101001', '1101010', '1101011', '1101100', '1101101', '1101110', '1101111', '1110001',
+                       '1110010', '1110011', '1110100', '1110101', '1110110', '1110111', '1111000', '1111001',
+                       '1111010', '1111011', '1111100', '1111101', '1111110', '1111111'],
+    "dic_m_bins_int_inv": ['1111111', '1111110', '1111101', '1111100', '1111011', '1111010', '1111001', '1111000',
+                           '1110111', '1110110', '1110101', '1110100', '1110011', '1110010', '1110001', '1101111',
+                           '1101110', '1101101', '1101100', '1101011', '1101010', '1101001', '1101000', '1100111',
+                           '1100110', '1100101', '1100100', '1100011', '1100010', '1100001', '1100000', '1011111',
+                           '1011110', '1011101', '1011100', '1011011', '1011010', '1011001', '1011000', '1010111',
+                           '1010110', '1010101', '1010100', '1010011', '1010010', '1010001', '1001111', '1001110',
+                           '1001101', '1001100', '1001011', '1001010', '1001001', '1001000', '1000111', '1000110',
+                           '1000101', '1000100', '1000011', '1000010', '1000001', '1000000']}
+lis_m_noms = [m for m in dic_m_analytic.keys() if "noms" in m]
+lis_m_bins = [m for m in dic_m_analytic.keys() if "bins" in m]
+dic_g_analytic = {
+    "dic_g_noms_ego": ['0', '-5', 'o45x', 'o46+', 'o46-', '-26o', '+25x', 'o35x', 'x26-', 'o45-', '*5', 'o4', 'o54-',
+                       '-34', 'o63-', 'o34x', '-25o', '-45x', '-46o', '*6', 'o65-', '+34x', 'x36+', '^3', '^2', '-24',
+                       '+35x', '+23x', 'o35+', 'o35-', 'o3', 'o36+', '-23', '+45x', 'x45+', 'x46+', '^4', 'x5', 'o6',
+                       '+56', '-56', '-56+', '-25', '+25-', '-25+', '-46+', '-36', '-36+', '-26', '-26+', '+26-', '+26',
+                       '-2', '+2', '-45+', '-34x', '+34', 'x3', '-45', 'o5', '-35+', '-35', '-4', '-3', '-6',
+                       '+6'],
+    "dic_g_noms_ego_inv": ['+6', '-6', '-3', 'o45x', '-4', 'o5', '-35', '-45+', '-35+', '-34x', 'x3', 'o34x', '-45x',
+                           '-46o', '*6', 'o65-', '-45', 'x36+', '^3', '^2', 'o54-', '*5', 'o63-', '-25o', '+34', '+2',
+                           'o45-', 'o35x', 'o36+', '-2', 'o46+', '+34x', '-26+', '+26-', 'o46-', '-26o', '+25x', '+26',
+                           'x26-', '-26', '-25', '+25-', '-25+', '-46+', '-36+', '-36', 'x5', 'o6', '-56+', '-56',
+                           '+35x', '+23x', 'o35+', 'o35-', '+56', 'x45+', 'x46+', '^4', '+45x', 'o4', '-34', 'o3',
+                           '-24', '-23', '-5', '0'],
+    "dic_g_noms_iso": ['o45x', 'o46-', 'o46+', 'o4', '*5', 'o45-', 'o35x', '+25x', 'x26-', 'o54-', '-34', 'o63-',
+                       'o34x', '-25o', '-45x', '-46o', '*6', 'o65-', '+34x', 'x36+', '^3', '^2', 'o35+', 'o35-', 'o3',
+                       'o36+', '-24', '+35x', '+23x', '-23', '+45x', '+25-', '-25+', '-26+', '-26', '-26o', '+26',
+                       '-25', '-2', '+2', '-45+', '-34x', '+34', 'x3', '-46+', '+26-', '-4', '-45', 'o5', '-35+',
+                       '-35', '-36', '-36+', '-3', 'x5', 'o6', '+56', '-56', '-56+', 'x45+', 'x46+', '^4', '-6', '+6',
+                       '0', '-5'],
+    "dic_g_noms_iso_inv": ['o45x', 'o34x', '-45x', '-46o', '*6', 'o65-', 'x36+', '^3', '^2', 'o35x', '+25x', 'x26-',
+                           'o46-', 'o46+', '+34x', '+35x', '+23x', 'o36+', '+25-', '-26+', '-26', '-26o', '+26', '+2',
+                           '+26-', '-45+', '-34x', 'x3', 'o45-', 'o54-', '*5', 'o63-', '-25o', '+34', 'x45+', '^4',
+                           'o35+', 'o35-', 'x46+', '+45x', 'x5', 'o6', '+56', '-56', '-56+', '-2', '-25', '-5', '-6',
+                           '+6', '0', '-35+', '-45', 'o5', '-35', '-25+', '-46+', '-36', '-36+', '-4', '-3', 'o4',
+                           '-34', 'o3', '-24', '-23'],
+    "dic_g_noms_int": ['o45x', 'o34x', '-45x', '-46o', '*6', 'o65-', 'x36+', '^3', '^2', 'o35x', '+25x', 'x26-',
+                       'o46-', 'o46+', '+34x', '+35x', '+23x', '-26+', '-26o', '+26', 'o36+', '+2', '+26-', '-26',
+                       '+25-', '-45+', '-34x', 'x3', 'o45-', 'o54-', '*5', 'o63-', '-25o', '+34', 'x45+', '^4',
+                       'o35+', 'o35-', 'x46+', '+45x', 'x5', 'o6', '+56', '-56', '-56+', '-6', '+6', '-2', '-25',
+                       '0', '-5', '-35+', '-25+', '-46+', '-36', '-36+', '-4', '-45', 'o5', '-3', '-35', 'o4',
+                       '-34', 'o3', '-24', '-23'],
+    "dic_g_noms_int_inv": ['o45x', 'o54-', '*5', 'o63-', 'o34x', '-25o', '-45x', '-46o', '*6', 'o65-', 'x36+',
+                           '^3', '^2', 'o45-', 'o35x', 'o46+', '+34x', 'o46-', '+25x', 'x26-', 'o4', '-34', 'o35+',
+                           'o35-', 'o3', 'o36+', '-24', '+35x', '+23x', '-23', '+45x', '-26o', '-25', '+25-',
+                           '-26', '-26+', '+26', '-2', '+2', '-25+', '-45', 'o5', '-46+', '+26-', '-4', '-45+',
+                           '-34x', '+34', 'x3', '-35+', '-35', '-36', '-36+', '-3', 'x5', 'o6', '+56', '-56',
+                           '-56+', 'x45+', 'x46+', '^4', '-5', '-6', '+6', '0'],
+    "dic_g_bins_ego": ['1111111', '1101110', '1001100', '1110111', '1111110', '1101100', '1001000', '1111011',
+                       '1100110', '1010111', '1000001', '1000000', '1000101', '1011000', '1011001', '1000100',
+                       '1001001', '1010001', '1000011', '1100000', '1000111', '1111000', '1100001', '1000010',
+                       '1010010', '1001011', '1010100', '1001111', '1110100', '1001101', '1100100', '1110001',
+                       '1110010', '1100010', '1111001', '1011011', '1010101', '1011100', '1100101', '1001010',
+                       '1010011', '1101101', '1110011', '1011101', '1011010', '1011111', '1110101', '1111010',
+                       '1100011', '1000110', '1101001', '1101000', '1101011', '1010110', '1100111', '1001110',
+                       '1111100', '1101111', '1110110', '1111101', '1101010', '1011110'],
+    "dic_g_bins_ego_inv": ['1111101', '1101010', '1000100', '1100111', '1011110', '1000000', '1001001', '1010011',
+                           '1001000', '1101111', '1001110', '1110011', '1110110', '1111100', '1101000', '1000001',
+                           '1101011', '1000110', '1100011', '1010110', '1000011', '1101001', '1000010', '1100001',
+                           '1100000', '1011111', '1001101', '1110101', '1111010', '1100100', '1011000', '1010001',
+                           '1001100', '1011101', '1000101', '1100101', '1011010', '1011001', '1010101', '1011011',
+                           '1101101', '1001010', '1100110', '1011100', '1111011', '1010111', '1111001', '1100010',
+                           '1000111', '1010010', '1010100', '1001011', '1110001', '1110010', '1001111', '1110100',
+                           '1111000', '1101100', '1111111', '1101110', '1110111', '1111110'],
+    "dic_g_bins_iso": ['1000001', '1000000', '1000101', '1011000', '1011001', '1000111', '1111000', '1100000',
+                       '1000011', '1001001', '1010001', '1000100', '1100001', '1000010', '1001011', '1010100',
+                       '1001111', '1110100', '1001101', '1100100', '1010010', '1110001', '1110010', '1011011',
+                       '1011100', '1010101', '1100101', '1001010', '1011101', '1011010', '1001000', '1011111',
+                       '1001100', '1110101', '1111010', '1100011', '1000110', '1101001', '1100111', '1001110',
+                       '1010011', '1111100', '1101000', '1101011', '1010110', '1101101', '1111011', '1100110',
+                       '1010111', '1101111', '1110011', '1110110', '1111001', '1100010', '1111101', '1101010',
+                       '1011110', '1111111', '1101110', '1110111', '1111110', '1101100'],
+    "dic_g_bins_iso_inv": ['1000011', '1000000', '1000001', '1100001', '1000010', '1000101', '1001001', '1011001',
+                           '1010001', '1000100', '1011000', '1010010', '1011011', '1001101', '1010101', '1100100',
+                           '1011101', '1100101', '1011010', '1001000', '1011111', '1110101', '1111010', '1010011',
+                           '1100011', '1000110', '1101001', '1100000', '1110001', '1100010', '1010100', '1001011',
+                           '1110010', '1111001', '1000111', '1111011', '1100110', '1001100', '1010111', '1101100',
+                           '1111101', '1101010', '1100111', '1011110', '1111111', '1101110', '1110111', '1111110',
+                           '1101011', '1010110', '1101000', '1101101', '1001010', '1110011', '1011100', '1101111',
+                           '1001110', '1110110', '1111100', '1001111', '1110100', '1111000'],
+    "dic_g_bins_int": ['1000011', '1000000', '1000001', '1100001', '1000010', '1000101', '1001001', '1011001',
+                       '1010001', '1000100', '1011000', '1010010', '1011101', '1100101', '1011010', '1001000',
+                       '1011111', '1001101', '1110101', '1111010', '1100100', '1010011', '1011011', '1010101',
+                       '1100011', '1000110', '1101001', '1100000', '1110001', '1100010', '1010100', '1001011',
+                       '1110010', '1111001', '1000111', '1111101', '1101010', '1100111', '1011110', '1111111',
+                       '1101110', '1001100', '1110111', '1111110', '1101100', '1111011', '1100110', '1010111',
+                       '1101011', '1010110', '1101101', '1001010', '1110011', '1011100', '1101111', '1001110',
+                       '1110110', '1111100', '1101000', '1001111', '1110100', '1111000'],
+    "dic_g_bins_int_inv": ['1000011', '1000001', '1100000', '1000000', '1100001', '1000010', '1001001', '1010001',
+                           '1000100', '1000101', '1011000', '1011001', '1000111', '1111000', '1001011', '1010100',
+                           '1001111', '1110100', '1001101', '1100100', '1010010', '1110001', '1110010', '1001000',
+                           '1011011', '1001100', '1010101', '1011101', '1100101', '1011010', '1011111', '1110101',
+                           '1111010', '1011100', '1001010', '1100011', '1000110', '1101000', '1100111', '1001110',
+                           '1010011', '1111100', '1101001', '1101011', '1010110', '1101101', '1111011', '1100110',
+                           '1010111', '1101111', '1110011', '1110110', '1111001', '1100010', '1101100', '1111101',
+                           '1101010', '1011110', '1111111', '1101110', '1110111', '1111110']}
+lis_g_noms = [g for g in dic_g_analytic.keys() if "noms" in g]
+lis_g_bins = [g for g in dic_g_analytic.keys() if "bins" in g]
+"# Traitement des données des 'dic__analytic' ou 'dic_g_analytic'."
+# Connaitre les égalités avec et sans renversements. Dans un même dictionnaire.
+"Dans un même dictionnaire : dic_m_analytic."
+for mnb in [lis_m_noms, lis_m_bins, lis_g_noms, lis_g_bins]:
+    for mn1 in mnb:
+        if "_m_" in mn1:
+            dma1 = dic_m_analytic[mn1]
+        else:
+            dma1 = dic_g_analytic[mn1]
+        for mn2 in mnb:
+            if "_m_" in mn1:
+                dma2 = dic_m_analytic[mn2]
+            else:
+                dma2 = dic_g_analytic[mn2]
+
+            # Comparaison des listes
+            if dma1 == dma2 and mn1 != mn2:
+                (lineno(), "\t mn1.2", mn1, mn2, "dma1.2", dma1[0], dma2[0])
+            dma2.reverse()
+            if dma1 == dma2 and mn1 != mn2:
+                (lineno(), "\t mn1.2", mn1, mn2, "dma1.2", dma1[0], dma2[0])
+"Comparaison entre les deux dictionnaires analytiques. Classe des noms."
+for lmn in lis_m_noms:
+    dma1 = dic_m_analytic[lmn]
+    for lgn in lis_g_noms:
+        dma2 = dic_g_analytic[lgn]
+        if dma1 == dma2:
+            (lineno(), "lmn_lgn", lmn, lgn, "\t\t Classic dma1=2", dma1[0], dma2[0])
+        dma2.reverse()
+        if dma1 == dma2:
+            (lineno(), "lmn_lgn", lmn, lgn, "\t\t Reverse dma1.2", dma1[0], dma2[0])
+"Comparaison entre les deux dictionnaires analytiques. Classe des binaires."
+for lmb in lis_m_bins:
+    dma1 = dic_m_analytic[lmb]
+    for lgb in lis_g_bins:
+        dma2 = dic_g_analytic[lgb]
+        if dma1 == dma2:
+            (lineno(), "lmb_lgb", lmb, lgb, "\t\t Classic dma1=2", dma1[0], dma2[0])
+        dma2.reverse()
+        if dma1 == dma2:
+            (lineno(), "lmb_lgb", lmb, lgb, "\t\t Reverse dma1.2", dma1[0], dma2[0])
+# Résultats obtenus :
+# 244 lmn_lgn dic_m_noms_ego dic_g_noms_ego 		 Classic dma1=2 +6 +6
+# 244 lmn_lgn dic_m_noms_iso dic_g_noms_iso 		 Classic dma1=2 o45x o45x
+# 254 lmb_lgb dic_m_bins_ego dic_g_bins_ego 		 Classic dma1=2 1011110 1011110
+# 257 lmb_lgb dic_m_bins_ego_inv dic_g_bins_ego 		 Reverse dma1.2 1011110 1011110
+# 254 lmb_lgb dic_m_bins_iso dic_g_bins_iso 		 Classic dma1=2 1000001 1000001
+# 257 lmb_lgb dic_m_bins_iso_inv dic_g_bins_iso 		 Reverse dma1.2 1000001 1000001
+
+
 gam_classic = {
     "102034050607": ["0", 336], "120034050607": ["-2", 210], "100234050607": ["+2", 392],
     "102304050607": ["-3", 301], "102034500607": ["-5", 341], "102034056007": ["-6", 330],
@@ -80,6 +305,7 @@ gam_maj = '102034050607'
 dic_codage = {}  # Dictionnaire des gammes et de leurs modes. PRÉALABLE
 dic_indice = {}  # Dictionnaire, clé = Nom de la gamme, valeur = Numéro de la gamme. PRÉALABLE
 dic_binary = {}  # Dictionnaire, clé = binaire, valeur = zob (['o45x', 1], '1000001'), (1, 2, '1000001'). PRÉALABLE
+dic_gammic = {}  # Dico, clé = Nom + valeur énumérée, valeur = Énumération binarisée + degrés binarisés. PRÉALABLE
 dic_force = {}  # Dictionnaire, clé = binaire, valeur = dic_codage avec le même binaire. PRÉALABLE
 dic_colon = [""]  # Liste, clés binaires liées aux choix de conversions.
 code_ages = {}  # Dictionnaire, clé = Numéro, valeur = Modes diatoniques.
@@ -89,12 +315,18 @@ mod, cod1 = '', 1
 "# Lire un globdicTcoup.txt pour construire un dictionnaire de tous les modèles diatoniques = dic_codage"
 for pre_cod in pre_codage:
     mod_cod = pre_cod[:12]  # 'mod_cod' = Copie du mode tonique.
+    (lineno(), "mod_cod", mod_cod)
     if pre_cod[:12] in gam_classic.keys():
-        cod2 = 0
+        cod2, clef0 = 0, ()
         dic_codage[cod1, mod_cod] = []
         code_ages[cod1] = [pre_cod[:12]]  # Enregistrer le mode tonique de chaque gamme.
-        (lineno(), "code_ages", code_ages[cod1], cod1)
-        # 86 code ages ['123400000567'] 1
+        if mod_cod not in dic_gammic.keys():
+            clef0 = gam_classic[mod_cod][0], mod_cod
+            bin0 = "".join("1" if i != "0" else "0" for i in mod_cod)
+            dic_gammic[clef0] = [bin0]
+            (lineno(), "dic_gammic", dic_gammic[clef0], "clef", clef0)
+        (lineno(), "code_ages", code_ages[cod1], cod1, "mod_cod", mod_cod)
+        # 97 code_ages ['123400000567'] 1 mod_cod 123400000567
         while cod2 < 12:
             cod2 += 1
             for p_c in mod_cod:
@@ -115,9 +347,10 @@ for pre_cod in pre_codage:
                 zob = cod1, cod2, mod
             dic_codage[cod1, pre_cod[:12]].append(zob)
             dic_binary[zob[-1]] = []  # 'dic_mode01' = Clé Binaire, = Rang numérique.
-            dic_binary[zob[-1]].append(zob)
-            (lineno(), "zob", zob, "zob[-1]")
-            (lineno(), "pre_cod[:12] :", pre_cod[:12])
+            dic_binary[zob[-1]].append(zob)  # Ce dictionnaire a des binaires uniques
+            dic_gammic[clef0].append(zob[-1])
+            (lineno(), "zob", zob, "zob[-1]", zob[-1])
+            # 127 zob (1, 2, '1000001') zob[-1] 1000001
             mod = ''
             "# Renversements diatoniques."
             mod_cod = mod_cod[1:] + mod_cod[:1]
@@ -132,13 +365,19 @@ for pre_cod in pre_codage:
                 else:
                     mut += '0'
             mod_cod = mut
-            (lineno(), "pre_cod", pre_cod[:12], "mod_cod", mod_cod, "cod1", cod1, "code_ages", code_ages[cod1])
+            (lineno(), "cod1", cod1, "pre_cod", pre_cod[:12], "mod_cod", mod_cod, "code_ages", code_ages[cod1])
             (lineno(), "dic_codage[cod1, pre_cod[:12]]", dic_codage[cod1, pre_cod[:12]])
             # 126 dic_codage[cod1, pre_cod[:12]] [(['0', 336], '1111111'), (44, 2, '1101110'), (44, 3, '1001100'),
             # (44, 4, '1110111'), (44, 5, '1111110'), (44, 6, '1101100'), (44, 7, '1001000')]
             if mod_cod == pre_cod[:12]:
                 break
+        (lineno(), "dic_gammic", dic_gammic[clef0], "\n dic_codage", dic_codage[cod1, pre_cod[:12]])
+        # 149 dic_gammic ['111100000111', '1000001', '1000001', '1000001', '1000001', '1000000', '1000001', '1000001']
+        #  dic_codage [(['o45x', 1], '1000001'), (1, 2, '1000001'), (1, 3, '1000001'), (1, 4, '1000001'),
+        #  (1, 5, '1000000'), (1, 6, '1000001'), (1, 7, '1000001')]
         cod1 += 1  # ("dic_codage", dic codage, "Les gammes formatées.")
+doc_key_gam = [k[0] for k in dic_gammic.keys()]
+(lineno(), "doc_key_gam", doc_key_gam)
 pre_codage.close()
 
 "# Construire un dictionnaire avec les modes ordonnés."
@@ -195,7 +434,24 @@ for lk in liste_keys:
 
 def func_ima(ami, ute):
     """Fonction de récupération des données de la fonction def clic image(), ami = Paramètre de clic_image,
-    ami[0] = Type de conversion. # item_id : (1=ego, 2=anti-ego, 3=iso, 3=anti-iso, 2=int, 3=bin, 3=anti-bin)."""
+    ami[0] = Type de conversion : item_id : (1=ego, 2=anti-ego, 3=iso, 3=anti-iso, 2=int, 3=bin, 3=anti-bin).
+
+        Processes the input 'ami' and modifies the list of binaries, integrating changes by user requests in 'ute'.
+        This function interacts with several dictionaries that represent different
+        aspects of musical range coding, binary keys, index rankings, and binary forces to update a list
+        of binaries.
+
+        :param ami: A list that represents user-specified binary ranges and associated metadata.
+        It
+                    includes coding information, binary representations, indices and force mappings
+                    used by the application.
+        :type ami: List
+        :param ute: Additional data or instructions that refine the binary processing or user requests.
+        :type ute: Any.
+
+        :return: A tuple containing the newly updated list of binaries and user instructions.
+        :rtype: Tuple.
+        """
     (lineno(), "ami[0]", ami[0], list(dic_codage)[0], "dic_codage, dic_binary, dic_indice, dic_force, dic_colon\n")
     # 160 ami[0] 2 (1, '123400000567') dic_codage, dic_binary, dic_indice, dic_force, dic_colon
     (lineno(), "func_ima", ami[0])
@@ -232,7 +488,7 @@ def func_ima(ami, ute):
                     dic_colon.append(kai)
                     (lineno(), "kai", kai, "dic_force", dic_force[str(kai)])
     "'dic_colon' = Paramètre nouvelle liste binaire"
-    (lineno(), "func_ima dic_colon = Nouveaux binaires", dic_colon[:6])
+    (lineno(), "func_ima dic_colon = Nouveaux binaires", dic_colon[:12], "ute", ute)
     return dic_colon, ute
 
 
@@ -241,18 +497,40 @@ class Relance(Tk):
 
     # Relance(dic_codage, dic_binary, dic_indice, dic_force, dic_colon, dic_titres).mainloop()
     def __init__(self, di_code=None, di_ages=None, di_bine=None, di_indi=None, di_fort=None, di_colon=None,
-                 di_ute=None, di_solo=None, di_mode=None, di_lec=None):
+                 di_gamme=None, di_ute=None, di_solo=None, di_mode=None, di_lec=None, di_son=None, di_gam=None,
+                 di_com=None):
         """ Initialisation du visuel, sous forme d'un tableur.
-        Di_code = dic_codage. Dictionnaire des gammes et de leurs modes.
-        Di_indi = dic_indice. Dictionnaire, clé = Nom de la gamme, valeur = Numéro de la gamme.
-        Di_bine = dic_binary. Dictionnaire, clé = binaire, valeur = zob (['o45x', 1], '1000001'), (1, 2, '1000001').
-        Di_fort = dic_force. Dictionnaire, clé = binaire, valeur = dic_codage avec le même binaire.
-        Di_colon = dic_colon. Liste, clés binaires liées aux choix de conversions.
-        Di_ages = dic_ages. Dictionnaire, clé = Numéro, valeur = Modes diatoniques.
-        Di_ute = tri. """
+        Di_code = dic_codage = Dictionnaire des gammes et de leurs modes.
+        Di_ages = dic_ages = Dictionnaire, clé = Numéro, valeur = Modes diatoniques.
+        Di_bine = dic_binary = Dictionnaire, clé = binaire, valeur = zob (['o45x', 1], '1000001'), (1, 2, '1000001').
+        Di_indi = dic_indice = Dictionnaire, clé = Nom de la gamme, valeur = Numéro de la gamme.
+        Di_fort = dic_force = Dictionnaire, clé = binaire, valeur = dic_codage avec le même binaire.
+        Di_colon = dic_colon = Liste, clés binaires liées aux choix de conversions.
+        Di_gamme = dic_gammic = Dictionnaire, clé = Nom + Énuméré, valeur = Binarisation + Degrés binarisés.
+        Di_ute = tri...
+            Initializes the class with provided dictionaries for codification, age,
+            binaries, indices, and others.
+            Sets up the layout and UI components for
+            the main window including decorative elements, grids, and various display
+            tables to show information related to binary arrays and musical scales.
+
+            :param di_code: Dictionary containing codification for various scales.
+            :param di_ages: Dictionary with keys as numbers and values as listed diatonic inversions.
+            :param di_bine: Dictionary mapping binary keys with associated zob.
+            :param di_indi: Dictionary where the key is the name of the scale and the value is its number.
+            :param di_fort: Dictionary with keys as binary values and corresponding original dic_codage key.
+            :param di_colon: Additional dictionary related to columns of the UI.
+            :param di_gamme: Dictionary specific to the scales and their modes.
+            :param di_ute: Utility dictionary for supporting UI operations.
+            :param di_solo: Dictionary aimed for solo mode functionalities.
+            :param di_mode: Descriptive dictionary detailing the modes available in the UI.
+            :param di_lec: Dictionary designed for reading and processing input data.
+            :param di_son: Dictionary for handling sound related functionalities.
+            :param di_gam: Secondary dictionary supporting scale functionalities.
+        """
         super().__init__()
         self.title("Base illusion")
-        self.geometry("1824x1030+30+10")
+        self.geometry("1824x1025+30+10")
         # self.protocol("WM_DELETE_WINDOW", self.quit())  # Pose problème au déroulement souhaité.
         self.borne = {1: "       "}
         self.quitter("1111111")
@@ -270,6 +548,18 @@ class Relance(Tk):
         self.table_b.grid(row=2, column=1)
         self.frame_b = Frame(self.table_b)
         self.frame_b.grid()
+        self.table_c = Canvas(self, width=60, height=60, bg="white")  # Coin (bas, gauche) pour commentaire d'état.
+        self.table_c.grid(row=3, column=1)
+        if di_com:
+            self.comment_sta = di_com
+            # Ajouter du texte au Canvas
+            self.table_c.create_text(30, 20, text=self.comment_sta[0], anchor="center", font=("arial", 10, "bold"))
+            self.table_c.create_text(30, 40, text=self.comment_sta[1], anchor="center", font=("arial", 10, "bold"))
+            (lineno(), "di_com", di_com)
+        else:
+            self.comment_sta = ["Modes", "TriEgo"]
+            self.table_c.create_text(30, 20, text=self.comment_sta[0], anchor="center", font=("arial", 10, "bold"))
+            self.table_c.create_text(30, 40, text=self.comment_sta[1], anchor="center", font=("arial", 10, "bold"))
         self.table_y = Canvas(self, width=84, height=30, bg="thistle")  # Coin (haut, droite).
         self.table_y.grid(row=1, column=3)
         self.table_o = Canvas(self, width=84, height=884, bg="thistle")  # Colonne dédiée aux binaires ordonnés.
@@ -336,24 +626,31 @@ class Relance(Tk):
         # 335 tab_rec [5, 8, 11, 14, 17, 20, 23, 26, 29, 32, 35, 38, 41, 44, 47, 50, 53, 56, 59, 62,
         # tab_lig [1, 3, 6, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36, 39, 42, 45, 48, 51, 54, ] long 68
 
+        "# Initialisation de la colonne binaire."
+        (lineno(), "di_colon", di_colon)
         if di_colon == [""]:
             di_colon = []
         self.colonne_bin = di_colon  # Première colonne aux modes binaires uniques. L’index de l'élément = La ligne.
         self.colonne_gam = {}  # Colonnes contenant les gammes de 1 à 66. Première ligne = Noms.
         self.colonne_lis = {}  # Le dictionnaire clé=N°gamme, valeur=Ensemble degrés à même niveau.
         self.gammes_bin = {}  # Dictionnaire des gammes aux modes binaires existants.
-        (lineno(), "self.colonne_bin", self.colonne_bin, "\n di_colon", di_colon)
-        (lineno(), "self.colonne_gam", self.colonne_gam, "\n di_colon", "di_colon")
+        self.gam_nat = []
+        self.tag_nat = False
+        if not self.colonne_bin and di_ute is None:
+            self.tag_nat = True
+            (lineno(), "Validation unique")
+        (lineno(), "self.colonne_bin", self.colonne_bin)
+        (lineno(), "self.colonne_gam", self.colonne_gam)
 
         "# Exécution de la fonction qui sert à alimenter les boutons horizontaux et verticaux."
         if len(di_colon) == 0:
-            "# self.gammes_arp()  # Fonction découvertes binaires selon les gammes."
+            "# self.gammes_arp()  # Fonction découvertes binaires absentes."
             self.gammes_arp()  # Fonction découvertes des gammes binarisées.
             self.borne[1] = int([self.dic_codage[(44, '102034050607')][0][1]][0])
             ("self borne[1]", self.borne[1], type(self.borne[1]), "|", None, lineno())
             # self borne[1] 1111111 <class 'int'> | None 281.
         else:
-            "# self.gammes_log()  # Fonction découvertes des gammes selon les binaires."
+            "# self.gammes_log()  # Fonction découvertes des binaires créées."
             self.gammes_log()  # Fonction découvertes des gammes binarisées.
             self.borne[1] = di_colon[0]
             ("self borne[1]", self.borne[1], type(self.borne[1]), "|", di_colon, lineno())
@@ -443,8 +740,9 @@ class Relance(Tk):
         # '-56': 'Ok', '-56+': 'Ok', '+25-': 'Ok', '-26+': 'Ok', '+26-': 'Ok', '+26': 'Ok', '+2': 'Ok', '-34x': 'Ok',
         # '+34': 'Ok', 'x3': 'Ok', 'o5': 'Ok', '-35': 'Ok', '+6': 'Ok'}
         (lineno(), "self.colonne_gam", self.colonne_gam, "")
+        # 467 self.colonne_gam {(1, 0): ['0'], (1, 2): ['1'], (1, 3): ['2'], (1, 4): ['3'], (1, 5): ['4'],
         (lineno(), " *********************************************** ")
-        coq2 = 1
+        coq2, t_noms = 1, []  # 't_noms' Liste les noms organisés
         color1, color2 = "black", "lavender"
         mul_bin = False  # Si la gamme en cours a plusieurs ensembles de degrés.
         col0, lin0 = self.deb_col + 24, self.deb_lin + 26
@@ -460,6 +758,7 @@ class Relance(Tk):
                     else:
                         color1 = "black"
                         color2 = "lavender"
+                    t_noms.append(self.colonne_gam[k_col][0])
                     (lineno(), self.colonne_gam[k_col][0])
                 lin1 = (k_col[1] * self.lin) + lin0
                 (lineno(), "___   col1", col1, "lin1", lin1, "v_lin", v_lin)
@@ -513,6 +812,58 @@ class Relance(Tk):
                     # print("*** ELSE k_col", k_col, "col2", col2, "lin2", lin2, "\t len(v_lin)", v_lin, "val", val)
                     # print("", )
                     break
+        (lineno(), "t_noms", t_noms, len(t_noms))
+
+        "# Alimentation du dictionnaire di_gamme. Correspondance simplifiée de 'self.dic_codage'"
+        self.gammic = di_gamme  # Dictionnaire, clé = nom, énumérée, valeur = énumérée et modes binaires.
+        self.gam_gen = [int(gg[1]) for gg in self.gammic.keys()]  # Ne récupère que les formes énumérées des clefs.
+        self.gam_iso = self.gam_gen.copy()
+        # self.gam_int = self.gam_iso.sort()
+        (lineno(), "gam_gen", self.gam_gen, "\n gam_iso", self.gam_iso)
+        # 370 gam_gen [123400000567, 123400056007, 123400050607, 123400050067, 123400500607, 123405000607,
+
+        if di_gam == "Gammes":
+            (lineno(), "di_gam Gammes", di_gam, "self.gammic", self.gammic)
+            # 368 di_gam Gammes Gammes self.gammic {('o45x', '123400000567'): ['111100000111', '1000001', '1000001',
+            (lineno(), "dic_binary", self.dic_binary)
+            # 370 dic_binary {'1000001': [(66, 5, '1000001')], '1000000': [(66, 2, '1000000')],
+            "# Génération des binaires issus de l'ordre original."
+            ("On parle des gammes énumérées à partir du fichier 'globdicTcoup.txt', où la séquence d'initialisation"
+             "suit les règles suivantes : Tri par décalage progressif d'éléments."
+             "Un algorithme où, à chaque étape, un élément spécifique se déplace progressivement vers une position "
+             "prédéfinie, tout en maintenant l'ordre relatif des autres éléments. Cette liste créée est lue par le"
+             "code, qui n'en retient que celles qui font partie du dictionnaire des gammes classiques. Dans la "
+             "compréhension, les énumérations représentent tous les quatre-cent-soixante-deux modes diatoniques.")
+            "# Génération des binaires servants à l'ordre trié."
+            ("Contrairement à l'ordre original, les formes énumérées sont compatibles à un tri croissant des nombres"
+             "entiers. Tout comme chacune des organisations, les formes énumérées aux douze chiffres, produisent"
+             "des formes modales ayant un nombre binaire à sept chiffres. Pour une organisation des formes à douze"
+             "chiffres, correspondent des formes binaires à sept chiffres dont l'organisation est différente du tri"
+             "effectué en mode de tri de type 'Modes'. Selon le radio-bouton, il y a deux choix :"
+             "le type (7) 'Modes' et le type (12) 'Gammes'")
+        elif di_gam == "Modes":  # Rien ne change dans ce mode de tri numérique.
+            (lineno(), "di_gam Modes", di_gam)
+            # 376 di_gam Modes Modes
+
+        "# Écriture sur le fichier 'gamme_majeure.txt' des formes énumérées primordiales."
+        self.gam_ego = []
+        self.liste_iso0, self.liste_iso1 = [], []
+        if self.tag_nat:
+            pre_gamme = open('gamme_majeure.txt', 'w')
+            for tn in t_noms:
+                for sgg in self.gammic.keys():
+                    if tn == sgg[0]:
+                        pre_gamme.write(sgg[1] + "\n")
+                        (lineno(), "sgg1", sgg[1])
+            pre_gamme.close()
+        with open('gamme_majeure.txt', 'r') as lec_gamme:
+            for lg in lec_gamme:
+                self.gam_ego.append(int(lg.strip()))
+        (lineno(), "gam_ego", self.gam_ego, "Longueur", len(self.gam_ego))
+        # 586 gam_ego ['102034050607', '102034500607', '123400000567', '123400050067', '123400056007',
+        ("[EGO] = Organisation composée à partir de la gamme naturelle......... 'self.gam_ego'"
+         "[ISO] = Organisation composée à partir du fichier `globdicTcoup.txt`. 'self.gam_iso'"
+         "[INT] = Organisation croissante des éléments [ISO]................... 'self.gam_int'")
 
         if self.borne[1] != 1111111:
             (lineno(), "Borne", self.borne[1])
@@ -531,7 +882,8 @@ class Relance(Tk):
         self.frame_lab = ["Toutes ou une seule gamme ?",
                           "En DO ou tonalité dynamique ?",
                           "Quel est votre ordonnance ?",
-                          "Couper l'audio ?"]
+                          "Couper l'audio ?",
+                          "Forme binarisée ?"]
         self.color_cad, rng = ["red", "orange", "yellow", "green", "skyblue", "mediumpurple", "violet"], 0
         self.table_cad = []
         for yes in range(7):
@@ -591,14 +943,30 @@ class Relance(Tk):
         rad_bou5.grid(row=4, column=1)
 
         "# Radio-bouton pour ne pas effectuer l'écoute audio des gammes."
+        if not di_son:
+            self.zone_w3 = StringVar(self.table_cad[3], value="Inaudible")
+        else:
+            self.zone_w3 = StringVar(self.table_cad[3], value=di_son)
         rng += 1
-        self.zone_w3 = StringVar(self.table_cad[3], value="Inaudible")
         rad_bou6 = Radiobutton(self.table_cad[3], variable=self.zone_w3, value="Inaudible", text="Couper l'audio",
                                bg=self.color_cad[rng])
         rad_bou6.grid(row=2, column=1)
         rad_bou7 = Radiobutton(self.table_cad[3], variable=self.zone_w3, value="Audible", text="Entendre",
                                bg=self.color_cad[rng])
         rad_bou7.grid(row=3, column=1)
+
+        "# Radio-bouton pour sélectionner les binarisations à traiter. Les degrés modaux ou les gammes primordiales."
+        if not di_gam:
+            self.zone_w4 = StringVar(self.table_cad[4], value="Modes")
+        else:
+            self.zone_w4 = StringVar(self.table_cad[4], value=di_gam)
+        rng += 1
+        rad_bou8 = Radiobutton(self.table_cad[4], variable=self.zone_w4, value="Modes", text="Modes binarisés",
+                               bg=self.color_cad[rng])
+        rad_bou8.grid(row=2, column=1)
+        rad_bou9 = Radiobutton(self.table_cad[4], variable=self.zone_w4, value="Gammes", text="Gammes binarisées",
+                               bg=self.color_cad[rng])
+        rad_bou9.grid(row=3, column=1)
 
         "# Traitement de la sonorisation des gammes retournées du module 'gammes_audio.py'"
         self.gam_son, self.gam_son1 = None, None  # , 'self.gam_son1'. Afin d'ordonner les clefs.
@@ -616,7 +984,16 @@ class Relance(Tk):
         self.tab_ind = []  # Tableau utilisé pour gérer la coloration des lignes des boutons binaires.
 
     def charger_image(self):
-        """Placer les boutons imagés sur le volet de droite 'table_o'"""
+        """
+        Loads and displays a series of images onto a Canvas widget.
+
+        This function loads a predefined list of images, creates PhotoImage objects
+        from them, and displays them on a Canvas.
+        It handles the positioning of each image on the Canvas and sets up event bindings to handle user clicks.
+
+        :raises IOError: If an image file cannot be opened.
+        :return: None
+        """
         # table_o = Canvas(root, width=84, height=884, bg="thistle"), (row=2, column=3)
         self.table_o.delete("all")
         # self.images_references.clear()
@@ -632,7 +1009,18 @@ class Relance(Tk):
             (lineno(), "index", index, "image_id", image_id, "image", self.images_liste[image_id - 1])
 
     def quitter(self, tag):
-        """Pour effectuer une transition en fenêtrage"""
+        """Pour effectuer une transition en fenêtrage.
+            Determines the current state with a real closure reference.
+            This method evaluates various conditions based on the `tag` parameter and the internal
+            state `self.borne[1]`, and performs actions such as clearing a collection or
+            destroying the object accordingly.
+
+            :param tag: A string representing the state or action that influences the
+                        method’s behavior.
+                        Valid values include "1111111", "0000000",
+                        "clic_image", "Passer", and other possible strings.
+            :return: None.
+            """
         "# Connaitre l'état actuel avec un repère de fermeture réelle."
         (lineno(), "\t Quitter(tag)", tag)
         if self.borne[1] == 1111111 and tag in ("1111111", "0000000"):
@@ -655,7 +1043,7 @@ class Relance(Tk):
     def gammes_arp(self):
         """Cette fonction est destinée à trier les modèles binaires, en commençant par la gamme naturelle.
         Ça concerne l'initialisation des tables par la gamme naturelle exprimée en modulations (binaires et degrés)."""
-        ("\t", lineno(), "**   Fonction gammes_arp ", "gammes_mode", "self.gammes_mode")
+        ("\t", lineno(), "**   Fonction gammes_arp ", "colonne_bin", list(self.colonne_bin))
         gammes_col = list(self.dic_codage.values())  # "dic_codage" = Les gammes issues de 'globdicTcoup.txt'
         (lineno(), "gammes_col", len(gammes_col))
         "# À chaque ligne, correspond un mode binaire. La ligne zéro, c'est pour les noms des gammes."
@@ -780,20 +1168,23 @@ class Relance(Tk):
                 (lineno(), "GAM_ARP self.colonne_gam", self.colonne_gam[k])
                 # 578 GAM_ARP self.colonne_gam ['1', '2', '3', '4', '6', '7']
         (lineno(), "GAM_ARP self.colonne_gam", list(self.colonne_gam)[:3])
-        (lineno(), "GAM_ARP self.dic_binary", self.dic_binary, "\nself.colonne_bin", self.colonne_bin)
+        (lineno(), "GAM_ARP self.dic_binary", self.dic_binary.keys(), "\n\nself.colonne_bin", self.colonne_bin)
 
     def gammes_log(self):
         """Fonction complémentaire au traitement original,
-        elle traite le signal original comme des nombres entiers. Contrairement à la fonction
+        elle traite le signal original comme des nombres entiers.
+        Contrairement à la fonction
         du traitement original, qui découvrait les gammes selon les dispositions binaires.
         Elle compose l'intégralité des définitions binaires, qui de par celles-ci, va structurer
-        la série des gammes fondamentales en fonction de leurs dispositions binaires. Soit,
+        la série des gammes fondamentales en fonction de leurs dispositions binaires.
+        Soit,
         qu'elles sont les gammes qui contiennent le pulsif de binaires rapprochés, en rapport
         avec la liste intégrale des modes binaires."""
-        ("\t", lineno(), "**   Fonction gammes_log, self.dic_force", list(self.dic_force)[0])
+        ("\t", lineno(), "**   Fonction gammes_log, colonne_bin", list(self.colonne_bin)[:2])
         "# Définir les contenants par quantité des sept premiers binaires cumulatifs."
         gammes_loc = list(self.dic_codage.values())  # "dic_codage" = Les gammes issues de 'globdicTcoup.txt'
-        (lineno(), "gammes_loc", len(gammes_loc))
+        (lineno(), "gammes_loc", len(gammes_loc), "dic_codage.keys", list(self.dic_codage.keys())[:3])
+        # 839 gammes_loc 66 dic_codage.keys [(1, '123400000567'), (2, '123400056007'), (3, '123400050607')]
         (lineno(), "gammes_loc[0]", gammes_loc[0], "\n force", self.dic_force, "\n Clés", self.dic_force.keys())
         # 541 gammes_loc[0] [(['o45x', 1], '1000001'), (1, 2, '1000001'), (1, 3, '1000001'),
         # force {'1000001': [((1, '123400000567'), (['o45x', 1], '1000001')), (1, 2, '1000001'),
@@ -815,23 +1206,24 @@ class Relance(Tk):
         cc, colon = 7, 1
 
         "# globe_num = Dictionnaire, clé = Numéro, value = Quantité"
-        for ss in range(1, 67):
-            globe_num[ss] = 0  # Quand 'globe_num'[ss] > 6 = La gamme aux modes binaires est terminée.
+        # for ss in range(1, 67):
+        #   globe_num[ss] = 0 # Quand 'globe_num'[ss]>6= La gamme aux modes binaires est terminée.
 
         while cc <= len(force_cop):
             "# colonne_cop = Liste native des clés binaires utilisées."
             (lineno(), "_________________________________WHILE 1______ cc", cc)
             colonne_cop.clear()
-            for cop_cc in force_cop[:cc]:
+            for cop_cc in force_cop[:cc]:  # 'force_cop' = Liste les clés de 'colonne bin'.
                 colonne_cop.append(str(cop_cc))
                 (lineno(), "cop_cc", type(cop_cc))
-            col_count = colonne_cop.count("")
+            col_count = colonne_cop.count("")  # Harmonisation des vides au début de la liste.
             if col_count == 0:
                 colonne_cop.insert(0, "")
                 colonne_cop.insert(1, "")
             if col_count == 1:
                 colonne_cop.insert(0, "")
             (lineno(), " § colonne_cop", colonne_cop[:6], "long", len(colonne_cop), "col_count", col_count)
+            # 878  § colonne_cop ['', '', '1011110', '1101010', '1111101', '1110110'] long 8 col_count 1
             # force_cop ['1000001', '1000000', '1000101', '1011000', '1011001', '1000111', '1111000']
             # colonne_cop ['1000001', '1000000', '1000101', '1011000', '1011001', '1000111', '1111000']
 
@@ -857,7 +1249,7 @@ class Relance(Tk):
                         # Parfois 'flop' = Nom de gamme sans numéro de gamme.
                         flop = fc[0][0]
                         if isinstance(flop, str):
-                            flop = dic_indice[flop]
+                            flop = self.dic_indice[flop]
                             (lineno(), "flop", flop)
                         (lineno(), "fc", fc, "flop", flop, type(flop))
                     else:
@@ -1009,6 +1401,43 @@ class Relance(Tk):
         (lineno(), "key_lig", key_lig, "\n dic_keys", "dic_keys")
         (lineno(), "self.gammes_bin", self.gammes_bin)
 
+    def reforme_bin(self, lab):
+        """Cette fonction est chargée de récupérer les formes binaires à partir des formes énumérées.
+        Les formes énumérées sont incluses dans les clefs du dictionnaire 'self.gammic'"""
+        table, tab_liste = [], []
+        if lab == "iso":  # "[ISO] = Organisation composée à partir du fichier `globdicTcoup.txt`. 'self.gam_iso'"
+            table = self.gam_iso.copy()
+        elif lab == "iso_inv":
+            iso_inv = self.gam_iso.copy()
+            iso_inv.reverse()
+            table = iso_inv.copy()
+        elif lab == "iso_int":
+            iso_int = self.gam_iso.copy()
+            iso_int.sort()
+            table = iso_int.copy()
+        elif lab == "iso_int_inv":
+            iso_int_inv = self.gam_iso.copy()
+            iso_int_inv.sort()
+            iso_int_inv.reverse()
+            table = iso_int_inv.copy()
+        elif lab == "ego":  # "[EGO] = Organisation composée à partir de la gamme naturelle......... 'self.gam_ego'"
+            table = self.gam_ego.copy()
+        elif lab == "ego_inv":
+            ego_inv = self.gam_ego.copy()
+            ego_inv.reverse()
+            table = ego_inv.copy()
+        (lineno(), "REFORME_BIN lab", lab, "table", table, type(table))
+        for t in table:
+            for g in self.gammic.keys():
+                if str(t) in g:
+                    for gv in self.gammic[g]:
+                        ind_liste = self.gammic[g].index(gv)
+                        if ind_liste > 0 and gv not in tab_liste:
+                            tab_liste.append(gv)
+                            (lineno(), "REFORME gv", gv)
+        (lineno(), "REFORME_BIN lab", lab, "tab_liste", tab_liste)
+        return tab_liste
+
     def clic_image(self, event):
         """Cette fonction convertit les modes binaires.
             En changeant le type, on ne change pas son ordre croissant, sauf pour les entiers libres.
@@ -1016,72 +1445,134 @@ class Relance(Tk):
             'dic_indice' = un dictionnaire = Les clés sont les noms et les valeurs sont les numéros des gammes.
             Il faut modifier le dictionnaire original, afin d'établir une nouvelle correspondance."""
         # Relance(dic_codage, dic_binary, dic_indice, dic_force, dic_colon, dic_titres).mainloop()
+        self.comment_sta.clear()
         self.mod_type.clear()
-        "# "
-        liste_iso0 = list(self.dic_binary.keys())  # 'liste_iso0' = Liste selon self.dic_binary.keys() INITIAL
-        liste_iso1 = self.colonne_bin.copy()  # 'liste_iso1' = Liste selon self.colonne_bin.copy() ORIGINAL
+        ("# Les listes[_iso0 et _iso1] changent selon le choix[Modes ou Gammes]. 'self.zone_w4.get()'"
+         "[EGO] = Organisation composée à partir de la gamme naturelle......... 'self.gam_ego'"
+         "[ISO] = Organisation composée à partir du fichier `globdicTcoup.txt`. 'self.gam_iso'"
+         "[INT] = Organisation croissante des éléments [ISO]................... 'self.gam_int'")
+
+        (lineno(), "Iso0", self.liste_iso0, len(self.liste_iso0), "\n Iso1", self.liste_iso1, len(self.liste_iso1))
         # , "codage_cop" = Transformé de "dic_codage"
         # print("dic_indice", "dic_indice", "dic_binary", "dic_binary", "\n liste_iso", liste_iso, len(liste_iso))
+        """self.images_liste = ["BoutonTriEgo.png", "BoutonAntiEgo.png", "BoutonTriIso.png", "BoutonAntiIso.png",
+                                     "BoutonTriInt.png", "BoutonAntiInt.png"]"""
         x, y = event.x, event.y
         item_id = self.table_o.find_closest(x, y)[0]  # Récupère l'ID de l'objet le pulsif proche
         # item_id : (1=iso[non trié], 2=int[trié])
-        (lineno(), "item_id", item_id, "liste_iso0", liste_iso0, "\ncolonne_bin", self.colonne_bin)
+        liste_ego3, liste_iso3 = [], []
+        if self.zone_w4.get() == "Modes":
+            self.liste_iso1 = self.colonne_bin.copy()  # Liste selon self.colonne_bin.copy() ORIGINAL
+            self.liste_iso0 = list(self.dic_binary.keys())  # Liste selon self.dic_binary.keys() INITIAL
+        ("\n   ", lineno(), "Clic_image/item_id", item_id)
         if item_id == 1:  # Conversion des modes originaux en nombres entiers.
             "# 'liste_iso1' = Liste selon self.colonne_bin.copy()"
-            liste_ego = liste_iso1
+            if self.zone_w4.get() == "Gammes":
+                (lineno(), "Gammes ego")
+                self.liste_iso1 = self.reforme_bin("ego")  # 'liste_iso1' = Liste selon MAJEURE
+                liste_ego3 = self.liste_iso1.copy()
+            elif self.zone_w4.get() == "Modes":
+                (lineno(), "Modes ego")
+                liste_ego3 = self.liste_iso1.copy()
+            liste_ego = liste_ego3.copy()
             self.dic_ego["type"] = "Images libres"
             for ind in range(len(liste_ego)):
                 self.dic_ego[liste_ego[ind]] = liste_ego[ind]
                 (lineno(), "ind", ind, liste_keys[ind], liste_ego[ind])
             self.dic_trans = self.dic_ego.copy()
-            (lineno(), "self.dic_trans", self.dic_trans)
+            (lineno(), "self.dic_trans", self.dic_trans.keys())
         elif item_id == 2:  # Inversion des modes originaux en nombres entiers.
             "# 'liste_iso1' = Liste selon self.colonne_bin.copy()"
-            liste_ego_inv = liste_iso1
-            liste_ego_inv.reverse()
+            if self.zone_w4.get() == "Gammes":
+                (lineno(), "Gammes ego_inv")
+                self.liste_iso1 = self.reforme_bin("ego_inv")  # 'liste_iso1' = Liste selon MAJEURE
+                liste_ego3 = self.liste_iso1.copy()
+            elif self.zone_w4.get() == "Modes":
+                (lineno(), "Modes ego_inv")
+                liste_ego_inv = self.liste_iso1.copy()
+                liste_ego_inv.reverse()
+                liste_ego3 = liste_ego_inv.copy()
+            liste_ego_inv = liste_ego3.copy()
             self.dic_ego_inv["type"] = "Images libres inversées"
+            (lineno(), "liste_ego_inv", liste_ego_inv)
             for ind in range(len(liste_ego_inv)):
                 self.dic_ego_inv[liste_ego_inv[ind]] = liste_ego_inv[ind]
                 (lineno(), "ind", ind, liste_keys[ind], liste_ego_inv[ind])
             self.dic_trans = self.dic_ego_inv.copy()
-            (lineno(), "self.dic_trans[inv]", self.dic_trans)
+            (lineno(), "self.dic_trans", self.dic_trans.keys())
         elif item_id == 3:  # Conversion des modes originaux en nombres entiers.
             "# 'liste_iso0' = Liste selon self.dic_binary.keys()"
-            liste_iso = [int(x) for x in liste_iso0 if x != '']
+            if self.zone_w4.get() == "Gammes":
+                (lineno(), "Gammes iso")
+                self.liste_iso0 = self.reforme_bin("iso")  # 'liste_iso0' = Liste selon INITIAL
+                liste_iso3 = self.liste_iso0.copy()
+            elif self.zone_w4.get() == "Modes":
+                (lineno(), "Modes iso")
+                liste_iso3 = [int(x) for x in self.liste_iso0 if x != '']
+            liste_iso = liste_iso3.copy()
             self.dic_iso["type"] = "Entiers libres"
             for ind in range(len(liste_iso)):
-                self.dic_iso[liste_iso[ind]] = liste_iso[ind]
+                self.dic_iso[str(liste_iso[ind])] = liste_iso[ind]
                 (lineno(), "ind", ind, liste_keys[ind], liste_iso[ind])
             self.dic_trans = self.dic_iso.copy()
+            (lineno(), "self.dic_trans", self.dic_trans.keys())
         elif item_id == 4:  # Inversion des modes originaux en nombres entiers.
             "# 'liste_iso0' = Liste selon self.dic_binary.keys()"
-            liste_iso_inv = [int(x) for x in liste_iso0 if x != '']
-            liste_iso_inv.reverse()
+            if self.zone_w4.get() == "Gammes":
+                (lineno(), "Gammes iso_inv")
+                self.liste_iso0 = self.reforme_bin("iso_inv")  # 'liste_iso0' = Liste selon INITIAL
+                liste_iso3 = self.liste_iso0.copy()
+            elif self.zone_w4.get() == "Modes":
+                (lineno(), "Modes iso_inv")
+                liste_iso3 = self.liste_iso0.copy()
+                liste_iso3.reverse()
+            liste_iso_inv = liste_iso3.copy()
             self.dic_iso_inv["type"] = "Entiers libres inversées"
             for ind in range(len(liste_iso_inv)):
                 self.dic_iso_inv[liste_iso_inv[ind]] = liste_iso_inv[ind]
                 (lineno(), "ind", ind, liste_keys[ind], liste_iso_inv[ind])
             self.dic_trans = self.dic_iso_inv.copy()
+            (lineno(), "self.dic_trans", self.dic_trans.keys())
         elif item_id == 5:  # Conversion des modes originaux en nombres entiers.
             "# 'liste_iso0' = Liste selon self.dic_binary.keys()"
-            liste_int = [int(x) for x in liste_iso0 if x != '']
-            liste_int.sort()
+            if self.zone_w4.get() == "Gammes":
+                (lineno(), "Gammes iso_int")
+                self.liste_iso0 = self.reforme_bin("iso_int")  # 'liste_iso0' = Liste selon INITIAL
+                liste_iso3 = self.liste_iso0.copy()
+            elif self.zone_w4.get() == "Modes":
+                (lineno(), "Modes iso_int")
+                liste_int1 = [int(x) for x in self.liste_iso0 if x != '']
+                liste_int1.sort()
+                liste_iso3 = liste_int1.copy()
+            liste_int = liste_iso3.copy()
             self.dic_int["type"] = "Entiers triés"
-            for ind in range(len(liste_iso0)):
-                self.dic_int[liste_int[ind]] = liste_int[ind]
+            for ind in range(len(self.liste_iso0)):
+                self.dic_int[str(liste_int[ind])] = liste_int[ind]
+                (lineno(), "ind", ind, liste_keys[ind], liste_int[ind])
             self.dic_trans = self.dic_int.copy()
+            (lineno(), "self.dic_trans", self.dic_trans.keys())
         elif item_id == 6:  # Inversion des modes originaux en nombres entiers.
             "# 'liste_iso0' = Liste selon self.dic_binary.keys()"
-            liste_int_inv = [int(x) for x in liste_iso0 if x != '']
-            liste_int_inv.sort()
-            liste_int_inv.reverse()
+            if self.zone_w4.get() == "Gammes":
+                (lineno(), "Gammes iso_int_inv")
+                self.liste_iso0 = self.reforme_bin("iso_int_inv")  # 'liste_iso0' = Liste selon INITIAL
+                liste_iso3 = self.liste_iso0.copy()
+            elif self.zone_w4.get() == "Modes":
+                (lineno(), "Modes iso_int_inv")
+                liste_int_inv1 = [int(x) for x in self.liste_iso0 if x != '']
+                liste_int_inv1.sort()
+                liste_int_inv1.reverse()
+                liste_iso3 = liste_int_inv1.copy()
+            liste_int_inv = liste_iso3.copy()
             self.dic_int_inv["type"] = "Entiers triés inversées"
-            for ind in range(len(liste_iso0)):
-                self.dic_int_inv[liste_int_inv[ind]] = liste_int_inv[ind]
+            for ind in range(len(self.liste_iso0)):
+                self.dic_int_inv[str(liste_int_inv[ind])] = liste_int_inv[ind]
+                (lineno(), "ind", ind, liste_keys[ind], liste_int_inv[ind])
             self.dic_trans = self.dic_int_inv.copy()
-        if item_id == 1:
+            (lineno(), "self.dic_trans", self.dic_trans.keys())
+        if item_id == 1 and self.zone_w4.get() == "Modes":
             self.mod_type = ["Vide"]
-            (lineno(), "self.dic_trans", self.dic_trans)
+            (lineno(), "self.dic_trans", self.dic_trans.keys())
         else:
             self.mod_type.append(item_id)
             self.mod_type.append(self.dic_trans)
@@ -1089,14 +1580,19 @@ class Relance(Tk):
         self.tri = self.images_liste[item_id - 1]  # Relever le type de tri qui organise les gammes.
         (lineno(), "Clic_image : item_id", item_id, "self.mod_type", self.mod_type, len(list(self.mod_type)))
         (lineno(), "self.tri", self.tri)
+        self.comment_sta.append(self.zone_w4.get())
+        self.comment_sta.append(self.tri[6:-4])
+        (lineno(), "Commentaire", self.comment_sta, self.comment_sta[6:-4])
         clic_tag = "clic_image"
         self.quitter(clic_tag)
         retour_func = func_ima(self.mod_type, self.tri)
-        (lineno(), "clic_image retour_func", retour_func[1])
+        (lineno(), "clic_image retour_func", retour_func)
         (lineno(), "\n _______________________________________________ \n")
 
-        Relance(dic_codage, code_ages, dic_binary, dic_indice, dic_force, retour_func[0], retour_func[1],
-                self.zone_w0.get(), self.zone_w1.get(), self.zone_w2.get())
+        (lineno(), "dic_binary", self.dic_binary.keys())
+        Relance(dic_codage, code_ages, dic_binary, dic_indice, dic_force, retour_func[0], dic_gammic, retour_func[1],
+                self.zone_w0.get(), self.zone_w1.get(), self.zone_w2.get(), self.zone_w3.get(), self.zone_w4.get(),
+                self.comment_sta)
 
     def on_click(self, event):
         """Fonction chargée de la structuration des modèles diatoniques sous la forme de valeurs signées."""
@@ -1175,7 +1671,6 @@ class Relance(Tk):
         # Joindre tous les messages avec des sauts de ligne
         texte_complet = "\n---\n".join(self.message)
         showinfo("Informations", f"{texte_complet}")
-
 
     def bouton_bin(self, bb, cc):
         """Pratiquer les redirections des boutons d'en-tête[noms des gammes] et latéral gauche[binômes].
@@ -1506,5 +2001,5 @@ class Relance(Tk):
         # , "gammes_copie" : Remplace : "gammes_col" par une autre demande utilisateur.
 
 
-(lineno(), "dic_indice", "dic_indice")
-Relance(dic_codage, code_ages, dic_binary, dic_indice, dic_force, dic_colon).mainloop()
+(lineno(), "dic_binary", dic_binary.keys())
+Relance(dic_codage, code_ages, dic_binary, dic_indice, dic_force, dic_colon, dic_gammic).mainloop()
