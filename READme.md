@@ -26,6 +26,7 @@ et de gauche à droite. La lecture respectera l'ordre des degrés ainsi que l'as
   * Il y a plusieurs choix concernant les sens de lectures :
     * De haut en bas, de bas en haut, du binaire en accord haut et bas, en suivant l'ordre des degrés.
     * En ne lisant que la ligne du binaire sélectionné, la ligne en accord,
+
 ### Les boutons horizontaux des gammes
     Nous pouvons avoir des méthodes de lecture :
     Tout comme les boutons verticaux, les boutons horizontaux peuvent lire les gammes qui ont les mêmes propriétés.
@@ -47,6 +48,52 @@ et de gauche à droite. La lecture respectera l'ordre des degrés ainsi que l'as
 * La gamme n'a pas de lien avec la suivante, la tonique devient en DO.
 * La gamme a un lien avec la suivante, la tonique devient celle de la gamme suivante.
 * La gamme a plusieurs liens avec la suivante, la tonique devient celle qui a le plus de notes communes.
+
+### Boutons radios ajoutés
+    Couper le son du mode lecture
+<br>
+
+    Choix de la polarité du traitement
+Le pôle "Modes" exécute le tri classique réalisé sur les modes binarisés des gammes. <br>
+Le pôle "Gammes" exécute le tri sur les formes énumérées des gammes (modes toniques).
+
+**Constitution des polarités.**
+![Constitutions polaires](armsph_5_1.png) <br>
+Aux premiers pas de cette application, seuls les degrés modaux étaient traités. Ce qui nous donnait six résultats <br>
+et maintenant, les gammes sous leurs formes énumérées sont traitées et elles apportent leur lot de nouveautés. <br>
+Ce n'est plus seulement six, mais douze éléments configurant douze listes particulières.
+
+Ce nouveau traitement nous entraine à l'analyse des différentes listes. <br>
+Les listes[_iso0 et _iso1] changent selon le choix[Modes ou Gammes]. `self.zone_w4.get()`
+*  [EGO] = Organisation composée à partir de la gamme naturelle......... `self.gam_ego`
+   *  La fonction `def gamme.arp(self)` produit les gammes à partir de la gamme majeure.
+   * Elle est effective lors de l'appui sur les images _[modes[Tri_ego] et gammes[Tri_ego]]_.
+*  [ISO] = Organisation composée à partir du fichier `globdicTcoup.txt`. `self.gam_iso`
+   * La fonction `def gamme_log(self)` organise les gammes à partir du fichier `globdicTcoup.txt`.
+   * **Rappel** : Contient les formes énumérées de la globalité des modulations diatoniques.
+     * Cette séquence a été automatiquement établie dans un précédent algorithme basé sur les tétracordes.
+   * Elle est effective lors de l'appui sur les images _[modes[Tri_iso] et gammes[Tri_iso]]_.
+*  [INT] = Organisation croissante des éléments......................... `self.gam_int`
+   * Les valeurs des éléments gammiques peuvent être ordonnés en croissance.
+   * Ces valeurs proviennent de la liste [ISO], qui d'ailleurs, elles sont identiques à celles-ci [EGO] et [INT].
+      * Les valeurs correspondent aux modes diatoniques qui ne varient jamais ici.
+
+Nous avons finalement deux types de traitement `("Modes" ou "Gammes")`. <br>
+Chacun d'eux a deux catégories, les noms des gammes énumérées et leurs modes binarisés. <br>
+
+Dictionnaire des listes : <br>
+La liste des noms {`dic_noms_ego`, `dic_noms_ego_inv`, `dic_noms_iso`, `dic_noms_iso_inv`, `dic_noms_int`, `dic_noms_int_inv`} <br>
+Celle des modes {`dic_bins_ego`, `dic_bins_ego_inv`, `dic_bins_iso`, `dic_bins_iso_inv`, `dic_bins_int`, `dic_bins_int_inv`} <br>
+Chaque liste change en raison de son originale polarité `("Modes" ou "Gammes")`, ce qui donnera {`dic_m_bins_ego` ou `dic_g_bins_ego`} <br>
+
+La figure "constitutions polaires" comprend plusieurs égalités liées aux traitements.
+
+_**TRAITS NOIRS**_ `dic_m_noms_ego` = `dic_g_noms_ego`. Puisque tous les deux sont issus de `def gammes.arp(self)`. <br>
+_**TRAITS BLEUS**_ `dic_m_bins_ego` = `dic_g_bins_ego`. Même ordre binarisé constaté. <br>
+_**TRAITS ROUGES**_ `dic_m_bins_ego` = `dic_m_bins_ego_inv`. L'ordre a seulement été inversé. <br>
+Les égalités baissent le nombre des différences, on sait que pour un [ISO], nous avons deux listes[noms, modes]. <br>
+
+    En comptant uniquement les différences, on obtient dix-sept marquages de modulations.
 ______________________________________________________________________________________________________________
 #### La fonction clic_image
     La liste selon '(self.dic_binary.keys())'.
