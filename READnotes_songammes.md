@@ -63,25 +63,52 @@ Un bouton radio a été ajouté offrant le choix d'entendre ou pas les gammes lo
 ## Utilisation des gammes fantômes.
     ???
 
-## Création d'une nouvelle ressource de binarisation.
+## Création de nouvelles ressources.
 Au départ, les degrés modaux étaient binarisés et seulement eux. Maintenant, les formes énumérées des gammes fondamentales vont avoir une signification binaire. <br>
 La manière de trier en ordre croissant les modes binarisés ne se reporte pas aux formes énumérées, puisqu'à elles seules, elles ont un même rapport de croissance. Selon le déroulement de la forme commençant et finissant toujours par (1 et 7) respectivement. <br>
 `dic_gammic = {}  # Dico, clé = Nom + valeur énumérée, valeur = Énumération binarisée + degrés binarisés.` <br>
+
 Ceci produit un dico ayant au 1er indice la valeur énumérée['123400000567'] binarisée['111100000111']. Suivi aux sept indices modaux des sept degrés binarisés tels qu'on les connait. Ce dictionnaire est construit au commencement du programme, dans la boucle `for pre_cod in pre_codage:`. Il est noté que le dictionnaire `dic_codage`, quoique plus complexe, a les mêmes données que `dic_gammic`. <br>
 `dic_gammic ['111100000111', '1000001', '1000001', '1000001', '1000001', '1000000', '1000001', '1000001']` <br>
+
 En triant les valeurs énumérées, on change l'ordre des modulations diatoniques binaires. <br>
 De ce fait, ce nouvel ordre des modes binarisés n'est pas forcément ordonné. Donc, avec le tri des formules gammales binaires, on crée un désordre organisé. Ce qui et par conséquence, pourrait engendrer une quelconque familiarité relative aux tris réalisés sur les modes binarisés. Et des nouvelles organisations d'apparences binaires.
-#### Consistance des formes binarisées :
+
+Les modèles modaux des gammes ont été vus jusqu'à présent à travers une conception binarisante. <br>
+Les modes toniques peuvent être conceptualisés d'une autre façon. En invoquant les modèles énumérés ressemblants à ceci[102034050607] et d'en estimant la mesure d'intervalle de chacune des tonalités. Ainsi en comptant les intervalles[102034050607], devient[1101110]. Quand il n'y a pas d'intervalle entre deux tonalités, le résultat vaut zéro et s'il y en a, on a juste à compter le nombre d'intervalles vides. <br>
+Faisons par exemple la conversion de cet exemple[1203040050607], équivalant à la gamme `b23`, le devenir de cet exemple est[0112110] (numériquement[112110]).
+
+_Une première tentative de traitement a donné le même résultat que celui produit par le tri sur les modes._ <br>
+À cause d'une ordonnance ne variant pas l'ordre des toniques, qui même en ayant trié les modèles [102034050607] et [1101110], l'ordre des binarisations était inchangé. <br>
+Afin d'éviter cette redondance et paraitre créateur d'inutilité absolue. La méthode de traitement des modèles en modes `GAMME et CONTIENT`, sont traité différemment, en affectant une sectorisation. C'est en suivant la hiérarchie des ordres et des appels de type de traitement, que s'accomplissent les grandeurs des sections. <br>
+Les grandeurs se basent sur la quantité des gammes primordiales et le nombre d'organisations : il y a soixante-six gammes et trois modèles de progression. <br>
+Alors, les sections sont au nombre de trois grandeurs entières {11, 33, 66}, pour modifier du premier résultat.
+* 11 : c'est la quantité de gammes incluses par secteur, il y a 6 secteurs de 11 gammes.
+  * Chaque secteur voit ses 11 gammes triées en ordre croissant et les binarisations ont un ordre différent.
+* 33 : il y a trente-trois gammes par section et il y a 2 secteurs de 33 gammes.
+  * Chaque secteur voit ses 33 gammes triées en ordre croissant et les binarisations ont un ordre encore différent.
+* 66 : il y a soixante-six gammes dans une section et il y a 1 secteur de 66 gammes.
+  * Ce secteur englobe toutes les gammes, c'est ici que les formes énumérées et les conteneurs sont ordonnés.
+
+
+### Consistance des formes binarisées :
 Les consultations des modes binaires composées de sept chiffres, ont trois pôles[EGO, ISO, INT]. <br>
 Et, celles des gammes binaires composées de douze chiffres, ont les mêmes pôles. <br>
-[EGO] = Organisation composée à partir de la gamme naturelle. <br>
-[ISO] = Organisation composée à partir du fichier `globdicTcoup.txt`. <br>
-[INT] = Organisation croissante des éléments [ISO].
-#### Commentaires sur les résultats
-**Au sujet du tri naturel de la gamme**
+[EGO] = Organisation composée à partir de la gamme naturelle. ......... **'self.gam_ego'** <br>
+[ISO] = Organisation composée à partir du fichier `globdicTcoup.txt`. . **'self.gam_iso'** <br>
+[INT] = Organisation croissante des éléments [ISO = EGO]. ............ **'self.gam_int'** <br>
+Les binaires : `[ISO]=[EGO]=[INT]`. Ce `dictionnaire[E/I][102034050607] = (Binaires)` <br>
 
-`self.zone_w4.get() == "Modes" ou "Gammes"` : <br>
-L'ordre des noms des gammes varient selon que les pôles sont traités en modes `"Modes"` ou `"Gammes"`.
+### Commentaires sur les résultats
+    Au sujet du tri naturel de la gamme
+Nous avons créé trois versions de transformation numérique des gammes. Nous avons remarqué que dans un premier temps, seuls les noms des gammes et les modes binarisés ont été traités. <br>
+Ce premier traitement dévoile la constance des résultats obtenus par les pôles[EGO, ISO], car le changement de l'ordre de la séquence intervient uniquement au pôle[INT]. L'ordre ne change pas à cause de l'originalité statique des listes produites préalablement. <br>
+_Le pôle[INT] modifie l'ordre de la séquence sans modifier les noms des gammes._ <br>
+
+Puisque les ressources ont produit trois formes[binaires, énumérées, conteneurs], on devine clairement, que les modes diatoniques ont été modifiés. Entrainant d'autres éléments de triages et d'autres organisations. <br>
+
+`self.zone_w4.get() == "Modes" ou "Gammes" ou "Contient"` : <br>
+L'ordre des noms des gammes varient selon que les pôles sont traités en modes `"Modes"` ou `"Gammes"` ou `Contient`.
 #### Dictionnaires des résultats
 Ils ont la tâche de rassembler les résultats selon `self.zone_w4.get() == "Modes" ou "Gammes"` : <br>
 Ainsi, que chacun de ces deux modes produisent, soit des modes binaires ou des gammes énumérées. <br>
@@ -113,6 +140,7 @@ Ainsi, que chacun de ces deux modes produisent, soit des modes binaires ou des g
 `dic_g_bins_iso_inv = ['1000011', '1000000', '1000001', '1100001', '1000010', '1000101', '1001001', '1011001', '1010001', '1000100', '1011000', '1010010', '1011011', '1001101', '1010101', '1100100', '1011101', '1100101', '1011010', '1001000', '1011111', '1110101', '1111010', '1010011', '1100011', '1000110', '1101001', '1100000', '1110001', '1100010', '1010100', '1001011', '1110010', '1111001', '1000111', '1111011', '1100110', '1001100', '1010111', '1101100', '1111101', '1101010', '1100111', '1011110', '1111111', '1101110', '1110111', '1111110', '1101011', '1010110', '1101000', '1101101', '1001010', '1110011', '1011100', '1101111', '1001110', '1110110', '1111100', '1001111', '1110100', '1111000']` <br>
 `dic_g_bins_int = ['1000011', '1000000', '1000001', '1100001', '1000010', '1000101', '1001001', '1011001', '1010001', '1000100', '1011000', '1010010', '1011101', '1100101', '1011010', '1001000', '1011111', '1001101', '1110101', '1111010', '1100100', '1010011', '1011011', '1010101', '1100011', '1000110', '1101001', '1100000', '1110001', '1100010', '1010100', '1001011', '1110010', '1111001', '1000111', '1111101', '1101010', '1100111', '1011110', '1111111', '1101110', '1001100', '1110111', '1111110', '1101100', '1111011', '1100110', '1010111', '1101011', '1010110', '1101101', '1001010', '1110011', '1011100', '1101111', '1001110', '1110110', '1111100', '1101000', '1001111', '1110100', '1111000']` <br>
 `dic_g_bins_int_inv = ['1000011', '1000001', '1100000', '1000000', '1100001', '1000010', '1001001', '1010001', '1000100', '1000101', '1011000', '1011001', '1000111', '1111000', '1001011', '1010100', '1001111', '1110100', '1001101', '1100100', '1010010', '1110001', '1110010', '1001000', '1011011', '1001100', '1010101', '1011101', '1100101', '1011010', '1011111', '1110101', '1111010', '1011100', '1001010', '1100011', '1000110', '1101000', '1100111', '1001110', '1010011', '1111100', '1101001', '1101011', '1010110', '1101101', '1111011', '1100110', '1010111', '1101111', '1110011', '1110110', '1111001', '1100010', '1101100', '1111101', '1101010', '1011110', '1111111', '1101110', '1110111', '1111110']` <br>
+
 
 _____________________________________________________________________________________________
 

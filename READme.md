@@ -55,16 +55,18 @@ et de gauche à droite. La lecture respectera l'ordre des degrés ainsi que l'as
 
     Choix de la polarité du traitement
 Le pôle "Modes" exécute le tri classique réalisé sur les modes binarisés des gammes. <br>
-Le pôle "Gammes" exécute le tri sur les formes énumérées des gammes (modes toniques).
+Le pôle "Gammes" exécute le tri sur les formes énumérées des gammes (modes toniques). <br>
+Le pôle "Contient" exécute une transition des formes énumérées en des quantités d'intervalles. <br>
 
 **Constitution des polarités.**
 ![Constitutions polaires](armsph_5_1.png) <br>
+
 Aux premiers pas de cette application, seuls les degrés modaux étaient traités. Ce qui nous donnait six résultats <br>
 et maintenant, les gammes sous leurs formes énumérées sont traitées et elles apportent leur lot de nouveautés. <br>
 Ce n'est plus seulement six, mais douze éléments configurant douze listes particulières.
 
 Ce nouveau traitement nous entraine à l'analyse des différentes listes. <br>
-Les listes[_iso0 et _iso1] changent selon le choix[Modes ou Gammes]. `self.zone_w4.get()`
+Les listes[_iso0 et _iso1] changent selon le choix[Modes ou Gammes ou Contient]. `self.zone_w4.get()`
 *  [EGO] = Organisation composée à partir de la gamme naturelle......... `self.gam_ego`
    *  La fonction `def gamme.arp(self)` produit les gammes à partir de la gamme majeure.
    * Elle est effective lors de l'appui sur les images _[modes[Tri_ego] et gammes[Tri_ego]]_.
@@ -78,8 +80,10 @@ Les listes[_iso0 et _iso1] changent selon le choix[Modes ou Gammes]. `self.zone_
    * Ces valeurs proviennent de la liste [ISO], qui d'ailleurs, elles sont identiques à celles-ci [EGO] et [INT].
       * Les valeurs correspondent aux modes diatoniques qui ne varient jamais ici.
 
-Nous avons finalement deux types de traitement `("Modes" ou "Gammes")`. <br>
+Nous avons finalement trois types de traitement `("Modes" ou "Gammes" ou "Contient")`. <br>
 Chacun d'eux a deux catégories, les noms des gammes énumérées et leurs modes binarisés. <br>
+
+Je rappelle que nous travaillons sur les soixante-six gammes primordiales et fondamentales, une gamme a sept notes diatoniques.
 
 Dictionnaire des listes : <br>
 La liste des noms {`dic_noms_ego`, `dic_noms_ego_inv`, `dic_noms_iso`, `dic_noms_iso_inv`, `dic_noms_int`, `dic_noms_int_inv`} <br>
