@@ -1096,10 +1096,10 @@ class Relance(Tk):
         else:
             self.zone_w0 = StringVar(self.table_cad[0], value=di_solo)
         rad_bou0 = Radiobutton(self.table_cad[0], variable=self.zone_w0, value="Poly", text="Global",
-                               bg=self.color_cad[rng])
+                               bg=self.color_cad[rng], command=self.modifier_option_radio)
         rad_bou0.grid(row=2, column=1)
         rad_bou01 = Radiobutton(self.table_cad[0], variable=self.zone_w0, value="Solo", text="Unique",
-                                bg=self.color_cad[rng])
+                                bg=self.color_cad[rng], command=self.modifier_option_radio)
         rad_bou01.grid(row=3, column=1)
 
         ("# Radio-bouton pour sélectionner le type de développement diatonique entre (statique et dynamique)."
@@ -1110,10 +1110,10 @@ class Relance(Tk):
             self.zone_w1 = StringVar(self.table_cad[1], value=di_mode)
         rng += 1
         rad_bou1 = Radiobutton(self.table_cad[1], variable=self.zone_w1, value="Sta", text="Statique",
-                               bg=self.color_cad[rng])
+                               bg=self.color_cad[rng], command=self.modifier_option_radio)
         rad_bou1.grid(row=2, column=1)
         rad_bou2 = Radiobutton(self.table_cad[1], variable=self.zone_w1, value="Dyn", text="Dynamique",
-                               bg=self.color_cad[rng])
+                               bg=self.color_cad[rng], command=self.modifier_option_radio)
         rad_bou2.grid(row=3, column=1)
 
         ("# Radio-bouton pour sélectionner le type de lecture à réaliser :"
@@ -1126,13 +1126,13 @@ class Relance(Tk):
             self.zone_w2 = StringVar(self.table_cad[2], value=di_lec)
         rng += 1
         rad_bou3 = Radiobutton(self.table_cad[2], variable=self.zone_w2, value="Groupe", text="Groupement",
-                               bg=self.color_cad[rng])
+                               bg=self.color_cad[rng], command=self.modifier_option_radio)
         rad_bou3.grid(row=2, column=1)
         rad_bou4 = Radiobutton(self.table_cad[2], variable=self.zone_w2, value="Diatone", text="Diatonique",
-                               bg=self.color_cad[rng])
+                               bg=self.color_cad[rng], command=self.modifier_option_radio)
         rad_bou4.grid(row=3, column=1)
         rad_bou5 = Radiobutton(self.table_cad[2], variable=self.zone_w2, value="Hertz", text="Hertzien",
-                               bg=self.color_cad[rng])
+                               bg=self.color_cad[rng], command=self.modifier_option_radio)
         rad_bou5.grid(row=4, column=1)
 
         "# Radio-bouton pour ne pas effectuer l'écoute audio des gammes."
@@ -1142,10 +1142,10 @@ class Relance(Tk):
             self.zone_w3 = StringVar(self.table_cad[3], value=di_son)
         rng += 1
         rad_bou6 = Radiobutton(self.table_cad[3], variable=self.zone_w3, value="Inaudible", text="Couper l'audio",
-                               bg=self.color_cad[rng])
+                               bg=self.color_cad[rng], command=self.modifier_option_radio)
         rad_bou6.grid(row=2, column=1)
         rad_bou7 = Radiobutton(self.table_cad[3], variable=self.zone_w3, value="Audible", text="Entendre",
-                               bg=self.color_cad[rng])
+                               bg=self.color_cad[rng], command=self.modifier_option_radio)
         rad_bou7.grid(row=3, column=1)
 
         ("# Radio-bouton pour sélectionner les binarisations à traiter. Les degrés modaux ou les gammes primordiales."
@@ -1158,13 +1158,13 @@ class Relance(Tk):
             self.zone_w4 = StringVar(self.table_cad[4], value=di_gam)
         rng += 1
         rad_bou8 = Radiobutton(self.table_cad[4], variable=self.zone_w4, value="Modes", text="Modes binarisés",
-                               bg=self.color_cad[rng])
+                               bg=self.color_cad[rng], command=self.modifier_option_radio)
         rad_bou8.grid(row=2, column=1)
         rad_bou9 = Radiobutton(self.table_cad[4], variable=self.zone_w4, value="Gammes", text="Gammes énumérées",
-                               bg=self.color_cad[rng])
+                               bg=self.color_cad[rng], command=self.modifier_option_radio)
         rad_bou9.grid(row=3, column=1)
         rad_bou10 = Radiobutton(self.table_cad[4], variable=self.zone_w4, value="Contient", text="Contient intervalles",
-                                bg=self.color_cad[rng])
+                                bg=self.color_cad[rng], command=self.modifier_option_radio)
         rad_bou10.grid(row=4, column=1)
 
         self.table_cad[5].configure(bg="#E8EDF0")
@@ -1780,6 +1780,10 @@ class Relance(Tk):
         self.lecture_arretee = True
         self.status_var.set("Arrêt demandé")
         self.vider_file_audio()
+
+    def modifier_option_radio(self):
+        """Arrête la lecture et remet son affichage au début après un choix radio."""
+        self.reinitialiser_lecture()
 
     def vider_file_audio(self):
         while True:
