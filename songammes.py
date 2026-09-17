@@ -4,7 +4,7 @@
 # Nom de l'application = songammes.py
 """Ce programme consiste à donner une sonorité diatonique aux gammes.
 Cette gamme est en Do et elle retrace les gammes fondamentales.
-L’architecture de cet assemblage ressemble à cette image (images/ClassBooLsIII.png)."""
+L’architecture de cet assemblage ressemble à cette image (ClassBooLsIII.png)."""
 # https://cabviva.com/musicmp3/gamcop!s.mp3
 
 import inspect
@@ -1003,7 +1003,7 @@ class Relance(Tk):
         # 926 gam_ego ['102034050607', '102034500607', '123400000567', '123400050067', '123400056007',
         ("[EGO] = Organisation composée à partir de la gamme naturelle......... 'self.gam_ego'"
          "[ISO] = Organisation composée à partir du fichier `globdicTcoup.txt`. 'self.gam_iso'"
-         "[INT] = Organisation croissante des éléments [ISO = EGO]............ 'self.gam_int'"
+         "[INT] = Organisation croissante ou décroissante des éléments issus d'ISO."
          "  Il y a trois dictionnaires pour deux ordonnances[EGO+ISO] :"
          "      Au démarrage de cette application, le type organisationnel est |MODES|,"
          "      RAPPEL ; chacune des organisations est composée des soixante-six gammes."
@@ -2405,7 +2405,7 @@ class Relance(Tk):
         ("# Les listes[_iso0 et _iso1] changent selon le choix[Modes ou Gammes]. 'self.zone_w4.get()'"
          "[EGO] = Organisation composée à partir de la gamme naturelle......... 'self.gam_ego'"
          "[ISO] = Organisation composée à partir du fichier `globdicTcoup.txt`. 'self.gam_iso'"
-         "[INT] = Organisation croissante des éléments [ISO = EGO]............. 'self.gam_int'")
+         "[INT] = Organisation croissante ou décroissante des éléments issus d'ISO.")
 
         (lineno(), "Listes vides avant clic_image... Iso0", self.liste_iso1, "\t Iso1", self.liste_ego1)
         # 1612 Listes vides avant clic_image... Iso0 [] 	 Iso1 []

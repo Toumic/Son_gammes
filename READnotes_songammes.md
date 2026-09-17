@@ -73,11 +73,11 @@ A changé l'identification du rectangle, par un indice équivalant ici : `ind_ga
 
     Interfaçage des sonorités (volume, tempo, audio ou pas)
     Paramétrer les fréquences aux positions réelles, quand (ligne//8 = Octave)
-    -   Il y a soixante-trois lignes liées aux modes binaires et huit octaves pan['A2'...'A9']
+    -   Il y a soixante-six lignes liées aux modes binaires et neuf octaves pan['A2'...'A10']
 
 ## Contrôler la lecture sonore
 
-    En ajoutant des boutons[marche, arrêt, pause, enregistrement]
+    Avec les commandes actuelles : lecture, arrêt, reprise et réinitialisation.
 Un bouton radio a été ajouté offrant le choix d'entendre ou pas les gammes lors de la sélection.
 
 ## Utilisation des gammes fantômes
@@ -135,7 +135,7 @@ Et, celles des gammes binaires composées de douze chiffres, ont les mêmes pôl
 
 [ISO] = Organisation composée à partir du fichier `globdicTcoup.txt`. . **'self.gam_iso'**
 
-[INT] = Organisation croissante des éléments [ISO = EGO]. ............ **'self.gam_int'**
+[INT] = Organisation croissante ou décroissante des éléments issus d'ISO.
 
 Les binaires : `[ISO]=[EGO]=[INT]`. Ce `dictionnaire[E/I][102034050607] = (Binaires)`
 

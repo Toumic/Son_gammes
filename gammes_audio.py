@@ -938,7 +938,7 @@ def audio_gam(gammic, pulsif, selon, mode, lecture):
 
         ("# Trouver la note naturelle et indexer la note altérée."
          "# 720 Lignes. tables_lig [2, 14, 26, 38, 50, 62, 74, 86]"
-         "# 747 Octaves. Pan ['A2', 'A3', 'A4', 'A5', 'A6', 'A7', 'A8', 'A9']")
+         "# 747 Octaves. Pan ['A2', 'A3', 'A4', 'A5', 'A6', 'A7', 'A8', 'A9', 'A10']")
         for noe in dic_lig1[nom]:
             if noe[0] == note:
                 cran = noe[1]
