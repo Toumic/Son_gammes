@@ -649,7 +649,7 @@ def audio_gam(gammic, pulsif, selon, mode, lecture):
                             for tad in tab_adn:
                                 for td in tad:
                                     if td == u2:
-                                        if not adn0:  # Remise à True au second tour
+                                        if not adn0:  # Remise à True lors du second tour
                                             adn0 = True
                                         (lino(), "Nom 1", td, "len", len(td))
                                     elif td == d2:
