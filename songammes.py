@@ -865,14 +865,14 @@ class Relance(Tk):
                     # print("*** ELSE k_col", k_col, "col2", col2, "lin2", lin2, "\t len(v_lin)", v_lin, "val", val)
                     # print("", )
                     break
-        print(lineno(), "t_noms", t_noms[:6], len(t_noms), "\n ____________________________________________________")
+        print(lineno(), "t_noms", t_noms, "[:6]", len(t_noms), "\n __________________________________________________")
 
         "# Alimentation du dictionnaire di_gamme. Correspondance simplifiée de 'self.dic_codage'"
         "# Di_gamme = dic_gammic = Dictionnaire, clé = Nom + Énuméré, valeur = Binarisation + Degrés binarisés."
         self.gammic = di_gamme  # Dictionnaire, clé = nom, énumérée, valeur = énumérée et modes binaires diatoniques.
         self.gam_gen = [int(gg[1]) for gg in self.gammic.keys()]  # Ne récupère que les formes énumérées des clefs.
         self.gam_iso, self.iso2 = self.gam_gen.copy(), {}
-        (lineno(), "gammic", self.gammic, "\ngam_gen", self.gam_gen)
+        (lineno(), "gammic", "self.gammic", "\ngam_gen", self.gam_gen)
         # 870 870 gammic {('o45x', '123400000567'): ['111100000111', '1000001', '1000001', '1000001', '1000001',
         # gam_gen [123400000567, 123400056007, 123400050607, 123400050067, 123400500607, 123405000607,
         #
@@ -960,9 +960,9 @@ class Relance(Tk):
          " ♦ Les gammes sont celles qui supportent les tris [EGO+ISO+INT], ce ne sont pas elles qui vont être triées."
          " ♦ Chaque gamme possède sept modes qui en type 'Contient', ils sont des valeurs conteneurs à trier.")
         if di_gam == "Modes":  # Modes binarisés = Le mode tonique binarisé de chaque gamme.
-            (lineno(), "di_gam Modes par défaut", "self.gammic.keys()", "list(self.gammic.keys())[:2]", self.gammic)
+            (lineno(), "di_gam Modes par défaut", self.gammic.keys(), "list(self.gammic.keys())[:2]")
             (lineno(), "dic_binary.keys()", list(self.dic_binary.keys())[:3])
-            (lineno(), "Modes_self.di_age", self.di_ages[1][3:])
+            print(lineno(), "Modes_self.di_age", self.di_ages, "[1][3:]")
             # 937 di_gam Modes par défaut self.gammic.keys() [('o45x', '123400000567'), ('o46-', '123400056007')]
             # 937 self.gammic = {('o45x', '123400000567'): ['111100000111', '1000001', '1000001', '1000001', '1000001',
             #       '1000000', '1000001', '1000001'], ('o46-',
@@ -975,7 +975,7 @@ class Relance(Tk):
         elif di_gam == "Gammes":  # Gammes énumérées = La gamme est énumérée façon binaire.
             (lineno(), "di_gam Gammes", "self.gammic.keys()", list(self.gammic.keys())[:2])
             (lineno(), "dic_binary.keys()", list(self.dic_binary.keys())[:3])
-            (lineno(), "Gammes_self.di_age", self.di_ages[1][3:])
+            print(lineno(), "Gammes_self.di_age", self.di_ages[1][3:])
             # 894 di_gam Gammes self.gammic.keys() [('o45x', '123400000567'), ('o46-', '123400056007')]
             # 895 dic_binary.keys() ['1000001', '1000000', '1000101']
             # 896 Gammes_self.di_age ['100000234567', '123456700000', '123456000007', '123450000067']
@@ -986,7 +986,7 @@ class Relance(Tk):
         elif di_gam == "Contient":  # Contient intervalles = La gamme des intervalles.
             (lineno(), "di_gam Contient", "self.gammic.keys()", list(self.gammic.keys())[:2])
             (lineno(), "dic_binary.keys()", list(self.dic_binary.keys())[:3])
-            (lineno(), "Contient_self.di_age", self.di_ages[1][3:], "1ére Clé", list(self.di_ages.keys())[0])
+            print(lineno(), "Contient_self.di_age", self.di_ages[1][3:], "1ére Clé", list(self.di_ages.keys())[0])
             # 906 di_gam Contient self.gammic.keys() [('o45x', '123400000567'), ('o46-', '123400056007')]
             # 907 dic_binary.keys() ['1000001', '1000000', '1000101']
             # 908 Contient_self.di_age ['100000234567', '123456700000', '123456000007', '123450000067'] 1ére Clé 1
@@ -1399,10 +1399,12 @@ class Relance(Tk):
                         self.con_pass33iso.clear()
                         # ...
                     (lineno(), "_sta", self.comment_sta[1], "bin_age_int_ego66", len(self.bin_age_int_ego66))
-                    (lineno(), "k_num", k_num, "bin_age_ego11", self.bin_age_ego11, len(self.bin_age_ego11))
+                    (lineno(), "k_num", k_num, "bin_age_ego11", self.bin_age_ego11[:4], len(self.bin_age_ego11))
+                    (lineno(), "k_num", k_num, "bin_con_ego11", self.bin_con_ego11[:4], len(self.bin_con_ego11))
                     (lineno(), "k_num", k_num, "bin_age_ego33", self.bin_age_ego33, len(self.bin_age_ego33))
-                    # 1372 _sta TriInt bin_age_int_ego66 66
-                    # 1292 k_num 65 bin_age_ego11 ['102034050607', '102034500607', '123400000567',... ] 66
+                    # 1401 _sta TriInt bin_age_int_ego66 66
+                    # 1402 k_num 65 bin_age_ego11 ['102034050607', '102034500607', '123400000567',... ] 66
+                    # 1403 k_num 66 bin_con_ego11 ['1101110', '1100210', '0005000', '0003200', '0003020',
                 ("# C'est ici qu'on récupère les sections à traiter dans le cycle clefs_triadic."
                  "Recréation dans une liste par section, dans une vaiable locale par sujets au reformatage."
                  "{ bin_age_ego11, bin_age_iso11, bin_age_ego22, bin_age_iso22, bin_age_ego33, bin_age_iso33 }.")
@@ -1421,7 +1423,7 @@ class Relance(Tk):
                         loc_con_ego = self.bin_con_ego11[- int(self.choix_box):].copy()
                         loc_con_iso = self.bin_con_iso11[- int(self.choix_box):].copy()
                         (lineno(), "self.bin_age_ego11", self.bin_age_ego11)
-                        (lineno(), " * ", k_num, "loc_age_ego[:self.choix_box]", loc_age_ego, len(loc_age_ego))
+                        (lineno(), " * ", k_num, "loc_age_ego[- self.choix_box:]", loc_age_ego, len(loc_age_ego))
                     elif self.choix_box == 22:
                         loc_age_ego = self.bin_age_ego22[- self.choix_box:].copy()
                         loc_age_iso = self.bin_age_iso22[- self.choix_box:].copy()
@@ -1464,6 +1466,7 @@ class Relance(Tk):
                         loc_bin_con_ego.append(loc_con_ego)
                         (lineno(), k_num, "\t loc_bin_con_ego", loc_bin_con_ego[0][:3], len(loc_bin_con_ego))
                         # 1405 11 	 loc_bin_con_ego [['0000410', '0002210', '0003020', '0003200',
+
                 ("Références choix de l'utilisateur self.comment_sta:"
                  "['TriEgo', 'AntiEgo', 'TriIso', 'AntiIso','TriInt', 'AntiInt']"
                  "Pour le secteur à traiter, on l'a en divisant 66 par self.choix_box."
@@ -1499,16 +1502,17 @@ class Relance(Tk):
             (lineno(), "comment_sta", self.comment_sta, "Le choix de l'utilisateur (bouton-image).")
             # 1490 comment_sta ['Gammes', 'TriEgo'] Le choix de l'utilisateur (bouton-image).
             if self.comment_sta[0] == 'Gammes':
-                (lineno(), "Gammes/transforme['AGE_EGO' ou 'AGE_ISO']", len(self.transforme['AGE_EGO']))
+                print(lineno(), "Gammes/transforme['AGE_EGO' ou 'AGE_ISO']", len(self.transforme['AGE_EGO']))
                 # 1492 Gammes/transforme['AGE_EGO'] 66
                 lis_enum_ego = self.transforme['AGE_EGO'].copy()
                 lis_enum_iso = self.transforme['AGE_ISO'].copy()
             elif self.comment_sta[0] == 'Contient':
-                (lineno(), "Contient/transcript['CON_ISO' ou 'CON_EGO']", len(self.transcript['CON_ISO']))
+                print(lineno(), "Contient/transcript['CON_ISO' ou 'CON_EGO']", len(self.transcript['CON_ISO']))
                 # 1495 Contient/transcript['CON_ISO'] 66
                 lis_enum_iso = self.transcript['CON_ISO'].copy()
                 lis_enum_ego = self.transcript['CON_EGO'].copy()
-            (lineno(), "enum_ego_iso", lis_enum_ego, lis_enum_iso)
+            (lineno(), "enum_ego", lis_enum_ego, "\n enum_iso", "lis_enum_iso")
+            # 1514 enum_ego ['100023456007', '100234000567', '102034050607', '102034500607',
 
             ("Attribution des binarisations diatoniques pour chaque gamme"
              "# Début de bouclage itératif : sources (lis_enum_ego, lis_enum_iso)")
@@ -1585,6 +1589,7 @@ class Relance(Tk):
                         # 1551 On a trouvé les deux énumérations.
                         break
                 (lineno(), "k_num", k_num, "tria", tria)
+                (lineno(), "gammic_keys", gammic_keys)
                 (lineno(), "_ clefs_triadic", list(clefs_triadic)[:3], "\n.... _ gammic_keys", list(gammic_keys)[:3])
                 # 1178 _ clefs_triadic [['o45x', '123400000567', 1], ['o46-', '123400056007', 2],
                 # .... _ gammic_keys [('o45x', '123400000567'), ('o46-', '123400056007'), ('o4', '123400050607')]
@@ -2105,7 +2110,7 @@ class Relance(Tk):
             self.protocol("WM_DELETE_WINDOW", dialog.destroy())
         elif event == "66":
             self.retour_bouton = 66
-        print(lineno(), "Fonction dialog", event, "retour_bouton", self.retour_bouton)
+        (lineno(), "Fonction dialog", event, "retour_bouton", self.retour_bouton)
         return self.retour_bouton
 
     def reforme_bin(self, lab, bin):
@@ -2240,6 +2245,7 @@ class Relance(Tk):
         self.comment_sta.append(self.tri[6:-4])
         liste_ego3, liste_iso3, ref_mode = [], [], ""
         mission_ego, mission_iso = [], []
+        print(lineno(), "retour_bouton", self.retour_bouton, "comment_sta", self.comment_sta)
 
         if self.zone_w4.get() == "Modes":
             self.liste_ego1 = self.colonne_bin.copy()  # Liste selon self.colonne_bin.copy() MAJEUR[EGO]
@@ -2289,7 +2295,7 @@ class Relance(Tk):
                 self.dic_ego[liste_ego[ind]] = liste_ego[ind]
                 (lineno(), "ind", ind, liste_keys[ind], liste_ego[ind])
             self.dic_trans = self.dic_ego.copy()
-            (lineno(), "self.dic_trans", list(self.dic_trans.keys())[:6])  # 1963 self.dic_trans ['type']
+            (lineno(), "dic_trans", self.dic_trans, "list(self.dic_trans.keys())[:6]")  # 1963 self.dic_trans ['type']
         elif item_id == 2:  # Inversion des modes originaux en nombres entiers.
             "# 'liste_ego1' = Liste selon self.colonne_bin.copy()"
             ref_mode = "ego_inv"
@@ -2380,7 +2386,7 @@ class Relance(Tk):
                 self.dic_int[str(liste_int[ind])] = liste_int[ind]
                 (lineno(), "ind", ind, liste_keys[ind], liste_int[ind])
             self.dic_trans = self.dic_int.copy()
-            (lineno(), "self.dic_trans", list(self.dic_trans.keys())[:6])
+            (lineno(), "dic_trans", self.dic_trans, "\n list(self.dic_trans.keys())[:6]")
         elif item_id == 6:  # Inversion des modes originaux en nombres entiers.
             "# 'liste_iso1' = Liste selon self.dic_binary.keys()"
             ref_mode = "iso_int_inv"
@@ -2406,9 +2412,10 @@ class Relance(Tk):
             self.dic_trans = self.dic_int_inv.copy()
             (lineno(), "self.dic_trans", list(self.dic_trans.keys())[:6])
             # 2083 liste_iso1[ISO] [], liste_ego1[EGO] []
+        print(lineno(), self.zone_w4.get(), "ref_mode", ref_mode)
+        print(lineno(), "self.dic_trans[clé égal valeur]", self.dic_trans.keys())
 
         (lineno(), "liste_iso1[ISO]", list(l0)[:6], "\n\tliste_ego1[EGO]", list(l1)[:6])
-        (lineno(), self.zone_w4.get(), "ref_mode", ref_mode)
         ("PHASE DE SÉLECTION de l'item_id = self.images_liste = ['BoutonTriEgo.png', 'BoutonAntiEgo.png', "
          "'BoutonTriIso.png', 'BoutonAntiIso.png','BoutonTriInt.png', 'BoutonAntiInt.png']"
          "L'item_id = indice self.images_liste[0] = 'BoutonTriEgo' en (ref_mode = 'ego')")
