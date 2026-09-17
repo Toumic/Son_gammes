@@ -8,15 +8,19 @@ L’architecture de cet assemblage ressemble à cette image (images/ClassBooLsII
 # https://cabviva.com/musicmp3/gamcop!s.mp3
 
 import inspect
+from pathlib import Path
+from queue import Empty, Queue
+from threading import Thread
+import time
 from tkinter import *
 from tkinter.constants import *
 from tkinter.font import *
 from tkinter.messagebox import *
 from tkinter import simpledialog
+from tkinter import ttk
 from typing import Callable
 
 from PIL import ImageTk, Image
-import time
 import pyaudio
 import numpy as np
 import ctypes
@@ -24,8 +28,33 @@ import ctypes
 # Les modules personnels.
 import gammes_audio as gamma  # Faire sonner les gammes.
 
+BASE_DIR = Path(__file__).resolve().parent
+
 # lino() Pour consulter le programme grâce au suivi des print’s
 lineno: Callable[[], int] = lambda: inspect.currentframe().f_back.f_lineno
+
+
+def play_sine_tone(frequency, duration, volume=0.7, sample_rate=44100):
+    audio = pyaudio.PyAudio()
+    stream = None
+    try:
+        stream = audio.open(format=pyaudio.paFloat32, channels=1, rate=sample_rate, output=True)
+        samples = np.linspace(0, duration, int(sample_rate * duration), endpoint=False)
+        wave = 0.5 * volume * np.sin(2 * np.pi * frequency * samples)
+        fade_samples = min(int(sample_rate * 0.005), len(wave) // 2)
+        if fade_samples:
+            envelope = np.ones(len(wave), dtype=np.float32)
+            envelope[:fade_samples] = np.linspace(0, 1, fade_samples)
+            envelope[-fade_samples:] = np.linspace(1, 0, fade_samples)
+            wave *= envelope
+        stream.write(wave.astype(np.float32).tobytes())
+    except Exception as error:
+        (lineno(), "Erreur dans 'play_sine_tone'", error)
+    finally:
+        if stream is not None:
+            stream.stop_stream()
+            stream.close()
+        audio.terminate()
 
 (lineno(), "Gammes", dir(gamma))
 
@@ -311,7 +340,7 @@ dic_force = {}  # Dictionnaire, clé = binaire, valeur = dic_codage avec le mêm
 dic_colon = [""]  # Liste, clés binaires liées aux choix de conversions.
 code_ages = {}  # Dictionnaire, clé = Numéro, valeur = Modes diatoniques énumérés.
 
-pre_codage = open('globdicTcoup.txt', 'r')
+pre_codage = open(BASE_DIR / 'globdicTcoup.txt', 'r', encoding='utf-8')
 mod, cod1 = '', 1
 "# Lire un globdicTcoup.txt pour construire un dictionnaire de tous les modèles diatoniques = dic_codage"
 for pre_cod in pre_codage:
@@ -574,8 +603,31 @@ class Relance(Tk):
             :param di_gam: Secondary dictionary supporting scale functionalities.
         """
         super().__init__()
-        self.title("Base illusion")
-        self.geometry("1824x1025+30+10")
+        self.audio_queue = Queue()
+        self.audio_worker = Thread(target=self._audio_worker, daemon=True)
+        self.audio_worker.start()
+        self.title("Songammes | Laboratoire des gammes")
+        largeur_reference, hauteur_reference = 1824, 1025
+        largeur_fenetre = min(largeur_reference, self.winfo_screenwidth())
+        hauteur_fenetre = min(hauteur_reference, max(600, self.winfo_screenheight() - 50))
+        self.ui_scale = min(1.0, largeur_fenetre / largeur_reference, hauteur_fenetre / hauteur_reference)
+        s = lambda valeur: max(1, round(valeur * self.ui_scale))
+        self.geometry(f"{largeur_fenetre}x{hauteur_fenetre}+0+0")
+        self.resizable(False, False)
+        self.configure(bg="#E8EDF0")
+        style = ttk.Style(self)
+        try:
+            style.theme_use("vista")
+        except TclError:
+            pass
+        style.configure("Lecture.TButton", padding=(8, 4), font=("Segoe UI", 9, "bold"))
+        style.configure("Lecture.TLabel", background="#E8EDF0", foreground="#24323D")
+        self.option_add("*Button.font", ("Segoe UI", 8, "bold"))
+        self.option_add("*Button.borderWidth", 0)
+        self.option_add("*Button.highlightThickness", 0)
+        self.option_add("*Radiobutton.font", ("Segoe UI", 8))
+        self.option_add("*Radiobutton.activebackground", "#D8E6EF")
+        self.option_add("*Radiobutton.selectcolor", "#2A9D8F")
         # self.protocol("WM_DELETE_WINDOW", self.quit())  # Pose problème au déroulement souhaité.
         self.borne = {1: "       "}
         self.quitter("1111111")
@@ -587,14 +639,14 @@ class Relance(Tk):
         self.di_ages = di_ages  # Le dictionnaire des formes énumérées.
         self.dic_binary = di_bine  # Clé = binaire, valeur = zob (['o45x', 1], '1000001'), (1, 2, '1000001')
         self.dic_indice = di_indi  # Dictionnaire, clé = Nom de la gamme, valeur = Numéro de la gamme.
-        self.font_coins = "Courrier 18 bold"
-        self.table_x = Canvas(self, width=60, height=30)  # Coin (haut, gauche) pour l'image favicon.
+        self.font_coins = ("Segoe UI", 14, "bold")
+        self.table_x = Canvas(self, width=s(60), height=s(30))  # Coin (haut, gauche) pour l'image favicon.
         self.table_x.grid(row=1, column=1)
-        self.table_b = Canvas(self, width=60, height=884, bg="white")  # Colonne dédiée aux boutons binaires.
+        self.table_b = Canvas(self, width=s(60), height=s(884), bg="#DCE8F0")  # Colonne dédiée aux boutons binaires.
         self.table_b.grid(row=2, column=1)
         self.frame_b = Frame(self.table_b)
-        self.frame_b.grid()
-        self.table_c = Canvas(self, width=60, height=60, bg="white")  # Coin (bas, gauche) pour commentaire d'état.
+        self.frame_b.place(x=0, y=0, width=s(60), height=s(884))
+        self.table_c = Canvas(self, width=s(60), height=s(60), bg="#DCE8F0")  # Coin (bas, gauche) pour commentaire d'état.
         self.table_c.grid(row=3, column=1)
 
         "# Affichage du mode sélectionné pour information dans le canvas du bas à gauche."
@@ -611,15 +663,15 @@ class Relance(Tk):
             self.table_c.create_text(30, 20, text=self.comment_sta[0], anchor="center", font=("arial", 10, "bold"))
             self.table_c.create_text(30, 40, text=self.comment_sta[1], anchor="center", font=("arial", 10, "bold"))
 
-        self.table_y = Canvas(self, width=84, height=30, bg="thistle")  # Coin (haut, droite).
+        self.table_y = Canvas(self, width=s(84), height=s(30), bg="#DCE8F0")  # Coin (haut, droite).
         self.table_y.grid(row=1, column=3)
-        self.table_o = Canvas(self, width=84, height=884, bg="thistle")  # Colonne dédiée aux binaires ordonnés.
+        self.table_o = Canvas(self, width=s(84), height=s(884), bg="#DCE8F0")  # Colonne dédiée aux binaires ordonnés.
         self.table_o.grid(row=2, column=3)
-        self.table_w = Canvas(self, width=1656, height=60, bg="lightgray")  # Colonne dédiée aux options d'affichage.
+        self.table_w = Canvas(self, width=s(1656), height=s(60), bg="#F4F6F7")  # Colonne dédiée aux options d'affichage.
         self.table_w.grid(row=3, column=2)
-        self.table_z = Canvas(self, width=84, height=60, bg="thistle")  # Coin (bas, droite).
+        self.table_z = Canvas(self, width=s(84), height=s(60), bg="#DCE8F0")  # Coin (bas, droite).
         self.table_z.grid(row=3, column=3)
-        self.table_g = Canvas(self, width=1656, height=30, bg="seashell")  # Colonne dédiée aux boutons gammes.
+        self.table_g = Canvas(self, width=s(1656), height=s(30), bg="#F4F6F7")  # Colonne dédiée aux boutons gammes.
         self.table_g.grid(row=1, column=2)
         self.frame_g = Frame(self.table_g)
         self.frame_g.grid()
@@ -628,12 +680,12 @@ class Relance(Tk):
         "72/2=36/2=18, 30/2=15, 54=18+36"
         tx1, tx2 = (18, 2), (54, 30)
         self.table_x.create_oval(tx1, tx2, fill="gold", width=0)  # Table décorative.
-        self.table_x.create_text(36, 15, fill="white", text="X", font=self.font_coins)  # Table décorative. Lettre X.
-        tx1, tx2 = (2, 2), (1656, 30)
-        self.table_g.create_oval(tx1, tx2, fill="blanchedalmond", width=0)  # Colonne dédiée aux boutons gammes.
-        self.table_y.create_text(44, 16, fill="white", text="Y", font=self.font_coins)  # Table décorative. Lettre Y.
-        self.table_z.create_text(44, 31, fill="white", text="Z", font=self.font_coins)  # Table décorative. Lettre Y.
-        self.tableau = Canvas(self, width=1656, height=884, bg="ivory")  # Affichage des (noms, binaires) liées.
+        self.table_x.create_text(s(36), s(15), fill="white", text="X", font=self.font_coins)  # Table décorative. Lettre X.
+        tx1, tx2 = (s(2), s(2)), (s(1656), s(30))
+        self.table_g.create_oval(tx1, tx2, fill="#E8EEF2", width=0)  # Colonne dédiée aux boutons gammes.
+        self.table_y.create_text(s(44), s(16), fill="#24323D", text="Y", font=self.font_coins)  # Table décorative. Lettre Y.
+        self.table_z.create_text(s(44), s(31), fill="#24323D", text="Z", font=self.font_coins)  # Table décorative. Lettre Y.
+        self.tableau = Canvas(self, width=s(1656), height=s(884), bg="#FCFBF7")  # Affichage des (noms, binaires) liées.
         self.tableau.grid(row=2, column=2)
         self.tableau.config(borderwidth=3, relief=RAISED)
 
@@ -641,10 +693,13 @@ class Relance(Tk):
         self.police1, self.police2 = "Courrier 8 bold", "Courrier 10 bold"
         '''Pour une colonne binaire de soixante-six éléments, un intervalle de treize = Hauteur (67*13 = 871).
         Ayant un nombre de colonnes égal aux gammes (66), pulsif une pour les binaires = Longueur (67*24 = 1608).'''
-        long1, haut1, long2, haut2 = 1656, 884, 1608, 871
+        long1, haut1, long2, haut2 = s(1656), s(884), s(1608), s(871)
         self.deb_col, self.deb_lin = (long1 - long2) // 2, (haut1 - haut2) // 2
-        self.col, self.lin = 24, 13  # Espace entre les colonnes_26 et espace entre les lignes_13.
-        self.tot_col, self.tot_lin = 67 * 24, 67 * 13
+        self.col, self.lin = s(24), s(13)  # Espace entre les colonnes et espace entre les lignes.
+        self.ligne_zero = self.deb_lin + s(26)
+        self.tot_col, self.tot_lin = 67 * self.col, 67 * self.lin
+        self.frame_g.configure(width=s(1656), height=s(30))
+        self.frame_g.grid_propagate(False)
 
         "# Tracer le quadrillage principal en bleu clair."
         self.fin_col, self.fin_lin = self.deb_col + self.tot_col, self.deb_lin + self.tot_lin
@@ -728,8 +783,9 @@ class Relance(Tk):
             self.colonne_bin.insert(0, "")
         elif self.colonne_bin.count("") == 1:
             self.colonne_bin.insert(0, "")
+        self.table_bin = self.colonne_bin.copy()
         (lineno(), " colonne_bin", self.colonne_bin[:6])
-        deb_col1, deb_lin1 = self.deb_col + 6, self.deb_lin + 26
+        deb_col1, deb_lin1 = self.deb_col + 6, self.ligne_zero
         (lineno(), "deb_col1, deb_lin1", deb_col1, deb_lin1)
         for colin in range(len(self.colonne_bin)):
             self.tableau.create_text(deb_col1, deb_lin1, text=self.colonne_bin[colin], font=self.police1)
@@ -746,9 +802,13 @@ class Relance(Tk):
             if self.table_bin[colin]:  # Self.table_bin = self.colonne_bin.copy(). Avant l'ajout des ("","")
                 nom0 = self.table_bin[colin]
                 self.table_bin[colin] = Button(self.frame_b, font=poli0, text=nom0,
+                                               relief=FLAT, bd=0, highlightthickness=0,
+                                               padx=0, pady=0, anchor=CENTER,
                                                command=lambda bab=self.table_bin[colin], ages=self.di_ages:
                                                self.bouton_bin(bab, ages))
-                self.table_bin[colin].grid(pady=1)
+                position_y = self.ligne_zero + colin * self.lin
+                self.table_bin[colin].place(x=s(30), y=position_y, anchor=CENTER,
+                                            width=s(54), height=max(1, self.lin - 1))
                 coq0 += 1
 
         "# Résultat des tests sur binaires."
@@ -796,7 +856,8 @@ class Relance(Tk):
         # 467 self.colonne_gam {(1, 0): ['0'], (1, 2): ['1'], (1, 3): ['2'], (1, 4): ['3'], (1, 5): ['4'],
         (lineno(), " *********************************************** ")
         coq2, t_noms = 1, []  # 't_noms' Liste les noms organisés
-        color1, color2 = "black", "lavender"
+        self.gamme_buttons = {}
+        color1, color2 = "#24323D", "#E8EEF2"
         mul_bin = False  # Si la gamme en cours a plusieurs ensembles de degrés.
         col0, lin0 = self.deb_col + 24, self.deb_lin + 26
         recaler = True
@@ -806,11 +867,11 @@ class Relance(Tk):
             for val in v_lin:
                 if k_col[1] == 0:
                     if val in self.gammes_bin.keys():
-                        color1 = "saddlebrown"
-                        color2 = "pink"
+                        color1 = "#A0522D"
+                        color2 = "#F5D7B2"
                     else:
-                        color1 = "black"
-                        color2 = "lavender"
+                        color1 = "#24323D"
+                        color2 = "#E8EEF2"
                     t_noms.append(self.colonne_gam[k_col][0])
                     (lineno(), self.colonne_gam[k_col][0])
                 lin1 = (k_col[1] * self.lin) + lin0
@@ -832,9 +893,12 @@ class Relance(Tk):
                             row0 = 2
                             recaler = True
                         gam_bouton = Button(self.frame_g, font=poli1, text=str(val), bg=color2,
+                                            width=4, relief=FLAT, bd=0, highlightthickness=0,
                                             command=lambda bag=str(val), ages=self.di_ages:
                                             self.bouton_bin(bag, ages))
-                        gam_bouton.grid(row=row0, column=coq2)
+                        position_y = s(8) if row0 == 1 else s(23)
+                        gam_bouton.place(x=col1, y=position_y, anchor=CENTER)
+                        self.gamme_buttons[str(val)] = (gam_bouton, color2)
                     if v_lin[0] == '1':
                         col3, lin3 = (col1 - 6, lin1 - 6), (col1 + 6, lin1 + 6)
                         self.tableau.create_rectangle(col3, lin3, fill="gold", width=0)
@@ -865,7 +929,7 @@ class Relance(Tk):
                     # print("*** ELSE k_col", k_col, "col2", col2, "lin2", lin2, "\t len(v_lin)", v_lin, "val", val)
                     # print("", )
                     break
-        print(lineno(), "t_noms", t_noms, "[:6]", len(t_noms), "\n __________________________________________________")
+        (lineno(), "t_noms", t_noms, "[:6]", len(t_noms), "\n __________________________________________________")
 
         "# Alimentation du dictionnaire di_gamme. Correspondance simplifiée de 'self.dic_codage'"
         "# Di_gamme = dic_gammic = Dictionnaire, clé = Nom + Énuméré, valeur = Binarisation + Degrés binarisés."
@@ -923,7 +987,7 @@ class Relance(Tk):
         self.gam_ego, self.ego2 = [], {}
         self.liste_iso1, self.liste_ego1 = [], []
         if self.tag_nat:
-            pre_gamme = open('gamme_majeure.txt', 'w')
+            pre_gamme = open(BASE_DIR / 'gamme_majeure.txt', 'w', encoding='utf-8')
             for tn in t_noms:
                 for sgg in self.gammic.keys():
                     if tn == sgg[0]:
@@ -932,7 +996,7 @@ class Relance(Tk):
             pre_gamme.close()
 
         "# Recopie des 66 formes énumérées primordiales dans le dictionnaire 'self.gam_ego'."
-        with open('gamme_majeure.txt', 'r') as lec_gamme:
+        with open(BASE_DIR / 'gamme_majeure.txt', 'r', encoding='utf-8') as lec_gamme:
             for lg in lec_gamme:
                 self.gam_ego.append(int(lg.strip()))
         (lineno(), "gam_ego", self.gam_ego, "Longueur", len(self.gam_ego))
@@ -962,7 +1026,7 @@ class Relance(Tk):
         if di_gam == "Modes":  # Modes binarisés = Le mode tonique binarisé de chaque gamme.
             (lineno(), "di_gam Modes par défaut", self.gammic.keys(), "list(self.gammic.keys())[:2]")
             (lineno(), "dic_binary.keys()", list(self.dic_binary.keys())[:3])
-            print(lineno(), "Modes_self.di_age", self.di_ages, "[1][3:]")
+            (lineno(), "Modes_self.di_age", self.di_ages, "[1][3:]")
             # 937 di_gam Modes par défaut self.gammic.keys() [('o45x', '123400000567'), ('o46-', '123400056007')]
             # 937 self.gammic = {('o45x', '123400000567'): ['111100000111', '1000001', '1000001', '1000001', '1000001',
             #       '1000000', '1000001', '1000001'], ('o46-',
@@ -975,7 +1039,7 @@ class Relance(Tk):
         elif di_gam == "Gammes":  # Gammes énumérées = La gamme est énumérée façon binaire.
             (lineno(), "di_gam Gammes", "self.gammic.keys()", list(self.gammic.keys())[:2])
             (lineno(), "dic_binary.keys()", list(self.dic_binary.keys())[:3])
-            print(lineno(), "Gammes_self.di_age", self.di_ages[1][3:])
+            (lineno(), "Gammes_self.di_age", self.di_ages[1][3:])
             # 894 di_gam Gammes self.gammic.keys() [('o45x', '123400000567'), ('o46-', '123400056007')]
             # 895 dic_binary.keys() ['1000001', '1000000', '1000101']
             # 896 Gammes_self.di_age ['100000234567', '123456700000', '123456000007', '123450000067']
@@ -986,7 +1050,7 @@ class Relance(Tk):
         elif di_gam == "Contient":  # Contient intervalles = La gamme des intervalles.
             (lineno(), "di_gam Contient", "self.gammic.keys()", list(self.gammic.keys())[:2])
             (lineno(), "dic_binary.keys()", list(self.dic_binary.keys())[:3])
-            print(lineno(), "Contient_self.di_age", self.di_ages[1][3:], "1ére Clé", list(self.di_ages.keys())[0])
+            (lineno(), "Contient_self.di_age", self.di_ages[1][3:], "1ére Clé", list(self.di_ages.keys())[0])
             # 906 di_gam Contient self.gammic.keys() [('o45x', '123400000567'), ('o46-', '123400056007')]
             # 907 dic_binary.keys() ['1000001', '1000000', '1000101']
             # 908 Contient_self.di_age ['100000234567', '123456700000', '123456000007', '123450000067'] 1ére Clé 1
@@ -995,10 +1059,7 @@ class Relance(Tk):
              " ♦ Les gammes sont celles qui supportent les tris [EGO+ISO+INT], elles ne vont pas être triées."
              " ♦ Chaque gamme possède sept modes qui en type 'Contient', ils sont des valeurs conteneurs à trier.")
 
-        "# Oups !"
-        if self.borne[1] != 1111111:
-            (lineno(), "Borne", self.borne[1])
-            self.protocol("WM_DELETE_WINDOW", self.quitter("0000000"))
+        self.protocol("WM_DELETE_WINDOW", self.fermer_application)
 
         "# Traitement des images préalable."
         self.images_liste = ["BoutonTriEgo.png", "BoutonAntiEgo.png", "BoutonTriIso.png",
@@ -1009,13 +1070,13 @@ class Relance(Tk):
         "# Zone de l'interface aux actions dédiées à l'affichage des gammes."
         # self.table_w = Canvas(self, width=1656, height=60, bg="lightgray") # Colonne dédiée aux options d'affichage.
         "# Création des cadres destinés à recueillir les boutons-radio."
-        largeur_cad, hauteur_cad = 1656 // 7, 100
+        largeur_cad, hauteur_cad = s(1656 // 7), s(100)
         self.frame_lab = ["Toutes ou une seule gamme ?",
                           "En DO ou tonalité dynamique ?",
                           "Quel est votre ordonnance ?",
                           "Couper l'audio ?",
                           "Forme binarisée ?"]
-        self.color_cad, rng = ["red", "orange", "yellow", "green", "skyblue", "mediumpurple", "violet"], 0
+        self.color_cad, rng = ["#F3F6F8", "#EEF3F6", "#F5F7F8", "#F1F5F7", "#EEF3F6", "#E6EEF3", "#E6EEF3"], 0
         self.table_cad = []
         for yes in range(7):
             frame = Frame(self.table_w, width=largeur_cad, height=hauteur_cad, bg=self.color_cad[yes], relief=GROOVE)
@@ -1024,7 +1085,8 @@ class Relance(Tk):
             self.table_cad.append(frame)
             # Ajout des labels dans les frames
             if yes < len(self.frame_lab):
-                label = Label(frame, text=self.frame_lab[yes], bg=self.color_cad[yes])
+                label = Label(frame, text=self.frame_lab[yes], bg=self.color_cad[yes],
+                              fg="#24323D", font=("Segoe UI", 8, "bold"))
                 label.grid(row=1, column=1)
 
         (" Radio-bouton pour sélectionner le type de lecture."
@@ -1105,9 +1167,38 @@ class Relance(Tk):
                                 bg=self.color_cad[rng])
         rad_bou10.grid(row=4, column=1)
 
+        self.table_cad[5].configure(bg="#E8EDF0")
+        self.status_var = StringVar(self.table_cad[5], value="Prêt")
+        ttk.Label(self.table_cad[5], text="Lecture", style="Lecture.TLabel").grid(row=1, column=1, columnspan=3)
+        ttk.Button(self.table_cad[5], text="Lecture", command=self.demarrer_lecture,
+                   style="Lecture.TButton", width=7).grid(row=2, column=1, padx=1)
+        ttk.Button(self.table_cad[5], text="Arrêter", command=self.arreter_lecture,
+                   style="Lecture.TButton", width=7).grid(row=2, column=2, padx=1)
+        ttk.Button(self.table_cad[5], text="Reprise", command=self.reprendre_lecture,
+                   style="Lecture.TButton", width=7).grid(row=2, column=3, padx=1)
+        ttk.Label(self.table_cad[5], textvariable=self.status_var,
+              style="Lecture.TLabel").grid(row=3, column=1, columnspan=3)
+        ttk.Button(self.table_cad[5], text="Réinitialiser", command=self.reinitialiser_lecture,
+               style="Lecture.TButton", width=25).grid(row=4, column=1, columnspan=3, pady=(2, 0))
+
+        self.table_cad[6].configure(bg="#E8EDF0")
+        ttk.Label(self.table_cad[6], text="Volume", style="Lecture.TLabel").pack()
+        self.volume_level = IntVar(value=70)
+        Scale(self.table_cad[6], from_=0, to=100, orient=HORIZONTAL, variable=self.volume_level,
+              length=145, showvalue=True, bg="lightgray", highlightthickness=0).pack()
+
         "# Traitement de la sonorisation des gammes retournées du module 'gammes_audio.py'"
         self.gam_son, self.gam_son1 = None, None  # , 'self.gam_son1'. Afin d'ordonner les clefs.
+        self.lecture_arretee = False
+        self.lecture_active = False
+        self.derniere_lecture = None
+        self.position_lecture = (0, 0)
         self.frequencies = []  # Liste [degré, fréquence].
+        frequence_grave, frequence_aigue = 80.0, 4000.0
+        self.frequences_lignes = {
+            ligne: frequence_grave * (frequence_aigue / frequence_grave) ** ((ligne - 1) / 65)
+            for ligne in range(1, 67)
+        }  # Échelle audible pratique : grave lisible en haut, aigu en bas.
         self.dic_donne = {}  # Dictionnaire, clé = nom de gamme + degré, valeur = numéro de gamme + ligne.
         self.all_rectangles = []  # Cela correspond aux fonds des notes diatoniques.
         self.all_textes = []  # Et ceci, à l'écriture des notes diatoniques.
@@ -1149,6 +1240,18 @@ class Relance(Tk):
         else:
             self.choix_box = self.retour_bouton
         (lineno(), "choix", self.choix_box, "retour_bouton", self.retour_bouton)  # 1141 choix 22 retour_bouton 11
+        self.position_lecture = (0, 0)
+        premieres_gammes = sorted(
+            (clef[0], valeurs[0])
+            for clef, valeurs in self.colonne_gam.items()
+            if clef[1] == 0 and valeurs
+        )
+        premiere_gamme = premieres_gammes[0][1] if premieres_gammes else "0"
+        self.premiere_lecture = (premiere_gamme, self.di_ages)
+        self.derniere_lecture = self.premiere_lecture
+        self.update_idletasks()
+        self.geometry(f"{largeur_fenetre}x{hauteur_fenetre}+0+0")
+        self.demarrage_id = None
 
 
     def k_num_fonc(self):
@@ -1502,12 +1605,12 @@ class Relance(Tk):
             (lineno(), "comment_sta", self.comment_sta, "Le choix de l'utilisateur (bouton-image).")
             # 1490 comment_sta ['Gammes', 'TriEgo'] Le choix de l'utilisateur (bouton-image).
             if self.comment_sta[0] == 'Gammes':
-                print(lineno(), "Gammes/transforme['AGE_EGO' ou 'AGE_ISO']", len(self.transforme['AGE_EGO']))
+                (lineno(), "Gammes/transforme['AGE_EGO' ou 'AGE_ISO']", len(self.transforme['AGE_EGO']))
                 # 1492 Gammes/transforme['AGE_EGO'] 66
                 lis_enum_ego = self.transforme['AGE_EGO'].copy()
                 lis_enum_iso = self.transforme['AGE_ISO'].copy()
             elif self.comment_sta[0] == 'Contient':
-                print(lineno(), "Contient/transcript['CON_ISO' ou 'CON_EGO']", len(self.transcript['CON_ISO']))
+                (lineno(), "Contient/transcript['CON_ISO' ou 'CON_EGO']", len(self.transcript['CON_ISO']))
                 # 1495 Contient/transcript['CON_ISO'] 66
                 lis_enum_iso = self.transcript['CON_ISO'].copy()
                 lis_enum_ego = self.transcript['CON_EGO'].copy()
@@ -1604,12 +1707,12 @@ class Relance(Tk):
 
         ("# Création de la liste globale des binarisations pour self.bin_int."
          "Vont être utilisées les listes self.age_dict et self.con_dict.")
-        '''print("\n", lineno(), "Distribution des clefs de ego2 et iso2 :\n",
-              " [numéro_gamme]*66 gammes, pour une gamme, il y a ['age']*7 diatonies et ['con']*7 diatonies\n",
-              " ['con'] = 7 modes conteneurs, ['age'] = 7 modes énumérés. 66 gammes * 14 degrés = 924 modèles.")
-        print(lineno(), "ego2[num_gam]['age']['con'] # Ordre majeur", list(self.ego2.keys())[:13])
-        print(lineno(), "iso2[num_gam]['age']['con'] # Ordre normal", list(self.iso2.keys())[:13])
-        print(lineno(), "bin_int_ego66", self.bin_int_ego66, "\nbin_int_iso66", self.bin_int_iso66,
+        '''("\n", lineno(), "Distribution des clefs de ego2 et iso2 :\n",
+                            " [numéro_gamme]*66 gammes, pour une gamme, il y a ['age']*7 diatonies et ['con']*7 diatonies\n",
+                            " ['con'] = 7 modes conteneurs, ['age'] = 7 modes énumérés. 66 gammes * 14 degrés = 924 modèles.")
+                (lineno(), "ego2[num_gam]['age']['con'] # Ordre majeur", list(self.ego2.keys())[:13])
+                (lineno(), "iso2[num_gam]['age']['con'] # Ordre normal", list(self.iso2.keys())[:13])
+                (lineno(), "bin_int_ego66", self.bin_int_ego66, "\nbin_int_iso66", self.bin_int_iso66,
               "\n\nLes listes bin_age_iso_ego et bin_con_iso_ego ont les binaires finaux.",
              "\n\nbin_age_ego", self.bin_age_ego, "\nbin_age_iso", self.bin_age_iso,
              "\n\nbin_con_ego", self.bin_con_ego, "\nbin_con_iso", self.bin_con_iso)'''
@@ -1632,12 +1735,100 @@ class Relance(Tk):
         """self.images_liste = ["BoutonTriEgo.png", "BoutonAntiEgo.png", "BoutonTriIso.png", "BoutonAntiIso.png",
                              "BoutonTriInt.png", "BoutonAntiInt.png"]"""
         for index, image in enumerate(self.images_liste):
-            photo_image = ImageTk.PhotoImage(Image.open(image))
+            photo_image = ImageTk.PhotoImage(Image.open(BASE_DIR / image))
             self.images_references.append(photo_image)
             image_id = self.table_o.create_image(deb, esp, image=photo_image)
             self.table_o.tag_bind(image_id, "<Button-1>", self.clic_image)
             esp += 100
             (lineno(), "index", index, "image_id", image_id, "image", self.images_liste[image_id - 1])
+
+    def mettre_en_evidence_gamme(self, gamme):
+        for bouton, couleur in self.gamme_buttons.values():
+            bouton.configure(
+                bg=couleur,
+                activebackground=couleur,
+                fg="black",
+            )
+        if gamme in self.gamme_buttons:
+            bouton, _ = self.gamme_buttons[gamme]
+            bouton.configure(
+                bg="#0057B8",
+                activebackground="#0057B8",
+                fg="white",
+            )
+
+    def afficher_infobulle(self, event, gamme):
+        self.masquer_infobulle()
+        notes = [note[0] for note in self.dic_multiples.get(gamme, [])]
+        if not notes:
+            return
+        self.infobulle = Toplevel(self)
+        self.infobulle.wm_overrideredirect(True)
+        self.infobulle.configure(bg="#24323D")
+        texte = "Notes concernées :\n" + ", ".join(notes)
+        Label(self.infobulle, text=texte, justify=LEFT, padx=8, pady=6,
+              bg="#24323D", fg="white", font=("Segoe UI", 9)).pack()
+        self.infobulle.geometry(f"+{event.x_root + 12}+{event.y_root + 12}")
+
+    def masquer_infobulle(self):
+        infobulle = getattr(self, "infobulle", None)
+        if infobulle is not None and infobulle.winfo_exists():
+            infobulle.destroy()
+        self.infobulle = None
+
+    def arreter_lecture(self):
+        self.lecture_arretee = True
+        self.status_var.set("Arrêt demandé")
+        self.vider_file_audio()
+
+    def vider_file_audio(self):
+        while True:
+            try:
+                self.audio_queue.get_nowait()
+            except Empty:
+                break
+            else:
+                self.audio_queue.task_done()
+
+    def demarrer_lecture(self):
+        if self.lecture_active:
+            return
+        if self.derniere_lecture is None:
+            self.derniere_lecture = ("0", self.di_ages)
+        self.vider_file_audio()
+        self.lecture_arretee = False
+        self.status_var.set("Lecture en cours")
+        self.bouton_bin(*self.derniere_lecture, reprendre=False)
+
+    def reinitialiser_lecture(self):
+        self.arreter_lecture()
+        for element in self.all_rectangles + self.all_textes:
+            self.tableau.delete(element)
+        self.all_rectangles.clear()
+        self.all_textes.clear()
+        for bouton, couleur in self.gamme_buttons.values():
+            bouton.configure(bg=couleur, activebackground=couleur)
+        self.position_lecture = (0, 0)
+        self.derniere_lecture = self.premiere_lecture
+        self.status_var.set("Prêt")
+
+    def fermer_application(self):
+        self.arreter_lecture()
+        self.destroy()
+
+    def reprendre_lecture(self):
+        if not self.lecture_active and self.derniere_lecture:
+            self.lecture_arretee = False
+            self.status_var.set("Reprise en cours")
+            self.bouton_bin(*self.derniere_lecture, reprendre=True)
+
+    def _audio_worker(self):
+        while True:
+            frequency, duration = self.audio_queue.get()
+            try:
+                play_sine_tone(frequency, duration, self.volume_level.get() / 100)
+            finally:
+                self.audio_queue.task_done()
 
     def quitter(self, tag):
         """Pour effectuer une transition en fenêtrage.
@@ -2024,7 +2215,7 @@ class Relance(Tk):
                         (lineno(), "If c_col", c_col, "long_k", long_k)
                     else:  # dk[1] in key_lig
                         lo += 1
-                        # print(lino(), "c_col", c_col, "lo", lo, "self.colonne_gam", self.colonne_gam[c_col, 0])
+                        (lineno(), "c_col", c_col, "lo", lo, "self.colonne_gam", self.colonne_gam[c_col, 0])
                 if long_k == lo:
                     self.gammes_bin[self.colonne_gam[c_col, 0][0]] = "Ok"
                 (lineno(), "long_k", long_k, "\n dic_keys", dic_keys[c_col], dic_keys)
@@ -2068,9 +2259,10 @@ class Relance(Tk):
     def custom_dialog(self, event):
         if event == "00":
             dialog = Toplevel()
-            dialog.title("Confirmation")
-            dialog.geometry("250x120+1500+100")  # Définir une taille de fenêtre
-            Label(dialog, text="Voulez-vous continuer ?").pack(pady=10)
+            dialog.title("Étendue de la lecture")
+            dialog.geometry("440x160+1500+100")
+            Label(dialog, text="Choisissez l'étendue du traitement :").pack(pady=(10, 2))
+            Label(dialog, text="11 = courte, 22 = moyenne, 33 = complète").pack(pady=(0, 8))
 
             def action11():
                 self.retour_bouton = 11
@@ -2094,7 +2286,7 @@ class Relance(Tk):
 
             button_frame = Frame(dialog)
             button_frame.pack(pady=10)
-            textes = ["11", "22", "33", "Cancel"]
+            textes = ["Courte (11)", "Moyenne (22)", "Complète (33)", "Annuler"]
             actions = [action11, action22, action33, cancel_action]
             boutons = []  # Liste des boutons.
             for i in range(4):
@@ -2107,7 +2299,6 @@ class Relance(Tk):
             dialog.transient(self)  # Garder la boîte de dialogue au-dessus de la fenêtre principale
             dialog.grab_set()  # Empêcher l'interaction avec la fenêtre principale tant que la boîte est ouverte
             self.wait_window(dialog)  # Attendre que la boîte soit fermée
-            self.protocol("WM_DELETE_WINDOW", dialog.destroy())
         elif event == "66":
             self.retour_bouton = 66
         (lineno(), "Fonction dialog", event, "retour_bouton", self.retour_bouton)
@@ -2245,7 +2436,7 @@ class Relance(Tk):
         self.comment_sta.append(self.tri[6:-4])
         liste_ego3, liste_iso3, ref_mode = [], [], ""
         mission_ego, mission_iso = [], []
-        print(lineno(), "retour_bouton", self.retour_bouton, "comment_sta", self.comment_sta)
+        (lineno(), "retour_bouton", self.retour_bouton, "comment_sta", self.comment_sta)
 
         if self.zone_w4.get() == "Modes":
             self.liste_ego1 = self.colonne_bin.copy()  # Liste selon self.colonne_bin.copy() MAJEUR[EGO]
@@ -2412,8 +2603,8 @@ class Relance(Tk):
             self.dic_trans = self.dic_int_inv.copy()
             (lineno(), "self.dic_trans", list(self.dic_trans.keys())[:6])
             # 2083 liste_iso1[ISO] [], liste_ego1[EGO] []
-        print(lineno(), self.zone_w4.get(), "ref_mode", ref_mode)
-        print(lineno(), "self.dic_trans[clé égal valeur]", self.dic_trans.keys())
+        (lineno(), self.zone_w4.get(), "ref_mode", ref_mode)
+        (lineno(), "self.dic_trans[clé égal valeur]", self.dic_trans.keys())
 
         (lineno(), "liste_iso1[ISO]", list(l0)[:6], "\n\tliste_ego1[EGO]", list(l1)[:6])
         ("PHASE DE SÉLECTION de l'item_id = self.images_liste = ['BoutonTriEgo.png', 'BoutonAntiEgo.png', "
@@ -2441,6 +2632,12 @@ class Relance(Tk):
         (lineno(), "self.comment_sta", self.comment_sta, " | | ", self.comment_sta[6:-4], "self.tri", self.tri)
         # 2300 self.comment_sta ['Gammes', 'TriEgo']  | |  [] self.tri BoutonTriEgo.png
         clic_tag = "clic_image"
+        if getattr(self, "demarrage_id", None) is not None:
+            self.after_cancel(self.demarrage_id)
+            self.demarrage_id = None
+        self.lecture_arretee = True
+        self.vider_file_audio()
+        self.position_lecture = (0, 0)
         self.quitter(clic_tag)
         retour_func = func_ima(self.mod_type, self.tri)
         (lineno(), "clic_image retour_func", retour_func)
@@ -2529,7 +2726,7 @@ class Relance(Tk):
         texte_complet = "\n---\n".join(self.message)
         showinfo("Informations", f"{texte_complet}")
 
-    def bouton_bin(self, bb, cc):
+    def bouton_bin(self, bb, cc, reprendre=False):
         """Pratiquer les redirections des boutons d'en-tête[noms des gammes] et latéral gauche[binômes].
             Cette fonction est située après avoir initialisé les dictionnaires nécessaires. """
         '''Colonnes-gam {(1, 0) : ['0'], (1, 2) : ['1'], (1, 3) : ['2'], (1, 4) : ['3']}
@@ -2540,6 +2737,11 @@ class Relance(Tk):
         Cc {1 : ['123400000567', '123000004567', '120000034567', '100000234567', '123456700000']}
         Bb x26- ou binaire
         Di_fort = dic_force. Dictionnaire, clé = binaire, valeur = dic_codage avec le même binaire.'''
+        self.derniere_lecture = (bb, cc)
+        self.lecture_arretee = False
+        self.lecture_active = True
+        if not reprendre:
+            self.position_lecture = (0, 0)
         (lineno(), "**   Fonction bouton_bin bb ", bb, "\n cc", cc[1])
         (lineno(), "\nbb ", bb, "\ncc ", cc, "\ncolonne_gam ", self.colonne_gam, "\ncolonne_bin ",
          self.colonne_bin, "\ndic_indice ", self.dic_indice, "\ndic_codage ", self.dic_codage,
@@ -2669,43 +2871,15 @@ class Relance(Tk):
                     break
             # break de vérification partielle, à cause des degrés aux mêmes binaires.
 
-        def sine_tone(frequency, duration, sample_rate=18000):
-            try:
-                """# Calculer le nombre total d'échantillons"""
-                # Initialiser PyAudio
-                p = pyaudio.PyAudio()
-                # Ouvrir un flux de sortie
-                stream = p.open(format=pyaudio.paFloat32,  # 8 bits par échantillon
-                                channels=1,  # mono
-                                rate=sample_rate,  # fréquence d'échantillonnage
-                                output=True)  # flux de sortie
-
-                # Génération de l'onde sonore
-                t = np.linspace(0, duration, int(sample_rate * duration), endpoint=False)
-                wave = 0.5 * np.sin(2 * np.pi * frequency * t)
-                # Lecture de l'onde sonore
-                stream.write(wave.astype(np.float32).tobytes())
-
-                # Fermeture du flux audio
-                stream.stop_stream()
-                stream.close()
-                time.sleep(0.1)
-
-                # Fermeture de PyAudio
-                p.terminate()
-                (lineno(), "Sine_tone", frequency)
-            except Exception as f:
-                print(lineno(), "Erreur dans 'sine_tone'", f)
-
         # Empêcher la mise en veille de l'ordinateur
         ctypes.windll.kernel32.SetThreadExecutionState(0x80000002)
 
         # Gestion.
-        self.tableau.bind("<Button-1>", self.quitter("Passer"))  # Du clic de la souris
+        self.tableau.bind("<Button-1>", lambda event: self.quitter("Passer"))  # Du clic de la souris
         self.focus_force()  # De la fenêtre principale.
 
         "# Nettoyer le tableau pour un nouvel affichage."
-        if self.all_rectangles:
+        if not reprendre and self.all_rectangles:
             for item in self.all_rectangles:
                 self.tableau.delete(item)
             self.all_rectangles.clear()
@@ -2741,7 +2915,13 @@ class Relance(Tk):
          "      réalisé dans le module 'gammes_audio.py' s'effectuait dans une fonction de remise en ordre"
          "      diatonique des notes. Et ne concernait pas toutes les gammes, contrairement à ces 'htz'.")
         "# La première boucle pour chaque gamme et ses modes diatoniques."
-        for k2, v2 in self.gam_son.items():
+        start_gamme, start_freq = self.position_lecture
+        for index_gamme, (k2, v2) in enumerate(self.gam_son.items()):
+            if index_gamme < start_gamme:
+                continue
+            if self.lecture_arretee:
+                break
+            self.mettre_en_evidence_gamme(k2)
             ind_gam = liste_gam.index(k2)
             if len(str(bb)) == 7:
                 ind_bin = colis1[3].index(bb) + 4  # Liste des lignes 'self.tab_lig', 'fill="lightblue"'.
@@ -2793,7 +2973,11 @@ class Relance(Tk):
             (lineno(), "frequencies", self.frequencies, "k2", k2)
             col_0, lig_0 = 24, 26  # Coordonnées d'origine.
             (lineno(), "col, lin", self.col, self.lin)  # 1216 col, lin 24 13
-            for freq in self.frequencies:
+            for index_freq, freq in enumerate(self.frequencies):
+                if index_gamme == start_gamme and index_freq < start_freq:
+                    continue
+                if self.lecture_arretee:
+                    break
                 # Colorier les rectangles coordonnés aux gammes via 'tab_rec' (ligne-315).
                 # For rec in tab_rec : self.tableau.itemconfig(rec, fill="red") : Change la couleur.
                 # For rec in self.tab_rec : coords = self.tableau.coords(rec) : Donne les coordonnées.
@@ -2810,9 +2994,12 @@ class Relance(Tk):
                     (lineno(), "len(str(bb)) != 7, tab_ind.2", self.tab_ind)
                 self.tableau.update_idletasks()  # Forcer la mise à jour de l'interface graphique.
                 id_freq = self.frequencies.index(freq) + 1  # Rang actuel parmi les fréquences.
+                frequence_ligne = freq[1]
                 "# Les clefs du dictionnaire dic_donne ont un nom de gamme et un rang diatonique."
                 for key_don in self.dic_donne.keys():
                     if k2 in key_don and str(id_freq) in key_don:  # 'k2' est le nom de la gamme.
+                        ligne = self.dic_donne[key_don][1]
+                        frequence_ligne = self.frequences_lignes[max(1, min(66, ligne))]
                         co_d, li_d = self.dic_donne[key_don][0] + 2, self.dic_donne[key_don][1] + 2
                         co0, li0 = self.col * co_d, self.lin * li_d
                         col0, lig0 = (co0 - 10, li0 + 1), (co0 + 10, li0 + 11)
@@ -2843,17 +3030,32 @@ class Relance(Tk):
                         self.tableau.tag_bind(stt, "<Enter>", lambda event: self.tableau.config(cursor="hand2"))
                         self.tableau.tag_bind(stt, "<Leave>", lambda event: self.tableau.config(cursor=""))
                         self.tableau.tag_bind(stt, "<Button-1>", self.on_click)
-                        break
+                        if nfq == "☺":
+                            self.tableau.tag_bind(
+                                stt, "<Enter>",
+                                lambda event, gamme=k2: self.afficher_infobulle(event, gamme),
+                            )
+                            self.tableau.tag_bind(stt, "<Leave>", lambda event: self.masquer_infobulle())
+                        self.update_idletasks()
+                        self.update()
+                        self.position_lecture = (index_gamme, index_freq + 1)
+                        if not self.lecture_arretee and self.zone_w3.get() == "Audible":
+                            play_sine_tone(frequence_ligne, 0.05, self.volume_level.get() / 100)
+                        lecture_delay = 0.18 if self.zone_w3.get() == "Audible" else 0.05
+                        time.sleep(lecture_delay)
 
-                if self.zone_w3.get() == "Audible":
-                    sine_tone(freq[1], 0.05)
                 # break de vérification.
 
+            if not self.lecture_arretee:
+                self.position_lecture = (index_gamme + 1, 0)
             self.tableau.itemconfig(self.tab_rec[ind_gam], fill="")
 
             if self.zone_w0.get() == "Solo":
                 break
 
+        self.lecture_active = False
+        self.vider_file_audio()
+        self.status_var.set("Lecture arrêtée" if self.lecture_arretee else "Lecture terminée")
         (lineno(), self.colonne_gam)
         # , "gammes_copie" : Remplace : "gammes_col" par une autre demande utilisateur.
 
