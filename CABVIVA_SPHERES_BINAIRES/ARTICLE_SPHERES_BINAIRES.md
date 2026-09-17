@@ -50,7 +50,7 @@ Lorsque deux gammes possèdent des correspondances, la transition peut conserver
 
 La physique fournit ici une analogie prudente. Une trajectoire musicale n'est pas une particule et une tonalité n'est pas une force au sens mécanique. Mais le vocabulaire du mouvement aide à comprendre ce que l'algorithme rend visible : une structure stable, des états successifs et des transitions déterminées par les relations.
 
-![Trajectoire des tonalites](trajectoire_tonale.svg)
+![Trajectoire des tonalités](trajectoire_tonale.svg)
 
 ---
 
@@ -73,8 +73,8 @@ Songammes transforme cette branche théorique en instrument d'exploration. L'uti
 Trois formes de traitement complètent cette lecture :
 
 - `Modes` travaille sur les profils binaires des modes ;
-- `Gammes` travaille sur les formes enumerees des gammes ;
-- `Contient` transforme les formes enumerees en quantites d'intervalles.
+- `Gammes` travaille sur les formes énumérées des gammes ;
+- `Contient` transforme les formes énumérées en quantités d'intervalles.
 
 La mécanique de l'application consiste à changer de représentation sans perdre la correspondance entre les données. Une même structure peut être nommée, énumérée, binarisée, regroupée ou ordonnée. Chaque opération révèle une relation différente.
 

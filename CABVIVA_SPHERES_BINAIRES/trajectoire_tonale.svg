@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 700" role="img" aria-labelledby="title desc">
-  <title id="title">Trajectoire des tonalites</title>
-  <desc id="desc">Une trajectoire relie plusieurs etats de gammes et leurs tonalites.</desc>
+  <title id="title">Trajectoire des tonalit&#233;s</title>
+  <desc id="desc">Une trajectoire relie plusieurs &#233;tats de gammes et leurs tonalit&#233;s.</desc>
   <defs><marker id="arrow" markerWidth="12" markerHeight="12" refX="9" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 Z" fill="#e49b62"/></marker></defs>
   <rect width="1200" height="700" fill="#171521"/>
   <path d="M70 540 C250 170 370 590 550 260 S860 160 1110 410" fill="none" stroke="#5bd6c2" stroke-opacity=".25" stroke-width="18"/>
