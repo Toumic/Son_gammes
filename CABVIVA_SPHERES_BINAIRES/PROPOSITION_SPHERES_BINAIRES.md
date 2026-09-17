@@ -90,6 +90,16 @@ La perception intervient lorsque la structure devient parcours. L'écran montre 
 
 C'est dans cet écart que se situe l'art quantique de la théorie musicale : non pas dans l'affirmation que la musique serait littéralement une mécanique quantique, mais dans l'exploration de correspondances entre états, transformations, relations et perceptions.
 
+#### L'ombre physique de la structure
+
+Le passage au son s'appuie sur le tempérament égal : une octave double la fréquence et chaque demi-ton multiplie la fréquence par `2^(1/12)`, à partir de la référence du La 440 Hz. Les octaves et les fréquences donnent ainsi une dimension continue aux positions discrètes du tableau.
+
+Songammes ne produit pas un son instrumental complet. La lecture utilise une onde sinusoïdale mono, échantillonnée à 44 100 Hz, avec une amplitude maximale d'environ 0,5 modulée par le volume. Un fondu linéaire d'environ 5 ms limite les coupures abruptes.
+
+Cette simplicité est un choix d'observation. Il n'y a ni timbre de piano, ni résonance de salle, ni simulation de propagation. La sinusoïde laisse au premier plan les hauteurs, les écarts, les changements de tonalité et les relations entre les degrés.
+
+La physique n'est donc pas ici une décoration ajoutée au calcul. Elle est le second versant de l'expérience : la structure est discrète dans le code, continue dans la vibration et perceptible dans l'écoute.
+
 **Image suggérée :** conserver les six images de tri et les schémas des ordonnances déjà associés à cette page.
 
 ---
