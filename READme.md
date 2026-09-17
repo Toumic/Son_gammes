@@ -4,6 +4,8 @@ Songammes est une application Python de visualisation et d'écoute des gammes di
 
 Pour comprendre le lien entre les structures numériques, les fréquences et la génération sonore, consulter [le contexte physique de Songammes](CONTEXTE_PHYSIQUE.md).
 
+Pour utiliser l'interface pas à pas, consulter le [manuel d'utilisation](MANUEL_UTILISATION.md).
+
 ## Démarrage rapide
 
 ### Prérequis
@@ -54,6 +56,7 @@ La lecture audio utilise une onde sinusoïdale mono. Le code prépare un worker 
 | [`globdicTcoup.txt`](globdicTcoup.txt) | 462 formules numériques utilisées par l'organisation ISO |
 | [`gamme_majeure.txt`](gamme_majeure.txt) | 66 formes énumérées générées à partir des gammes majeures |
 | [`CONTEXTE_PHYSIQUE.md`](CONTEXTE_PHYSIQUE.md) | Contexte physique, acoustique et numérique du fonctionnement sonore |
+| [`MANUEL_UTILISATION.md`](MANUEL_UTILISATION.md) | Guide pratique de l'installation et de l'utilisation |
 | `Bouton*.png` | Images des commandes de tri |
 | [`armsph_5_1.png`](armsph_5_1.png) | Schéma des constitutions polaires |
 
