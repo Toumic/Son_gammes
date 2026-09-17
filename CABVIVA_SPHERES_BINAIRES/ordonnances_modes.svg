@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 700" role="img" aria-labelledby="title desc">
+  <title id="title">Ordonnances des modes</title>
+  <desc id="desc">Une structure centrale est observee selon les ordonnances EGO ISO et INT, avec leurs inversions.</desc>
+  <rect width="1200" height="700" fill="#102027"/>
+  <text x="80" y="85" fill="#f4ead5" font-family="Georgia,serif" font-size="38">Ordonnances, perception et outil</text>
+  <text x="82" y="125" fill="#a9c5c9" font-family="Arial,sans-serif" font-size="18">La meme matiere musicale, plusieurs chemins d'observation</text>
+  <g fill="none" stroke="#55757b" stroke-width="3"><path d="M600 350 L230 190"/><path d="M600 350 L970 190"/><path d="M600 350 L230 520"/><path d="M600 350 L970 520"/><path d="M600 350 L600 170"/><path d="M600 350 L600 570"/></g>
+  <g font-family="Arial,sans-serif" text-anchor="middle">
+    <circle cx="600" cy="350" r="95" fill="#e49b62" stroke="#f4ead5" stroke-width="5"/>
+    <text x="600" y="340" fill="#102027" font-size="28">66 x 7</text><text x="600" y="375" fill="#102027" font-size="17">gammes et modes</text>
+    <g fill="#173b4d" stroke="#5bd6c2" stroke-width="4">
+      <circle cx="230" cy="190" r="56"/><circle cx="970" cy="190" r="56"/><circle cx="230" cy="520" r="56"/><circle cx="970" cy="520" r="56"/><circle cx="600" cy="170" r="56"/><circle cx="600" cy="570" r="56"/>
+    </g>
+    <g fill="#f4ead5" font-size="22"><text x="230" y="198">EGO</text><text x="970" y="198">ISO</text><text x="230" y="528">INT</text><text x="970" y="528">Anti</text><text x="600" y="178">Modes</text><text x="600" y="578">Contient</text></g>
+    <g fill="#a9c5c9" font-size="16"><text x="230" y="270">origine</text><text x="970" y="270">formules</text><text x="230" y="600">ordre numerique</text><text x="970" y="600">inversion</text></g>
+  </g>
+  <text x="80" y="665" fill="#f4ead5" font-family="Georgia,serif" font-size="24">L'objet reste stable ; l'ordonnance change.</text>
+</svg>

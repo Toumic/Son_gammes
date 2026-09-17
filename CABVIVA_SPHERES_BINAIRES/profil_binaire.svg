@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 700" role="img" aria-labelledby="title desc">
+  <title id="title">Profil binaire d'un mode</title>
+  <desc id="desc">Sept positions musicales reliees a un profil binaire 1 1 0 1 0 1 0.</desc>
+  <rect width="1200" height="700" fill="#101820"/>
+  <circle cx="930" cy="150" r="190" fill="#173b4d" opacity=".8"/>
+  <circle cx="930" cy="150" r="125" fill="none" stroke="#5bd6c2" stroke-width="2" opacity=".55"/>
+  <text x="80" y="85" fill="#f4ead5" font-family="Georgia,serif" font-size="38">De la note au profil</text>
+  <text x="82" y="125" fill="#a9c5c9" font-family="Arial,sans-serif" font-size="18">Une structure musicale observee sous une autre forme</text>
+  <g font-family="Arial,sans-serif" font-size="22" text-anchor="middle">
+    <line x1="140" y1="275" x2="1060" y2="275" stroke="#55757b" stroke-width="3"/>
+    <g fill="#f4ead5" stroke="#5bd6c2" stroke-width="5">
+      <circle cx="140" cy="275" r="28"/><circle cx="293" cy="275" r="28"/><circle cx="447" cy="275" r="28"/>
+      <circle cx="600" cy="275" r="28"/><circle cx="753" cy="275" r="28"/><circle cx="907" cy="275" r="28"/><circle cx="1060" cy="275" r="28"/>
+    </g>
+    <g fill="#101820" stroke="none"><text x="140" y="283">1</text><text x="293" y="283">2</text><text x="447" y="283">3</text><text x="600" y="283">4</text><text x="753" y="283">5</text><text x="907" y="283">6</text><text x="1060" y="283">7</text></g>
+    <g fill="#a9c5c9" font-size="17"><text x="140" y="330">degre</text><text x="293" y="330">degre</text><text x="447" y="330">degre</text><text x="600" y="330">degre</text><text x="753" y="330">degre</text><text x="907" y="330">degre</text><text x="1060" y="330">degre</text></g>
+    <path d="M140 390 V450 H1060 V390" fill="none" stroke="#e49b62" stroke-width="3" stroke-dasharray="8 10"/>
+    <g fill="#e49b62"><rect x="104" y="475" width="72" height="72" rx="10"/><rect x="257" y="475" width="72" height="72" rx="10"/><rect x="411" y="475" width="72" height="72" rx="10"/><rect x="564" y="475" width="72" height="72" rx="10"/><rect x="717" y="475" width="72" height="72" rx="10"/><rect x="871" y="475" width="72" height="72" rx="10"/><rect x="1024" y="475" width="72" height="72" rx="10"/></g>
+    <g fill="#101820" font-size="28"><text x="140" y="522">1</text><text x="293" y="522">1</text><text x="447" y="522">0</text><text x="600" y="522">1</text><text x="753" y="522">0</text><text x="907" y="522">1</text><text x="1060" y="522">0</text></g>
+  </g>
+  <text x="80" y="635" fill="#f4ead5" font-family="Georgia,serif" font-size="24">Le code ne remplace pas la musique : il rend une relation visible.</text>
+</svg>

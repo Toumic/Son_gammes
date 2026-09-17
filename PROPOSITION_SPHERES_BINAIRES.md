@@ -1,0 +1,105 @@
+# Proposition de mise à jour — Sphères binaires
+
+Ce document prépare le contenu des trois pages Cabviva consacrées aux sphères binaires.
+
+Règle éditoriale : les titres des premières sections restent strictement inchangés. Leur contenu peut être amélioré. Une deuxième section peut être créée pour prolonger chaque page avec l'état actuel de Songammes.
+
+---
+
+## Page 1 — `Les notes majeures binaires`
+
+### Première section — titre conservé
+
+# Les notes majeures binaires
+
+La binarisation transforme une organisation musicale en une lecture de positions. Chaque degré est observé selon sa relation avec la structure majeure de référence, puis traduit dans une forme numérique exploitable : présence ou absence, `1` ou `0`.
+
+Cette écriture ne prétend pas remplacer la note, le mode ou la tonalité. Elle isole une propriété de la structure afin de rendre visibles les ressemblances, les écarts et les répétitions entre les gammes. Le zéro n'est donc pas un vide absolu : il indique qu'une position ne possède pas la qualité recherchée dans le cadre choisi.
+
+La binarisation est ainsi un changement de regard. La gamme n'est pas détruite par sa traduction numérique ; elle est observée sous une autre forme. Les notes deviennent des positions, les positions deviennent des profils, et les profils peuvent être comparés sans perdre leur origine musicale.
+
+### Deuxième section — `Songammes : de la note au profil`
+
+Dans Songammes, la forme binaire appartient à une architecture plus vaste. Les données ne sont pas directement des fréquences : elles servent d'abord à organiser les degrés, les modes et les relations entre les 66 gammes fondamentales.
+
+Chaque gamme possède sept modes diatoniques. Lorsqu'un mode est parcouru, sa structure peut être représentée par une suite binaire de sept positions. Cette suite devient une sorte d'empreinte : elle permet de retrouver les gammes qui partagent une même organisation de degrés.
+
+Le geste est à la fois musical et mécanique. Une position est retenue, déplacée, comparée ou regroupée. La gamme devient un objet en mouvement, non parce que ses notes cessent d'exister, mais parce que son ordre d'observation change.
+
+L'image binaire agit alors comme une carte. Elle ne dit pas tout de la musique ; elle rend visible une relation précise, celle qui permet au système de parcourir et de comparer les structures.
+
+**Image suggérée :** conserver les images de binarisation et de premier voyage déjà associées à cette page.
+
+---
+
+## Page 2 — `Les tonalités dynamiques`
+
+### Première section — titre conservé
+
+# Les tonalités dynamiques
+
+L'algorithme distingue deux niveaux. Certaines données restent stables : les relations binaires, les degrés et les structures comparées. D'autres données peuvent varier : la tonalité, l'ordre du parcours et la position d'écoute.
+
+La lecture statique rapporte les gammes à une tonalité de référence, généralement Do. Cette stabilité facilite la comparaison. La lecture dynamique met en mouvement cette référence : la tonalité d'une gamme peut dépendre des correspondances découvertes avec la gamme précédente.
+
+La tonalité n'est donc plus seulement un état fixé au début de la lecture. Elle devient le résultat d'une relation. Une gamme conduit vers une autre, et les points communs entre elles peuvent déterminer la continuité du parcours.
+
+Ce mouvement ne constitue pas une simulation complète d'un instrument ou d'un espace acoustique. Il s'agit d'une règle musicale et algorithmique : conserver une structure lisible tout en faisant varier son contexte tonal.
+
+### Deuxième section — `La tonalité comme trajectoire`
+
+La dynamique introduit une idée mécanique dans la théorie musicale : une gamme n'est pas seulement située, elle est engagée dans une trajectoire.
+
+Le système conserve une couche structurale, composée des degrés et des profils binaires. Par-dessus cette couche, il calcule une succession de tonalités. L'invariant donne la forme du mouvement ; la variation lui donne une direction.
+
+Lorsque deux gammes possèdent des correspondances, la transition peut conserver une continuité perceptible. Lorsqu'aucun lien suffisant n'est trouvé, le parcours revient à la référence. Ce retour n'est pas un échec : il marque la limite de la relation calculée et fournit un nouveau point de départ.
+
+La physique fournit ici une analogie prudente. Une trajectoire musicale n'est pas une particule et une tonalité n'est pas une force au sens mécanique. Mais le vocabulaire du mouvement aide à comprendre ce que l'algorithme rend visible : une structure stable, des états successifs et des transitions déterminées par les relations.
+
+**Image suggérée :** conserver les schémas consacrés aux tonalités dynamiques et aux armatures.
+
+---
+
+## Page 3 — `Une branche d'exploration — les modes binarisés`
+
+### Première section — titre conservé
+
+# Une branche d'exploration — les modes binarisés
+
+Les modes binarisés constituent une branche d'exploration parmi les différentes manières d'organiser les gammes. La binarisation est appliquée aux 66 gammes fondamentales et à leurs sept modes diatoniques.
+
+Six boutons organisent les principales orientations du parcours : EGO, Anti-EGO, ISO, Anti-ISO, INT et Anti-INT. Ils ne créent pas de nouvelles gammes. Ils changent l'ordre selon lequel les structures existantes sont consultées.
+
+L'ordre EGO part de la gamme naturelle. L'ordre ISO s'appuie sur les formules numériques préparées dans `globdicTcoup.txt`. L'ordre INT trie les valeurs selon une progression numérique, dans un sens ou dans l'autre.
+
+La même matière musicale peut donc apparaître sous plusieurs perspectives. L'objet reste stable ; l'ordonnance change.
+
+### Deuxième section — `Ordonnances, perception et outil`
+
+Songammes transforme cette branche théorique en instrument d'exploration. L'utilisateur choisit une gamme ou un mode binaire, puis observe comment celui-ci se situe dans les différentes ordonnances.
+
+Trois formes de traitement complètent cette lecture :
+
+- `Modes` travaille sur les profils binaires des modes ;
+- `Gammes` travaille sur les formes énumérées des gammes ;
+- `Contient` transforme les formes énumérées en quantités d'intervalles.
+
+La mécanique de l'application consiste à changer de représentation sans perdre la correspondance entre les données. Une même structure peut être nommée, énumérée, binarisée, regroupée ou ordonnée. Chaque opération révèle une relation différente.
+
+La perception intervient lorsque la structure devient parcours. L'écran montre les positions ; l'oreille reçoit les fréquences. Le passage du tableau au son relie une géométrie discrète à un phénomène continu : la vibration.
+
+C'est dans cet écart que se situe l'art quantique de la théorie musicale : non pas dans l'affirmation que la musique serait littéralement une mécanique quantique, mais dans l'exploration de correspondances entre états, transformations, relations et perceptions.
+
+**Image suggérée :** conserver les six images de tri et les schémas des ordonnances déjà associés à cette page.
+
+---
+
+## Note d'intégration
+
+Les contenus ci-dessus sont prêts à être adaptés dans l'éditeur Cabviva. Les titres de premières sections doivent rester exactement ceux qui sont enregistrés :
+
+- `Les notes majeures binaires` ;
+- `Les tonalités dynamiques` ;
+- `Une branche d'exploration — les modes binarisés`.
+
+Les deuxièmes sections peuvent recevoir leurs propres titres et les images préparées peuvent être placées entre les paragraphes correspondants.
