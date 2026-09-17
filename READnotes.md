@@ -50,7 +50,7 @@ A changé l'identification du rectangle, par un indice équivalant ici : `ind_ga
 
 
 ## Constitution des paramètres.
-    Interfaçage des sonorités (volume, tempo, audio ou pas)
+    Interfaçage des sonorités (volume et audio activé ou désactivé)
     Paramétrer les fréquences aux positions réelles, quand (ligne//8 = Octave)
 Il y a soixante-six lignes liées aux modes binaires et neuf octaves pan['A2'...'A10'].
 
@@ -59,4 +59,4 @@ Avec les commandes actuelles : lecture, arrêt, reprise et réinitialisation.
 Un bouton radio a été ajouté offrant le choix d'entendre ou pas les gammes lors de la sélection.
 
 ## Utilisation des gammes fantômes.
-    ???
+    Cette fonctionnalité n'est pas implémentée dans la version actuelle.
