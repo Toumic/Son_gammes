@@ -52,6 +52,8 @@ Songammes prépare une série d'octaves dont les références commencent à 13,7
 
 La référence 440 Hz correspond au La utilisé pour accorder les instruments modernes. Les notes affichées dans l'interface portent un numéro d'octave interne, par exemple `C6` ou `A3`. Ce numéro sert à organiser la tessiture et ne doit pas être confondu avec le numéro de demi-ton utilisé dans les calculs.
 
+Pour l'affichage du tableau, les lignes sont réparties sur une échelle logarithmique pratique allant approximativement de 80 à 4000 Hz. Cette échelle visuelle sert à positionner les notes et ne remplace pas nécessairement la fréquence exacte utilisée pour leur lecture.
+
 ## Signes et hauteur relative
 
 Les symboles internes comme `+`, `-`, `o`, `x` ou `^` codent des modifications de hauteur ou des relations de transposition dans les structures de Songammes. Ils appartiennent au vocabulaire numérique et modal de l'application.
@@ -74,12 +76,12 @@ $$
 
 avec :
 
-- `A`, l'amplitude, fixée ici à environ `0,5` ;
+- `A`, l'amplitude maximale, égale à environ `0,5` puis modulée par le volume choisi ;
 - `f`, la fréquence de la note ;
 - `t`, le temps ;
-- une fréquence d'échantillonnage de 18 000 échantillons par seconde.
+- une fréquence d'échantillonnage de `44 100` échantillons par seconde.
 
-L'onde est convertie en valeurs flottantes `float32`, puis envoyée à PyAudio dans un flux mono. La lecture utilise donc un son de référence très simple : une sinusoïde sans harmoniques ajoutées.
+L'onde est convertie en valeurs flottantes `float32`, puis envoyée à PyAudio dans un flux mono. Un fondu linéaire d'environ `5 ms` est appliqué au début et à la fin de chaque note afin de limiter les coupures abruptes. La lecture utilise donc un son de référence très simple : une sinusoïde sans harmoniques ajoutées.
 
 ## Ce que l'oreille entend
 
@@ -109,7 +111,7 @@ Le moteur sonore actuel est volontairement minimal :
 
 - une seule forme d'onde, la sinusoïde ;
 - un canal mono ;
-- pas d'enveloppe d'attaque ou d'extinction ;
+- un fondu court d'attaque et d'extinction, mais pas d'enveloppe ADSR complète ;
 - pas de modèle de résonance ;
 - pas de filtrage ni d'égalisation ;
 - pas de normalisation perceptive entre les notes ;
@@ -121,7 +123,7 @@ Ces limites sont utiles pour l'analyse des structures, car elles réduisent les 
 
 Un futur modèle physique ou perceptif pourrait ajouter :
 
-1. une enveloppe ADSR pour éviter les attaques et coupures abruptes ;
+1. une enveloppe ADSR complète pour remplacer le fondu linéaire actuel ;
 2. plusieurs formes d'onde avec un choix de timbre ;
 3. des harmoniques contrôlées pour simuler différents instruments ;
 4. un volume normalisé selon la tessiture ;
