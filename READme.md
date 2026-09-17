@@ -41,9 +41,9 @@ L'interface propose :
 - les organisations `EGO`, `ISO` et `INT`, avec leurs inversions ;
 - une tonalité statique en Do ou une tonalité dynamique ;
 - une lecture audible ou silencieuse ;
-- plusieurs directions de lecture et une sélection des degrés.
+- un ordre de lecture par groupement, ordre diatonique ou fréquence.
 
-La lecture audio est effectuée en arrière-plan afin de laisser l'interface Tkinter réactive pendant le parcours des notes.
+La lecture audio utilise une onde sinusoïdale mono. Le code prépare un worker audio, mais le parcours actuel joue les notes directement pendant le traitement de l'interface ; l'interface peut donc rester occupée durant une lecture longue.
 
 ## Organisation du projet
 
@@ -79,12 +79,9 @@ Les fichiers de données et les images doivent rester à côté de `songammes.py
 
 ---
 
-## Notes techniques
-
 ## Remarques importantes
 
-Approfondir la compréhension des cumulations binaires des modes
-On ne peut choisir qu'une seule conversion sur quatre[int, bin, hex, oct].
+Les traitements et les cumulations binaires restent liés aux structures de données historiques du projet. Les six images de tri permettent de choisir les organisations EGO, ISO et INT, ainsi que leurs inversions.
 
 ## Remarques historiques
 
@@ -97,9 +94,9 @@ Nous avons les boutons de la colonne des nombres entiers, et ceux de la barre ho
 ### Les boutons verticaux des binaires
 
 Nous pouvons avoir des méthodes de lecture :
-La méthode de lire à partir du bouton vertical, les gammes qui utilisent ce bouton (mono-note ou accord).
-Par défaut les gammes qui ont ce mode binaire dans leurs corps diatoniques, seront lues de haut en bas,
-et de gauche à droite. La lecture respectera l'ordre des degrés ainsi que l'ascension des octaves.
+La méthode de lire à partir du bouton vertical parcourt les gammes qui utilisent ce bouton.
+Par défaut, les gammes qui ont ce mode binaire dans leurs corps diatoniques sont parcourues selon l'ordre
+des degrés. L'ordre effectif peut être groupé, diatonique ou hertzien.
 
 1. [ ] Position du bouton-radio statique:
    1. Par défaut la gamme sélectionnée sera en DO (tout comme toutes les gammes qui ont été développées en DO).
@@ -113,9 +110,9 @@ et de gauche à droite. La lecture respectera l'ordre des degrés ainsi que l'as
 
 - Lecture des gammes ayant ce modèle binaire.
   - Cette lecture suit l'ordre affiché, le changement de gamme se fera en respectant la concordance de la tonalité.
-  - Il y a plusieurs choix concernant les sens de lectures :
-    - De haut en bas, de bas en haut, du binaire en accord haut et bas, en suivant l'ordre des degrés.
-    - En ne lisant que la ligne du binaire sélectionné, la ligne en accord,
+  - Il y a plusieurs choix concernant les séquences de lecture :
+    - Parcours complet en suivant l'ordre des degrés.
+    - Lecture limitée à la ligne du binaire sélectionné.
 
 ### Les boutons horizontaux des gammes
 
@@ -130,10 +127,10 @@ Tout comme les boutons verticaux, les boutons horizontaux peuvent lire les gamme
 
 **On peut créer plusieurs genres de lecture.**
 
-- La lecture de la gamme peut se faire de façon unique ou en accord.
+- La lecture de la gamme peut se faire seule ou dans le parcours global.
   - Il y a plusieurs choix concernant les sens de lectures :
     - La gamme de bas en haut, de haut en bas, en suivant les degrés.
-    - On peut aussi lire les gammes qui ont des correspondances binaires. De droite à gauche ou l'inverse, en accord.
+    - On peut aussi lire les gammes qui ont des correspondances binaires, selon l'ordre choisi.
 
 #### Types de méthodes sur les gammes : Lorsqu'on appuie sur un bouton vertical ou horizontal
 
@@ -165,19 +162,18 @@ Ce nouveau traitement nous entraine à l'analyse des différentes listes.
 Les listes (`_iso0` et `_iso1`) changent selon le choix (Modes, Gammes ou Contient). `self.zone_w4.get()`
 
 - [EGO] = Organisation composée à partir de la gamme naturelle......... `self.gam_ego`
-  - La fonction `def gamme.arp(self)` produit les gammes à partir de la gamme majeure.
+  - La méthode `Relance.gammes_arp()` produit les gammes à partir de la gamme majeure.
   - Elle est effective lors de l'appui sur les images _[modes[Tri_ego] et gammes[Tri_ego]]_.
 
 - [ISO] = Organisation composée à partir du fichier `globdicTcoup.txt`. `self.gam_iso`
-  - La fonction `def gamme_log(self)` organise les gammes à partir du fichier `globdicTcoup.txt`.
+  - La méthode `Relance.gammes_log()` organise les gammes à partir du fichier `globdicTcoup.txt`.
   - **Rappel** : Contient les formes énumérées de la globalité des modulations diatoniques.
     - Cette séquence a été automatiquement établie dans un précédent algorithme basé sur les tétracordes.
   - Elle est effective lors de l'appui sur les images _[modes[Tri_iso] et gammes[Tri_iso]]_.
 
-- [INT] = Organisation croissante des éléments......................... `self.gam_int`
-  - Les valeurs des éléments gammiques peuvent être ordonnés en croissance.
-  - Ces valeurs proviennent de la liste [ISO], qui d'ailleurs, elles sont identiques à celles-ci [EGO] et [INT].
-    - Les valeurs correspondent aux modes diatoniques qui ne varient jamais ici.
+- [INT] = Organisation croissante ou décroissante des éléments.
+  - Les valeurs issues de l'organisation ISO sont triées dans l'ordre croissant ou décroissant au moment de la sélection.
+  - Les valeurs correspondent aux modes diatoniques utilisés par la lecture.
 
 Nous avons finalement trois types de traitement `("Modes" ou "Gammes" ou "Contient")`.
 Chacun d'eux a deux catégories, les noms des gammes énumérées et leurs modes binarisés.
@@ -244,25 +240,22 @@ En inversant l'ordre croissant trié, on opère sur le tempérament original.
 
 ### Les réglages
 
-Choisir la tonalité, le signe, les durées des notes et des silences.
+Choisir la tonalité statique ou dynamique à l'aide des boutons radio.
 
-- Menus déroulants.
-
-- Par défaut, la tonalité est en DO[C].
+- Par défaut, la tonalité est statique et rapportée au Do.
 
 Régler le volume.
 
 - Curseur.
 
-Accès sur les accords typiques.
+Choisir le mode de traitement : `Modes`, `Gammes` ou `Contient`.
 
-- Radios-boutons dans une fenêtre contextuelle.
+- Les boutons radio déterminent la représentation traitée.
 
 ### Les lectures
 
-Types : De bas en haut, de haut en bas, de gauche à droite, de droite à gauche.
-Du niveau de la sélection, puis vers la gauche et la droite, l'accord est possible.
-Une lecture au niveau de la sélection (binaire ou gamme).
+Types : groupement, ordre diatonique ou ordre hertzien.
+La lecture peut porter sur toutes les gammes ou sur une seule gamme.
 
 - Ne lire que la ligne (binaire, gamme).
 
@@ -272,9 +265,5 @@ Une lecture au niveau de la sélection (binaire ou gamme).
 
 - Lire à partir de la sélection (binaires, gammes).
 
-La lecture respecte l'ordre donné par les degrés,
-avec la possibilité d'enregistrer et de mémoriser (gammes, accords).
-
-- Bouton d'enregistrement.
-
-- Bouton de mémorisation.
+La lecture respecte l'ordre donné par les degrés. Des commandes permettent de lancer,
+d'arrêter, reprendre ou réinitialiser la lecture.
