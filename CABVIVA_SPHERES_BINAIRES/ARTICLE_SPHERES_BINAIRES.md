@@ -6,7 +6,7 @@ Ce texte est préparé pour les trois pages Cabviva consacrées aux sphères bin
 
 ## Page 1 — Les notes majeures binaires
 
-# Les notes majeures binaires
+### Les notes majeures binaires
 
 La binarisation transforme une organisation musicale en une lecture de positions. Chaque degré est observé dans la structure traitée, puis traduit dans une forme numérique exploitable : position retenue ou position vide, `1` ou `0`.
 
@@ -14,7 +14,7 @@ Cette écriture ne prétend pas remplacer la note, le mode ou la tonalité. Elle
 
 La binarisation est ainsi un changement de regard. La gamme n'est pas détruite par sa traduction numérique ; elle est observée sous une autre forme. Les notes deviennent des positions, les positions deviennent des profils, et les profils peuvent être comparés sans perdre leur origine musicale.
 
-## Songammes : de la note au profil
+### Songammes : de la note au profil
 
 Dans Songammes, la forme binaire appartient à une architecture plus vaste. Les données ne sont pas directement des fréquences : elles servent d'abord à organiser les degrés, les modes et les relations entre les 66 gammes fondamentales.
 
@@ -30,7 +30,7 @@ L'image binaire agit alors comme une carte. Elle ne dit pas tout de la musique ;
 
 ## Page 2 — Les tonalités dynamiques
 
-# Les tonalités dynamiques
+### Les tonalités dynamiques
 
 L'algorithme distingue deux niveaux. Certaines données restent stables : les relations binaires, les degrés et les structures comparées. D'autres données peuvent varier : la tonalité, l'ordre du parcours et la position d'écoute.
 
@@ -40,7 +40,7 @@ La tonalité n'est donc plus seulement un état fixe au début de la lecture. El
 
 Ce mouvement ne constitue pas une simulation complète d'un instrument ou d'un espace acoustique. Il s'agit d'une règle musicale et algorithmique : conserver une structure lisible tout en faisant varier son contexte tonal.
 
-## La tonalité comme trajectoire
+### La tonalité comme trajectoire
 
 La dynamique introduit une idée mécanique dans la théorie musicale : une gamme n'est pas seulement située, elle est engagée dans une trajectoire.
 
@@ -56,7 +56,7 @@ La physique fournit ici une analogie prudente. Une trajectoire musicale n'est pa
 
 ## Page 3 — Une branche d'exploration — les modes binarisés
 
-# Une branche d'exploration — les modes binarisés
+### Une branche d'exploration — les modes binarisés
 
 Les modes binarisés constituent une branche d'exploration parmi les différentes manières d'organiser les gammes. La binarisation est appliquée aux 66 gammes fondamentales et à leurs sept modes diatoniques.
 
@@ -66,7 +66,7 @@ L'ordre EGO part de la gamme naturelle. L'ordre ISO s'appuie sur les formules nu
 
 La même matière musicale peut donc apparaître sous plusieurs perspectives. L'objet reste stable ; l'ordonnance change.
 
-## Ordonnances, perception et outil
+### Ordonnances, perception et outil
 
 Songammes transforme cette branche théorique en instrument d'exploration. L'utilisateur choisit une gamme ou un mode binaire, puis observe comment celui-ci se situe dans les différentes ordonnances.
 
@@ -82,7 +82,7 @@ La perception intervient lorsque la structure devient parcours. L'écran montre 
 
 C'est dans cet écart que se situe l'art quantique de la théorie musicale : non pas dans l'affirmation que la musique serait littéralement une mécanique quantique, mais dans l'exploration de correspondances entre états, transformations, relations et perceptions.
 
-## L'ombre physique de la structure
+### L'ombre physique de la structure
 
 Le passage au son s'appuie sur le tempérament égal : une octave double la fréquence et chaque demi-ton multiplie la fréquence par `2^(1/12)`, à partir de la référence du La 440 Hz. Les octaves et les fréquences donnent ainsi une dimension continue aux positions discrètes du tableau.
 

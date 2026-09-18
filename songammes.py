@@ -626,8 +626,7 @@ class Relance(Tk):
         self.option_add("*Button.borderWidth", 0)
         self.option_add("*Button.highlightThickness", 0)
         self.option_add("*Radiobutton.font", ("Segoe UI", 8))
-        self.option_add("*Radiobutton.activebackground", "#D8E6EF")
-        self.option_add("*Radiobutton.selectcolor", "#2A9D8F")
+        self.option_add("*Radiobutton.activebackground", "#FFFFFF")
         # self.protocol("WM_DELETE_WINDOW", self.quit())  # Pose problème au déroulement souhaité.
         self.borne = {1: "       "}
         self.quitter("1111111")
@@ -1076,11 +1075,12 @@ class Relance(Tk):
                           "Quel est votre ordonnance ?",
                           "Couper l'audio ?",
                           "Forme binarisée ?"]
-        self.color_cad, rng = ["#F3F6F8", "#EEF3F6", "#F5F7F8", "#F1F5F7", "#EEF3F6", "#E6EEF3", "#E6EEF3"], 0
+        self.color_cad, rng = ["#F4B4B4", "#F6C98D", "#F4E68A", "#A9D6A5", "#A9D8E8", "#C2B0D9", "#E5B0D5"], 0
         self.table_cad = []
         for yes in range(7):
+            self.table_w.grid_columnconfigure(yes, minsize=largeur_cad, weight=1)
             frame = Frame(self.table_w, width=largeur_cad, height=hauteur_cad, bg=self.color_cad[yes], relief=GROOVE)
-            frame.grid(row=1, column=yes, ipadx=1)
+            frame.grid(row=1, column=yes, ipadx=1, sticky="nsew")
             frame.grid_propagate(False)
             self.table_cad.append(frame)
             # Ajout des labels dans les frames
@@ -1096,10 +1096,14 @@ class Relance(Tk):
         else:
             self.zone_w0 = StringVar(self.table_cad[0], value=di_solo)
         rad_bou0 = Radiobutton(self.table_cad[0], variable=self.zone_w0, value="Poly", text="Global",
-                               bg=self.color_cad[rng], command=self.modifier_option_radio)
+                               bg=self.color_cad[rng], activebackground=self.color_cad[rng],
+                               selectcolor=self.color_cad[rng],
+                               command=self.modifier_option_radio)
         rad_bou0.grid(row=2, column=1)
         rad_bou01 = Radiobutton(self.table_cad[0], variable=self.zone_w0, value="Solo", text="Unique",
-                                bg=self.color_cad[rng], command=self.modifier_option_radio)
+                                bg=self.color_cad[rng], activebackground=self.color_cad[rng],
+                                selectcolor=self.color_cad[rng],
+                                command=self.modifier_option_radio)
         rad_bou01.grid(row=3, column=1)
 
         ("# Radio-bouton pour sélectionner le type de développement diatonique entre (statique et dynamique)."
@@ -1110,10 +1114,14 @@ class Relance(Tk):
             self.zone_w1 = StringVar(self.table_cad[1], value=di_mode)
         rng += 1
         rad_bou1 = Radiobutton(self.table_cad[1], variable=self.zone_w1, value="Sta", text="Statique",
-                               bg=self.color_cad[rng], command=self.modifier_option_radio)
+                               bg=self.color_cad[rng], activebackground=self.color_cad[rng],
+                               selectcolor=self.color_cad[rng],
+                               command=self.modifier_option_radio)
         rad_bou1.grid(row=2, column=1)
         rad_bou2 = Radiobutton(self.table_cad[1], variable=self.zone_w1, value="Dyn", text="Dynamique",
-                               bg=self.color_cad[rng], command=self.modifier_option_radio)
+                               bg=self.color_cad[rng], activebackground=self.color_cad[rng],
+                               selectcolor=self.color_cad[rng],
+                               command=self.modifier_option_radio)
         rad_bou2.grid(row=3, column=1)
 
         ("# Radio-bouton pour sélectionner le type de lecture à réaliser :"
@@ -1126,13 +1134,19 @@ class Relance(Tk):
             self.zone_w2 = StringVar(self.table_cad[2], value=di_lec)
         rng += 1
         rad_bou3 = Radiobutton(self.table_cad[2], variable=self.zone_w2, value="Groupe", text="Groupement",
-                               bg=self.color_cad[rng], command=self.modifier_option_radio)
+                               bg=self.color_cad[rng], activebackground=self.color_cad[rng],
+                               selectcolor=self.color_cad[rng],
+                               command=self.modifier_option_radio)
         rad_bou3.grid(row=2, column=1)
         rad_bou4 = Radiobutton(self.table_cad[2], variable=self.zone_w2, value="Diatone", text="Diatonique",
-                               bg=self.color_cad[rng], command=self.modifier_option_radio)
+                               bg=self.color_cad[rng], activebackground=self.color_cad[rng],
+                               selectcolor=self.color_cad[rng],
+                               command=self.modifier_option_radio)
         rad_bou4.grid(row=3, column=1)
         rad_bou5 = Radiobutton(self.table_cad[2], variable=self.zone_w2, value="Hertz", text="Hertzien",
-                               bg=self.color_cad[rng], command=self.modifier_option_radio)
+                               bg=self.color_cad[rng], activebackground=self.color_cad[rng],
+                               selectcolor=self.color_cad[rng],
+                               command=self.modifier_option_radio)
         rad_bou5.grid(row=4, column=1)
 
         "# Radio-bouton pour ne pas effectuer l'écoute audio des gammes."
@@ -1142,10 +1156,14 @@ class Relance(Tk):
             self.zone_w3 = StringVar(self.table_cad[3], value=di_son)
         rng += 1
         rad_bou6 = Radiobutton(self.table_cad[3], variable=self.zone_w3, value="Inaudible", text="Couper l'audio",
-                               bg=self.color_cad[rng], command=self.modifier_option_radio)
+                               bg=self.color_cad[rng], activebackground=self.color_cad[rng],
+                               selectcolor=self.color_cad[rng],
+                               command=self.modifier_option_radio)
         rad_bou6.grid(row=2, column=1)
         rad_bou7 = Radiobutton(self.table_cad[3], variable=self.zone_w3, value="Audible", text="Entendre",
-                               bg=self.color_cad[rng], command=self.modifier_option_radio)
+                               bg=self.color_cad[rng], activebackground=self.color_cad[rng],
+                               selectcolor=self.color_cad[rng],
+                               command=self.modifier_option_radio)
         rad_bou7.grid(row=3, column=1)
 
         ("# Radio-bouton pour sélectionner les binarisations à traiter. Les degrés modaux ou les gammes primordiales."
@@ -1158,16 +1176,21 @@ class Relance(Tk):
             self.zone_w4 = StringVar(self.table_cad[4], value=di_gam)
         rng += 1
         rad_bou8 = Radiobutton(self.table_cad[4], variable=self.zone_w4, value="Modes", text="Modes binarisés",
-                               bg=self.color_cad[rng], command=self.modifier_option_radio)
+                               bg=self.color_cad[rng], activebackground=self.color_cad[rng],
+                               selectcolor=self.color_cad[rng],
+                               command=self.modifier_option_radio)
         rad_bou8.grid(row=2, column=1)
         rad_bou9 = Radiobutton(self.table_cad[4], variable=self.zone_w4, value="Gammes", text="Gammes énumérées",
-                               bg=self.color_cad[rng], command=self.modifier_option_radio)
+                               bg=self.color_cad[rng], selectcolor=self.color_cad[rng],
+                               command=self.modifier_option_radio)
         rad_bou9.grid(row=3, column=1)
         rad_bou10 = Radiobutton(self.table_cad[4], variable=self.zone_w4, value="Contient", text="Contient intervalles",
-                                bg=self.color_cad[rng], command=self.modifier_option_radio)
+                                bg=self.color_cad[rng], activebackground=self.color_cad[rng],
+                                selectcolor=self.color_cad[rng],
+                                command=self.modifier_option_radio)
         rad_bou10.grid(row=4, column=1)
 
-        self.table_cad[5].configure(bg="#E8EDF0")
+        self.table_cad[5].configure(bg=self.color_cad[5])
         self.status_var = StringVar(self.table_cad[5], value="Prêt")
         ttk.Label(self.table_cad[5], text="Lecture", style="Lecture.TLabel").grid(row=1, column=1, columnspan=3)
         ttk.Button(self.table_cad[5], text="Lecture", command=self.demarrer_lecture,
@@ -1181,11 +1204,13 @@ class Relance(Tk):
         ttk.Button(self.table_cad[5], text="Réinitialiser", command=self.reinitialiser_lecture,
                style="Lecture.TButton", width=25).grid(row=4, column=1, columnspan=3, pady=(2, 0))
 
-        self.table_cad[6].configure(bg="#E8EDF0")
-        ttk.Label(self.table_cad[6], text="Volume", style="Lecture.TLabel").pack()
+        self.table_cad[6].configure(bg=self.color_cad[6])
+        Label(self.table_cad[6], text="Volume", bg=self.color_cad[6],
+              fg="#24323D", font=("Segoe UI", 8, "bold")).pack()
         self.volume_level = IntVar(value=70)
         Scale(self.table_cad[6], from_=0, to=100, orient=HORIZONTAL, variable=self.volume_level,
-              length=145, showvalue=True, bg="lightgray", highlightthickness=0).pack()
+              length=145, showvalue=True, bg=self.color_cad[6],
+              troughcolor="#F7E9F4", highlightthickness=0).pack()
 
         "# Traitement de la sonorisation des gammes retournées du module 'gammes_audio.py'"
         self.gam_son, self.gam_son1 = None, None  # , 'self.gam_son1'. Afin d'ordonner les clefs.
@@ -1731,16 +1756,72 @@ class Relance(Tk):
         # table_o = Canvas(root, width=84, height=884, bg="thistle"), (row=2, column=3)
         self.table_o.delete("all")
         # self.images_references.clear()
-        esp, deb, image_id, photo_image = 60, 48, None, 0
+        esp, deb, photo_image = 48, 42, None
         """self.images_liste = ["BoutonTriEgo.png", "BoutonAntiEgo.png", "BoutonTriIso.png", "BoutonAntiIso.png",
                              "BoutonTriInt.png", "BoutonAntiInt.png"]"""
+        taille_image = (60, 60)
+        tri_nom = self.comment_sta[1] if len(self.comment_sta) > 1 else "TriEgo"
+        tri_index = next(
+            (index + 1 for index, image in enumerate(self.images_liste)
+             if image[6:-4] == tri_nom),
+            1
+        )
+        self.tri_image_ids = []
         for index, image in enumerate(self.images_liste):
-            photo_image = ImageTk.PhotoImage(Image.open(BASE_DIR / image))
+            with Image.open(BASE_DIR / image) as source:
+                image_source = source.convert("RGBA")
+            image_source.thumbnail(taille_image, Image.Resampling.LANCZOS)
+            image_uniforme = Image.new("RGBA", taille_image, (0, 0, 0, 0))
+            position = ((taille_image[0] - image_source.width) // 2,
+                        (taille_image[1] - image_source.height) // 2)
+            image_uniforme.paste(image_source, position, image_source)
+            photo_image = ImageTk.PhotoImage(image_uniforme)
             self.images_references.append(photo_image)
-            image_id = self.table_o.create_image(deb, esp, image=photo_image)
-            self.table_o.tag_bind(image_id, "<Button-1>", self.clic_image)
+            image_id = self.table_o.create_image(
+                deb, esp, image=photo_image, tags=("bouton_tri",)
+            )
+            self.tri_image_ids.append(image_id)
             esp += 100
-            (lineno(), "index", index, "image_id", image_id, "image", self.images_liste[image_id - 1])
+            (lineno(), "index", index, "image_id", image_id, "image", self.images_liste[index])
+        self.table_o.bind("<Button-1>", self.clic_image)
+        self.encadrer_image_tri(self.tri_image_ids[tri_index - 1])
+
+    def encadrer_image_tri(self, image_id):
+        """Dessine le cadre arrondi autour de l'image de tri active."""
+        for cadre_id in getattr(self, "cadre_tri_ids", []):
+            self.table_o.delete(cadre_id)
+        self.cadre_tri_ids = []
+        boite = self.table_o.bbox(image_id)
+        if not boite:
+            return
+        x1, y1, x2, y2 = boite
+        marge, rayon = 4, 8
+        x1, y1, x2, y2 = x1 - marge, y1 - marge, x2 + marge, y2 + marge
+        couleur, largeur = "#24323D", 3
+        self.cadre_tri_ids.extend((
+            self.table_o.create_line(x1 + rayon, y1, x2 - rayon, y1,
+                                     fill=couleur, width=largeur),
+            self.table_o.create_line(x1 + rayon, y2, x2 - rayon, y2,
+                                     fill=couleur, width=largeur),
+            self.table_o.create_line(x1, y1 + rayon, x1, y2 - rayon,
+                                     fill=couleur, width=largeur),
+            self.table_o.create_line(x2, y1 + rayon, x2, y2 - rayon,
+                                     fill=couleur, width=largeur),
+            self.table_o.create_arc(x1, y1, x1 + 2 * rayon, y1 + 2 * rayon,
+                                    start=90, extent=90, style=ARC,
+                                    outline=couleur, width=largeur),
+            self.table_o.create_arc(x2 - 2 * rayon, y1, x2, y1 + 2 * rayon,
+                                    start=0, extent=90, style=ARC,
+                                    outline=couleur, width=largeur),
+            self.table_o.create_arc(x1, y2 - 2 * rayon, x1 + 2 * rayon, y2,
+                                    start=180, extent=90, style=ARC,
+                                    outline=couleur, width=largeur),
+            self.table_o.create_arc(x2 - 2 * rayon, y2 - 2 * rayon, x2, y2,
+                                    start=270, extent=90, style=ARC,
+                                    outline=couleur, width=largeur),
+        ))
+        for cadre_id in self.cadre_tri_ids:
+            self.table_o.tag_lower(cadre_id, image_id)
 
     def mettre_en_evidence_gamme(self, gamme):
         for bouton, couleur in self.gamme_buttons.values():
@@ -2404,6 +2485,14 @@ class Relance(Tk):
             'dic_indice' = un dictionnaire = Les clés sont les noms et les valeurs sont les numéros des gammes.
             Il faut modifier le dictionnaire original, afin d'établir une nouvelle correspondance."""
         # Relance(dic_codage, dic_binary, dic_indice, dic_force, dic_colon, dic_titres).mainloop()
+        x, y = event.x, event.y
+        objets = self.table_o.find_overlapping(x, y, x, y)
+        image_id = next((objet for objet in reversed(objets)
+                         if "bouton_tri" in self.table_o.gettags(objet)), None)
+        if image_id is None:
+            return
+        item_id = self.tri_image_ids.index(image_id) + 1
+        self.encadrer_image_tri(image_id)
         self.comment_sta.clear()
         self.mod_type.clear()
         ("# Les listes[_iso0 et _iso1] changent selon le choix[Modes ou Gammes]. 'self.zone_w4.get()'"
@@ -2417,8 +2506,6 @@ class Relance(Tk):
         # print("dic_indice", "dic_indice", "dic_binary", "dic_binary", "\n liste_iso", liste_iso, len(liste_iso))
         """self.images_liste = ["BoutonTriEgo.png", "BoutonAntiEgo.png", "BoutonTriIso.png", "BoutonAntiIso.png",
                                      "BoutonTriInt.png", "BoutonAntiInt.png"]"""
-        x, y = event.x, event.y
-        item_id = self.table_o.find_closest(x, y)[0]  # Récupère l'ID de l'objet le plus proche
         # item_id : (1=iso[non trié], 2=int[trié])
         ("\n", lineno(), "Clic_image/item", item_id, "zone_w4", self.zone_w4.get())
         # 1482 Clic_image/item_id 1 (1er bouton image)
