@@ -37,34 +37,34 @@ Le dossier courant n'est pas nécessairement le dossier du projet : les fichiers
 
 L'interface propose :
 
-- des boutons horizontaux pour sélectionner une gamme ;
-- des boutons verticaux pour sélectionner un mode binaire ;
-- les traitements `Modes`, `Gammes` et `Contient` ;
-- les organisations `EGO`, `ISO` et `INT`, avec leurs inversions ;
-- une tonalité statique en Do ou une tonalité dynamique ;
-- une lecture audible ou silencieuse ;
+- des boutons horizontaux pour sélectionner une gamme,
+- des boutons verticaux pour sélectionner un mode binaire,
+- les traitements `Modes`, `Gammes` et `Contient`,
+- les organisations `EGO`, `ISO` et `INT`, avec leurs inversions,
+- une tonalité statique en Do ou une tonalité dynamique,
+- une lecture audible ou silencieuse,
 - un ordre de lecture par groupement, ordre diatonique ou fréquence.
 
-La lecture audio utilise une onde sinusoïdale mono. Le code prépare un worker audio, mais le parcours actuel joue les notes directement pendant le traitement de l'interface ; l'interface peut donc rester occupée durant une lecture longue.
+La lecture audio utilise une onde sinusoïdale mono. Le code prépare un worker audio, mais le parcours actuel joue les notes directement pendant le traitement de l'interface : l'interface peut donc rester occupée durant une longue lecture.
 
 ## Organisation du projet
 
-| Fichier | Rôle |
-| --- | --- |
-| [`songammes.py`](songammes.py) | Interface Tkinter, calculs de présentation et orchestration de l'application |
-| [`gammes_audio.py`](gammes_audio.py) | Transposition des gammes et préparation des séquences audio |
-| [`globdicTcoup.txt`](globdicTcoup.txt) | 462 formules numériques utilisées par l'organisation ISO |
-| [`gamme_majeure.txt`](gamme_majeure.txt) | 66 formes énumérées générées à partir des gammes majeures |
-| [`CONTEXTE_PHYSIQUE.md`](CONTEXTE_PHYSIQUE.md) | Contexte physique, acoustique et numérique du fonctionnement sonore |
-| [`MANUEL_UTILISATION.md`](MANUEL_UTILISATION.md) | Guide pratique de l'installation et de l'utilisation |
-| `Bouton*.png` | Images des commandes de tri |
-| [`armsph_5_1.png`](armsph_5_1.png) | Schéma des constitutions polaires |
+| Fichier                                          | Rôle                                                                         |
+|--------------------------------------------------|------------------------------------------------------------------------------|
+| [`songammes.py`](songammes.py)                   | Interface Tkinter, calculs de présentation et orchestration de l'application |
+| [`gammes_audio.py`](gammes_audio.py)             | Transposition des gammes et préparation des séquences audio                  |
+| [`globdicTcoup.txt`](globdicTcoup.txt)           | 462 formules numériques utilisées par l'organisation ISO                     |
+| [`gamme_majeure.txt`](gamme_majeure.txt)         | 66 formes énumérées générées à partir des gammes majeures                    |
+| [`CONTEXTE_PHYSIQUE.md`](CONTEXTE_PHYSIQUE.md)   | Contexte physique, acoustique et numérique du fonctionnement sonore          |
+| [`MANUEL_UTILISATION.md`](MANUEL_UTILISATION.md) | Guide pratique de l'installation et de l'utilisation                         |
+| `Bouton*.png`                                    | Images des commandes de tri                                                  |
+| [`armsph_5_1.png`](armsph_5_1.png)               | Schéma des constitutions polaires                                            |
 
 ## Modèle de traitement
 
 Les trois organisations principales sont les suivantes :
 
-- **EGO** : ordre construit à partir de la gamme naturelle ;
+- **EGO** : ordre construit à partir de la gamme naturelle ;
 - **ISO** : ordre construit à partir des formules de `globdicTcoup.txt` ;
 - **INT** : ordre numérique croissant ou décroissant.
 
@@ -84,7 +84,7 @@ Les fichiers de données et les images doivent rester à côté de `songammes.py
 
 ## Remarques importantes
 
-Les traitements et les cumulations binaires restent liés aux structures de données historiques du projet. Les six images de tri permettent de choisir les organisations EGO, ISO et INT, ainsi que leurs inversions.
+Les traitements et les cumulations binaires restent liés aux structures de données historiques du projet. Les six images de tri permettent de choisir les organisations "EGO", ISO et INT, ainsi que leurs inversions.
 
 ## Remarques historiques
 
@@ -98,13 +98,13 @@ Nous avons les boutons de la colonne des nombres entiers, et ceux de la barre ho
 
 Nous pouvons avoir des méthodes de lecture :
 La méthode de lire à partir du bouton vertical parcourt les gammes qui utilisent ce bouton.
-Par défaut, les gammes qui ont ce mode binaire dans leurs corps diatoniques sont parcourues selon l'ordre
+Par défaut, les gammes qui ont ce mode binaire dans leurs corps diatoniques, sont parcourues selon l'ordre
 des degrés. L'ordre effectif peut être groupé, diatonique ou hertzien.
 
-1. [ ] Position du bouton-radio statique:
+1. [ ] Position du bouton-radio statique :
    1. Par défaut la gamme sélectionnée sera en DO (tout comme toutes les gammes qui ont été développées en DO).
 
-2. [ ] Position du bouton-radio dynamique:
+2. [ ] Position du bouton-radio dynamique :
     1. Cette première gamme sert de référence à la mise en tonalité de la gamme suivante, la nouvelle tonalité
 
    dépendra des occurrences entre ces deux gammes voisines, ici, les lignes représentent les hauteurs tonales.
@@ -122,10 +122,10 @@ des degrés. L'ordre effectif peut être groupé, diatonique ou hertzien.
 Nous pouvons avoir des méthodes de lecture :
 Tout comme les boutons verticaux, les boutons horizontaux peuvent lire les gammes qui ont les mêmes propriétés.
 
-1. [ ] Position du bouton-radio statique:
+1. [ ] Position du bouton-radio statique :
    1. Par défaut la gamme sélectionnée sera en DO (tout comme toutes les gammes qui ont été développées en DO).
 
-2. [ ] Position du bouton-radio dynamique:
+2. [ ] Position du bouton-radio dynamique :
     1. Cette première gamme sert de référence à la mise en tonalité de la gamme suivante, la nouvelle tonalité dépendra des occurrences entre ces deux gammes voisines, ici, les lignes représentent les hauteurs tonales.
 
 **On peut créer plusieurs genres de lecture.**
@@ -193,7 +193,7 @@ La figure "constitutions polaires" comprend plusieurs égalités liées aux trai
 _**TRAITS NOIRS**_ `dic_m_noms_ego` = `dic_g_noms_ego`. Puisque tous les deux sont issus de `def gammes.arp(self)`.
 _**TRAITS BLEUS**_ `dic_m_bins_ego` = `dic_g_bins_ego`. Même ordre binarisé constaté.
 _**TRAITS ROUGES**_ `dic_m_bins_ego` = `dic_m_bins_ego_inv`. L'ordre a seulement été inversé.
-Les égalités baissent le nombre des différences, on sait que pour un [ISO], nous avons deux listes[noms, modes].
+Les égalités baissent le nombre des différences, on sait que pour un [ISO], nous avons deux listes [noms, modes].
 
 En comptant uniquement les différences, on obtient dix-sept marquages de modulations.
 
@@ -235,7 +235,7 @@ En inversant l'ordre croissant trié, on opère sur le tempérament original.
 
 ##### Le bouton ego et le bouton iso, inversés
 
-##### Les boutons int, l'un est ordonné et l'autre est inversé
+##### Les boutons int, l'un est ordonné et l'autre inversé
 
 - Int = Les données binaires ont été triées en ordre croissant et inversement.
 
@@ -253,7 +253,7 @@ Régler le volume.
 
 Choisir le mode de traitement : `Modes`, `Gammes` ou `Contient`.
 
-- Les boutons radio déterminent la représentation traitée.
+- Les boutons-radio déterminent la représentation traitée.
 
 ### Les lectures
 

@@ -17,7 +17,7 @@ Le problème vient à cause du manque de précision du rapport (ligne/octave). P
 
 Où la note MI ayant une `ligne inférieure` avec une fréquence plus élevée que la note SI.
 
-Y a besoin de calibrer les octaves à l'aide des notes réelles signées.
+Il y a besoin de calibrer les octaves à l'aide des notes réelles signées.
 
     Les fréquences hertziennes anormalement élevées, dans cette série de gammes.
 Cette liste a des fréquences anormales [-26o, *6, o6, -36].
@@ -52,7 +52,7 @@ Voici deux choix d'une même gamme ayant deux assemblages distincts.
 Modifier les valeurs du dictionnaire, en leur ajoutant les coordonnées des rectangles d'arrière-plan.
 
 
-1. [ ] col0[1], lig0[1]. Où, col0 = coin haut-gauche[x, y] et lig0 = coin bas-droit[x, y].
+1. [ ] col0[1], lig0[1]. Où, col0 = coin haut-gauche [x, y] et lig0 = coin bas-droit [x, y].
 
     Lors de la sélection d'un bouton binaire, la lecture se comporte anormalement.
 Les gammes ne sont pas lues selon l'ordre apparaissant dans l'interface de l'utilisateur.
@@ -112,7 +112,7 @@ _Une première tentative de traitement a donné le même résultat que celui pro
 
 À cause d'une ordonnance ne variant pas l'ordre des toniques, qui même en ayant trié les modèles [102034050607] et [1101110], l'ordre des binarisations était inchangé.
 
-Afin d'éviter cette redondance et paraitre créateur d'inutilité absolue. La méthode de traitement des modèles en modes `GAMME et CONTIENT`, sont traité différemment, en affectant une sectorisation. C'est en suivant la hiérarchie des ordres et des appels de type de traitement, que s'accomplissent les grandeurs des sections.
+Afin d'éviter cette redondance et paraitre créateur d'inutilité absolue. La méthode de traitement des modèles en modes `GAMME et CONTIENT`, sont traité différemment, en affectant une sectorisation. C'est en suivant la hiérarchie des ordres et des appels de type de traitement que s'accomplissent les grandeurs des sections.
 
 Les grandeurs se basent sur la quantité des gammes primordiales et le nombre d'organisations : il y a soixante-six gammes et trois modèles de progression.
 
@@ -150,7 +150,7 @@ Ce premier traitement dévoile la constance des résultats obtenus par les pôle
 _Le pôle[INT] modifie l'ordre de la séquence sans modifier les noms des gammes._
 
 
-Puisque les ressources ont produit trois formes[binaires, énumérées, conteneurs], on devine clairement, que les modes diatoniques ont été modifiés. Entrainant d'autres éléments de triages et d'autres organisations.
+Puisque les ressources ont produit trois formes [binaires, énumérées, conteneurs], on devine clairement, que les modes diatoniques ont été modifiés. Entrainant d'autres éléments de triages et d'autres organisations.
 
 
 `self.zone_w4.get() == "Modes" ou "Gammes" ou "Contient"` :
@@ -230,9 +230,7 @@ ________________________________________________________________________________
 
 ### Version v0.7 =
 
-La précédente version a été arrangée, car la dernière gamme n'était pas colorée en rouge,
-
-bien que ses degrés avaient déjà été listés.
+La précédente version a été arrangée, car la dernière gamme n'était pas colorée en rouge, bien que ses degrés avaient déjà été listés.
 
 
 ### Version v0.8 =
@@ -350,6 +348,6 @@ Nouvelles matrices relatives aux gammes énumérées, qui du point de vue du tra
 
 Puis c'est avec joie que la partie sensée de l'affichage et à la tonification, n'ont pas eu besoin d'être modifiée.
 
-Il ne reste plus qu'à mettre à jour les pages web : <https://www.cabviva.fr/armsph_2.html>.
+Il ne reste plus qu'à mettre à jour les pages web : <https://cabviva.fr/arme/spheres>.
 
     Il est tellement difficile d'atteindre la perfection !

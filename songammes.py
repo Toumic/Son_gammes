@@ -10,7 +10,7 @@ L’architecture de cet assemblage ressemble à cette image (ClassBooLsIII.png).
 import inspect
 from pathlib import Path
 from queue import Empty, Queue
-from threading import Thread
+from threading import Lock, Thread
 import time
 from tkinter import *
 from tkinter.constants import *
@@ -34,27 +34,60 @@ BASE_DIR = Path(__file__).resolve().parent
 lineno: Callable[[], int] = lambda: inspect.currentframe().f_back.f_lineno
 
 
-def play_sine_tone(frequency, duration, volume=0.7, sample_rate=44100):
-    audio = pyaudio.PyAudio()
-    stream = None
-    try:
-        stream = audio.open(format=pyaudio.paFloat32, channels=1, rate=sample_rate, output=True)
-        samples = np.linspace(0, duration, int(sample_rate * duration), endpoint=False)
-        wave = 0.5 * volume * np.sin(2 * np.pi * frequency * samples)
-        fade_samples = min(int(sample_rate * 0.005), len(wave) // 2)
-        if fade_samples:
-            envelope = np.ones(len(wave), dtype=np.float32)
-            envelope[:fade_samples] = np.linspace(0, 1, fade_samples)
-            envelope[-fade_samples:] = np.linspace(1, 0, fade_samples)
-            wave *= envelope
-        stream.write(wave.astype(np.float32).tobytes())
-    except Exception as error:
-        (lineno(), "Erreur dans 'play_sine_tone'", error)
-    finally:
-        if stream is not None:
-            stream.stop_stream()
-            stream.close()
-        audio.terminate()
+class TonePlayer:
+    def __init__(self, sample_rate=44100):
+        self.sample_rate = sample_rate
+        self.audio = None
+        self.stream = None
+        self.samples = np.empty(0, dtype=np.float32)
+        self.lock = Lock()
+
+    def _audio_callback(self, in_data, frame_count, time_info, status):
+        output = np.zeros(frame_count, dtype=np.float32)
+        with self.lock:
+            sample_count = min(frame_count, len(self.samples))
+            if sample_count:
+                output[:sample_count] = self.samples[:sample_count]
+                self.samples = self.samples[sample_count:]
+        return output.tobytes(), pyaudio.paContinue
+
+    def play(self, frequency, duration, volume=0.7):
+        try:
+            if self.stream is None:
+                self.audio = pyaudio.PyAudio()
+                self.stream = self.audio.open(
+                    format=pyaudio.paFloat32,
+                    channels=1,
+                    rate=self.sample_rate,
+                    output=True,
+                    frames_per_buffer=512,
+                    stream_callback=self._audio_callback,
+                )
+            samples = np.linspace(0, duration, int(self.sample_rate * duration), endpoint=False)
+            wave = 0.5 * volume * np.sin(2 * np.pi * frequency * samples)
+            fade_samples = min(int(self.sample_rate * 0.02), len(wave) // 2)
+            if fade_samples:
+                fade = np.sin(np.linspace(0, np.pi / 2, fade_samples)) ** 2
+                envelope = np.ones(len(wave), dtype=np.float32)
+                envelope[:fade_samples] = fade
+                envelope[-fade_samples:] = fade[::-1]
+                wave *= envelope
+            with self.lock:
+                self.samples = np.concatenate((self.samples, wave.astype(np.float32)))
+        except Exception as error:
+            (lineno(), "Erreur dans 'TonePlayer.play'", error)
+            self.close()
+
+    def close(self):
+        if self.stream is not None:
+            self.stream.stop_stream()
+            self.stream.close()
+            self.stream = None
+        if self.audio is not None:
+            self.audio.terminate()
+            self.audio = None
+        with self.lock:
+            self.samples = np.empty(0, dtype=np.float32)
 
 (lineno(), "Gammes", dir(gamma))
 
@@ -603,15 +636,17 @@ class Relance(Tk):
             :param di_gam: Secondary dictionary supporting scale functionalities.
         """
         super().__init__()
+        self.tone_player = TonePlayer()
         self.audio_queue = Queue()
         self.audio_worker = Thread(target=self._audio_worker, daemon=True)
         self.audio_worker.start()
         self.title("Songammes | Laboratoire des gammes")
-        largeur_reference, hauteur_reference = 1824, 1025
+        largeur_reference, hauteur_reference = 1824, 1095
         largeur_fenetre = min(largeur_reference, self.winfo_screenwidth())
         hauteur_fenetre = min(hauteur_reference, max(600, self.winfo_screenheight() - 50))
         self.ui_scale = min(1.0, largeur_fenetre / largeur_reference, hauteur_fenetre / hauteur_reference)
         s = lambda valeur: max(1, round(valeur * self.ui_scale))
+        hauteur_options = s(130)
         self.geometry(f"{largeur_fenetre}x{hauteur_fenetre}+0+0")
         self.resizable(False, False)
         self.configure(bg="#E8EDF0")
@@ -645,7 +680,7 @@ class Relance(Tk):
         self.table_b.grid(row=2, column=1)
         self.frame_b = Frame(self.table_b)
         self.frame_b.place(x=0, y=0, width=s(60), height=s(884))
-        self.table_c = Canvas(self, width=s(60), height=s(60), bg="#DCE8F0")  # Coin (bas, gauche) pour commentaire d'état.
+        self.table_c = Canvas(self, width=s(60), height=hauteur_options, bg="#DCE8F0")  # Coin (bas, gauche) pour commentaire d'état.
         self.table_c.grid(row=3, column=1)
 
         "# Affichage du mode sélectionné pour information dans le canvas du bas à gauche."
@@ -666,9 +701,9 @@ class Relance(Tk):
         self.table_y.grid(row=1, column=3)
         self.table_o = Canvas(self, width=s(84), height=s(884), bg="#DCE8F0")  # Colonne dédiée aux binaires ordonnés.
         self.table_o.grid(row=2, column=3)
-        self.table_w = Canvas(self, width=s(1656), height=s(60), bg="#F4F6F7")  # Colonne dédiée aux options d'affichage.
+        self.table_w = Canvas(self, width=s(1656), height=hauteur_options, bg="#F4F6F7")  # Colonne dédiée aux options d'affichage.
         self.table_w.grid(row=3, column=2)
-        self.table_z = Canvas(self, width=s(84), height=s(60), bg="#DCE8F0")  # Coin (bas, droite).
+        self.table_z = Canvas(self, width=s(84), height=hauteur_options, bg="#DCE8F0")  # Coin (bas, droite).
         self.table_z.grid(row=3, column=3)
         self.table_g = Canvas(self, width=s(1656), height=s(30), bg="#F4F6F7")  # Colonne dédiée aux boutons gammes.
         self.table_g.grid(row=1, column=2)
@@ -1067,9 +1102,9 @@ class Relance(Tk):
         self.charger_image()
 
         "# Zone de l'interface aux actions dédiées à l'affichage des gammes."
-        # self.table_w = Canvas(self, width=1656, height=60, bg="lightgray") # Colonne dédiée aux options d'affichage.
+        # self.table_w = Canvas(self, width=1656, height=130, bg="lightgray") # Colonne dédiée aux options d'affichage.
         "# Création des cadres destinés à recueillir les boutons-radio."
-        largeur_cad, hauteur_cad = s(1656 // 7), s(100)
+        largeur_cad, hauteur_cad = s(1656 // 7), hauteur_options
         self.frame_lab = ["Toutes ou une seule gamme ?",
                           "En DO ou tonalité dynamique ?",
                           "Quel est votre ordonnance ?",
@@ -1151,7 +1186,7 @@ class Relance(Tk):
 
         "# Radio-bouton pour ne pas effectuer l'écoute audio des gammes."
         if not di_son:
-            self.zone_w3 = StringVar(self.table_cad[3], value="Inaudible")
+            self.zone_w3 = StringVar(self.table_cad[3], value="Audible")
         else:
             self.zone_w3 = StringVar(self.table_cad[3], value=di_son)
         rng += 1
@@ -1211,6 +1246,21 @@ class Relance(Tk):
         Scale(self.table_cad[6], from_=0, to=100, orient=HORIZONTAL, variable=self.volume_level,
               length=145, showvalue=True, bg=self.color_cad[6],
               troughcolor="#F7E9F4", highlightthickness=0).pack()
+        self.muet = BooleanVar(value=True)
+        Checkbutton(self.table_cad[6], text="Muet", variable=self.muet,
+                bg=self.color_cad[6], activebackground=self.color_cad[6],
+                selectcolor=self.color_cad[6]).pack()
+        Label(self.table_cad[6], text="Vitesse", bg=self.color_cad[6],
+              fg="#24323D", font=("Segoe UI", 8, "bold")).pack()
+        self.vitesse_lecture = StringVar(value="Lent")
+        vitesse_frame = Frame(self.table_cad[6], bg=self.color_cad[6])
+        vitesse_frame.pack()
+        Radiobutton(vitesse_frame, text="Lent", variable=self.vitesse_lecture, value="Lent",
+                bg=self.color_cad[6], activebackground=self.color_cad[6],
+                selectcolor=self.color_cad[6]).pack(side=LEFT)
+        Radiobutton(vitesse_frame, text="Rapide", variable=self.vitesse_lecture, value="Rapide",
+                bg=self.color_cad[6], activebackground=self.color_cad[6],
+                selectcolor=self.color_cad[6]).pack(side=LEFT)
 
         "# Traitement de la sonorisation des gammes retournées du module 'gammes_audio.py'"
         self.gam_son, self.gam_son1 = None, None  # , 'self.gam_son1'. Afin d'ordonner les clefs.
@@ -1899,6 +1949,7 @@ class Relance(Tk):
 
     def fermer_application(self):
         self.arreter_lecture()
+        self.tone_player.close()
         self.destroy()
 
     def reprendre_lecture(self):
@@ -1911,7 +1962,8 @@ class Relance(Tk):
         while True:
             frequency, duration = self.audio_queue.get()
             try:
-                play_sine_tone(frequency, duration, self.volume_level.get() / 100)
+                if not self.muet.get():
+                    self.tone_player.play(frequency, duration, self.volume_level.get() / 100)
             finally:
                 self.audio_queue.task_done()
 
@@ -3130,9 +3182,11 @@ class Relance(Tk):
                         self.update_idletasks()
                         self.update()
                         self.position_lecture = (index_gamme, index_freq + 1)
-                        if not self.lecture_arretee and self.zone_w3.get() == "Audible":
-                            play_sine_tone(frequence_ligne, 0.05, self.volume_level.get() / 100)
-                        lecture_delay = 0.18 if self.zone_w3.get() == "Audible" else 0.05
+                        if not self.lecture_arretee and self.zone_w3.get() == "Audible" and not self.muet.get():
+                            self.tone_player.play(frequence_ligne, 0.12, self.volume_level.get() / 100)
+                        lecture_delay = 0.40 if self.vitesse_lecture.get() == "Lent" else 0.18
+                        if self.zone_w3.get() != "Audible":
+                            lecture_delay = 0.05
                         time.sleep(lecture_delay)
 
                 # break de vérification.
