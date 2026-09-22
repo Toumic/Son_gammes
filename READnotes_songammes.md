@@ -11,7 +11,6 @@ L'erreur n'apparait plus
     Seulement à corriger si besoin.
 Le problème vient à cause du manque de précision du rapport (ligne/octave). Par exemple :
 
-
 * 1212 freq1 ['E3', 164.81] key_don ('+6', '3') dic_donne (66, 17)
 * 1212 freq1 ['B3', 123.47] key_don ('+6', '7') dic_donne (66, 18)
 
@@ -46,11 +45,9 @@ Voici deux choix d'une même gamme ayant deux assemblages distincts.
 * 1089 self.dic_multiples [('C', '1'), ('+D', '3'), ('E', '4'), ('+A', '7')] gamme +25x note ☺
 * Chacune des lignes correspond à un mode binaire dissemblable.
 
-
 **Solution :**
 
 Modifier les valeurs du dictionnaire, en leur ajoutant les coordonnées des rectangles d'arrière-plan.
-
 
 1. [ ] col0[1], lig0[1]. Où, col0 = coin haut-gauche [x, y] et lig0 = coin bas-droit [x, y].
 
@@ -63,11 +60,9 @@ Le rectangle toute hauteur, "celui qui signale le niveau de lecture sonore", ne 
 
 * Le dictionnaire self.colonne_gam, le changement après le tri a bien eu lieu. (Ligne 428)
 
-
 **Solution :**
 
 A changé l'identification du rectangle, par un indice équivalant ici : `ind_gam = liste_gam.index(k2)`
-
 
 ## Constitution des paramètres
 
@@ -92,11 +87,9 @@ La manière de trier en ordre croissant les modes binarisés ne se reporte pas a
 
 `dic_gammic = {}  # Dico, clé = Nom + valeur énumérée, valeur = Énumération binarisée + degrés binarisés.`
 
-
 Ceci produit un dico ayant au 1er indice la valeur énumérée['123400000567'] binarisée['111100000111']. Suivi aux sept indices modaux des sept degrés binarisés tels qu'on les connait. Ce dictionnaire est construit au commencement du programme, dans la boucle `for pre_cod in pre_codage:`. Il est noté que le dictionnaire `dic_codage`, quoique plus complexe, a les mêmes données que `dic_gammic`.
 
 `dic_gammic ['111100000111', '1000001', '1000001', '1000001', '1000001', '1000000', '1000001', '1000001']`
-
 
 En triant les valeurs énumérées, on change l'ordre des modulations diatoniques binaires.
 
@@ -139,7 +132,6 @@ Et, celles des gammes binaires composées de douze chiffres, ont les mêmes pôl
 
 Les binaires : `[ISO]=[EGO]=[INT]`. Ce `dictionnaire[E/I][102034050607] = (Binaires)`
 
-
 ### Commentaires sur les résultats
 
     Au sujet du tri naturel de la gamme
@@ -149,9 +141,7 @@ Ce premier traitement dévoile la constance des résultats obtenus par les pôle
 
 _Le pôle[INT] modifie l'ordre de la séquence sans modifier les noms des gammes._
 
-
 Puisque les ressources ont produit trois formes [binaires, énumérées, conteneurs], on devine clairement, que les modes diatoniques ont été modifiés. Entrainant d'autres éléments de triages et d'autres organisations.
-
 
 `self.zone_w4.get() == "Modes" ou "Gammes" ou "Contient"` :
 
@@ -162,7 +152,6 @@ L'ordre des noms des gammes varient selon que les pôles sont traités en modes 
 Ils ont la tâche de rassembler les résultats selon `self.zone_w4.get() == "Modes" ou "Gammes"` :
 
 Ainsi, que chacun de ces deux modes produisent, soit des modes binaires ou des gammes énumérées.
-
 
 ##### Dictionnaire dic_m_noms["Modes"]
 
@@ -178,7 +167,6 @@ Ainsi, que chacun de ces deux modes produisent, soit des modes binaires ou des g
 
 `dic_m_noms_int_inv = ['-2', '0', '-25', '-26', '-6', '-56', '+26', '-26o', 'o6', '-5', 'o45x', 'o46-', 'o4', 'o46+', 'o45-', 'o54-', '*5', '-34', 'o63-', 'o35x', 'o35+', 'o3', 'o36+', 'o35-', 'o34x', '-24', '-25o', '-23', '-25+', '-26+', '-45x', '-45+', '-46o', '*6', '-4', 'o65-', '-46+', '-45', 'o5', '-35+', '-36', '-3', '-36+', '-35', '-34x', 'x5', '+56', '+6', '-56+', '+45x', 'x45+', 'x46+', '^4', '+35x', '+34', '+34x', 'x3', 'x36+', '^3', '+25x', '+26-', '+2', '+25-', '+23x', 'x26-', '^2']`
 
-
 #### Dictionnaire dic_m_bins["Modes"]
 
 `dic_m_bins_ego = ['1111111', '1101110', '1001100', '1110111', '1111110', '1101100', '1001000', '1111011', '1100110', '1010111', '1000001', '1000000', '1000101', '1011000', '1011001', '1000100', '1001001', '1010001', '1000011', '1100000', '1000111', '1111000', '1100001', '1000010', '1010010', '1001011', '1010100', '1001111', '1110100', '1001101', '1100100', '1110001', '1110010', '1100010', '1111001', '1011011', '1010101', '1011100', '1100101', '1001010', '1010011', '1101101', '1110011', '1011101', '1011010', '1011111', '1110101', '1111010', '1100011', '1000110', '1101001', '1101000', '1101011', '1010110', '1100111', '1001110', '1111100', '1101111', '1110110', '1111101', '1101010', '1011110']`
@@ -192,7 +180,6 @@ Ainsi, que chacun de ces deux modes produisent, soit des modes binaires ou des g
 `dic_m_bins_int = ['1000000', '1000001', '1000010', '1000011', '1000100', '1000101', '1000110', '1000111', '1001000', '1001001', '1001010', '1001011', '1001100', '1001101', '1001110', '1001111', '1010001', '1010010', '1010011', '1010100', '1010101', '1010110', '1010111', '1011000', '1011001', '1011010', '1011011', '1011100', '1011101', '1011110', '1011111', '1100000', '1100001', '1100010', '1100011', '1100100', '1100101', '1100110', '1100111', '1101000', '1101001', '1101010', '1101011', '1101100', '1101101', '1101110', '1101111', '1110001', '1110010', '1110011', '1110100', '1110101', '1110110', '1110111', '1111000', '1111001', '1111010', '1111011', '1111100', '1111101', '1111110', '1111111']]`
 
 `dic_m_bins_int_inv = ['1111111', '1111110', '1111101', '1111100', '1111011', '1111010', '1111001', '1111000', '1110111', '1110110', '1110101', '1110100', '1110011', '1110010', '1110001', '1101111', '1101110', '1101101', '1101100', '1101011', '1101010', '1101001', '1101000', '1100111', '1100110', '1100101', '1100100', '1100011', '1100010', '1100001', '1100000', '1011111', '1011110', '1011101', '1011100', '1011011', '1011010', '1011001', '1011000', '1010111', '1010110', '1010101', '1010100', '1010011', '1010010', '1010001', '1001111', '1001110', '1001101', '1001100', '1001011', '1001010', '1001001', '1001000', '1000111', '1000110', '1000101', '1000100', '1000011', '1000010', '1000001', '1000000']`
-
 
 ##### Dictionnaire dic_g_noms["Gammes"]
 
@@ -208,7 +195,6 @@ Ainsi, que chacun de ces deux modes produisent, soit des modes binaires ou des g
 
 `dic_g_noms_int_inv = ['o45x', 'o54-', '*5', 'o63-', 'o34x', '-25o', '-45x', '-46o', '*6', 'o65-', 'x36+', '^3', '^2', 'o45-', 'o35x', 'o46+', '+34x', 'o46-', '+25x', 'x26-', 'o4', '-34', 'o35+', 'o35-', 'o3', 'o36+', '-24', '+35x', '+23x', '-23', '+45x', '-26o', '-25', '+25-', '-26', '-26+', '+26', '-2', '+2', '-25+', '-45', 'o5', '-46+', '+26-', '-4', '-45+', '-34x', '+34', 'x3', '-35+', '-35', '-36', '-36+', '-3', 'x5', 'o6', '+56', '-56', '-56+', 'x45+', 'x46+', '^4', '-5', '-6', '+6', '0']`
 
-
 ##### Dictionnaire dic_g_bins["Gammes"]
 
 `dic_g_bins_ego = ['1111111', '1101110', '1001100', '1110111', '1111110', '1101100', '1001000', '1111011', '1100110', '1010111', '1000001', '1000000', '1000101', '1011000', '1011001', '1000100', '1001001', '1010001', '1000011', '1100000', '1000111', '1111000', '1100001', '1000010', '1010010', '1001011', '1010100', '1001111', '1110100', '1001101', '1100100', '1110001', '1110010', '1100010', '1111001', '1011011', '1010101', '1011100', '1100101', '1001010', '1010011', '1101101', '1110011', '1011101', '1011010', '1011111', '1110101', '1111010', '1100011', '1000110', '1101001', '1101000', '1101011', '1010110', '1100111', '1001110', '1111100', '1101111', '1110110', '1111101', '1101010', '1011110']`
@@ -223,7 +209,6 @@ Ainsi, que chacun de ces deux modes produisent, soit des modes binaires ou des g
 
 `dic_g_bins_int_inv = ['1000011', '1000001', '1100000', '1000000', '1100001', '1000010', '1001001', '1010001', '1000100', '1000101', '1011000', '1011001', '1000111', '1111000', '1001011', '1010100', '1001111', '1110100', '1001101', '1100100', '1010010', '1110001', '1110010', '1001000', '1011011', '1001100', '1010101', '1011101', '1100101', '1011010', '1011111', '1110101', '1111010', '1011100', '1001010', '1100011', '1000110', '1101000', '1100111', '1001110', '1010011', '1111100', '1101001', '1101011', '1010110', '1101101', '1111011', '1100110', '1010111', '1101111', '1110011', '1110110', '1111001', '1100010', '1101100', '1111101', '1101010', '1011110', '1111111', '1101110', '1110111', '1111110']`
 
-
 _____________________________________________________________________________________________
 
 ## Historique des versions capturées
@@ -232,24 +217,19 @@ ________________________________________________________________________________
 
 La précédente version a été arrangée, car la dernière gamme n'était pas colorée en rouge, bien que ses degrés avaient déjà été listés.
 
-
 ### Version v0.8 =
 
-**Ouverture des sonorités**
-
+#### Ouverture des sonorités
 
 Le programme a un niveau de préparation des données correct.
-
 
 Ce premier pas vers les sonorités commence sereinement.
 
 Toutes les données sont présentes pour réaliser tous les traitements nécessaires à l'édition des sons audio.
 
-
 La prochaine étape se fera avec l'organisation des données utiles.
 
 Elle sera suivie de la création de plusieurs options relatives à la lecture audio sélectionnée.
-
 
 ### Version v0.9
 
@@ -261,7 +241,7 @@ La liste créée contient des tuples (numéro de la colonne et numéro de la lig
 
 ### Propreté
 
-**La version v0.9.1**
+#### La version v0.9.1
 
 Les modulations dynamiques sont obtenues avec succès, elles fonctionnent aussi bien pour les boutons des sélections des modes binarisés que pour ceux des gammes nommées.
 
@@ -277,16 +257,15 @@ C'est avec plaisir que s'est réalisée la construction de cette application. El
 
 ### Message d'informations
 
-**La version v09.3**
+#### La version v09.3
 
-**Message box infos**
+#### Message box infos
 
 Cette version fait le point sur les informations relatives aux gammes sélectionnées par l'utilisateur.
 
 Plusieurs options de lecture ont été mises en place, tout en respectant les options précédentes.
 
-
-**Nouveautés**
+#### Nouveautés
 
 **Lecture d'une seule ou de toutes les gammes.**
 
@@ -300,21 +279,19 @@ Plusieurs options de lecture ont été mises en place, tout en respectant les op
 
 – En s'accordant sur la croissance des fréquences hertziennes.
 
-
     Notes du bas de page.
 
     Quelques fréquences inattendues à vérifier.
 
 ### Comme un château de sable
 
-**La version v09.4**
+#### La version v09.4
 
-**Partie après partie**
+#### Partie après partie
 
 L'architecture prend forme au fur et à mesure que les prévisions se réalisent.
 
 La version n'est pas définitive étant donné qu'il manque quelques parties essentielles :
-
 
     Vérification des fréquences.
     Réglages de l'audio.
@@ -329,8 +306,7 @@ Il se pourrait que je me trompe, mais les seules erreurs que j'aurais pu ne pas 
 
 ### Version 10.1
 
-**La version v10.1**
-
+#### La version v10.1
 
 Correctif de la version 10.
 
@@ -342,7 +318,7 @@ Quelques erreurs rectifiées aux niveaux de la sélection du bouton binaire et d
 
 ### Version 10.3
 
-**Nouvelle énumération**
+#### Nouvelle énumération
 
 Nouvelles matrices relatives aux gammes énumérées, qui du point de vue du traitement, ont été faciles.
 
@@ -351,3 +327,35 @@ Puis c'est avec joie que la partie sensée de l'affichage et à la tonification,
 Il ne reste plus qu'à mettre à jour les pages web : <https://cabviva.fr/arme/spheres>.
 
     Il est tellement difficile d'atteindre la perfection !
+
+### Version v10.4
+
+#### Documentation et cohérence du projet
+
+Nettoyage et réorganisation des notes historiques afin de mieux suivre l'évolution du projet.
+
+### Version v10.5
+
+#### Manuel utilisateur et lecture réinitialisée
+
+Ajout du manuel utilisateur et amélioration de la réinitialisation de la lecture.
+
+### Version v10.6
+
+#### Contenus Cabviva et sphères binaires
+
+Harmonisation de la mise en forme des contenus consacrés à Cabviva et aux sphères binaires.
+
+### Version v10.7
+
+#### Sélection des tris et interface
+
+Amélioration de la sélection des tris et harmonisation de l'interface.
+
+### Version v10.8
+
+#### Audio et interface
+
+Ajout d'un mode muet activé par défaut, de deux vitesses de lecture et d'une lecture audio continue pour réduire les parasites entre les notes.
+
+L'interface inférieure a également été recadrée afin que les options et les boutons radio restent entièrement visibles.
